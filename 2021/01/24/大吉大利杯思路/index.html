@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="大吉大利杯web部分wp菜炸了，一部分题是自己做出来的，一部分题是看wp复现的 spacemanphp代码审计，源码： 12345678910111213141516171819202122232425262728293031323334353637&lt;?phperror_reporting(0);highlight_file(__FILE__);class spaceman&amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DJBCTF">
+<meta property="og:url" content="http://example.com/2021/01/24/%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF%E6%80%9D%E8%B7%AF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="大吉大利杯web部分wp菜炸了，一部分题是自己做出来的，一部分题是看wp复现的 spacemanphp代码审计，源码： 12345678910111213141516171819202122232425262728293031323334353637&lt;?phperror_reporting(0);highlight_file(__FILE__);class spaceman&amp;#123;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210124173439968.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210124175714492.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210124175902807.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125094308165.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125094459116.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124151116.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124217163.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124326307.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125125220618.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210125184218268.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210126093915671.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210126094004259.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210126114719848.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210127123518266.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210127124645962.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210127124946215.png">
+<meta property="article:published_time" content="2021-01-24T09:01:08.000Z">
+<meta property="article:modified_time" content="2021-01-28T07:48:18.261Z">
+<meta property="article:author" content="K1te">
+<meta property="article:tag" content="wp">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zk1te/img/main/image-20210124173439968.png">
+
+<link rel="canonical" href="http://example.com/2021/01/24/%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF%E6%80%9D%E8%B7%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DJBCTF | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/24/%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF%E6%80%9D%E8%B7%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="K1te">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DJBCTF
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-24 17:01:08" itemprop="dateCreated datePublished" datetime="2021-01-24T17:01:08+08:00">2021-01-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-28 15:48:18" itemprop="dateModified" datetime="2021-01-28T15:48:18+08:00">2021-01-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">题解</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="大吉大利杯web部分wp"><a href="#大吉大利杯web部分wp" class="headerlink" title="大吉大利杯web部分wp"></a>大吉大利杯web部分wp</h1><p>菜炸了，一部分题是自己做出来的，一部分题是看wp复现的</p>
+<h2 id="spaceman"><a href="#spaceman" class="headerlink" title="spaceman"></a>spaceman</h2><p>php代码审计，源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">spaceman</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$username</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$password</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$username</span>,<span class="variable">$password</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = <span class="variable">$username</span>;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = <span class="variable">$password</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;password===<span class="string">&#x27;ctfshowvip&#x27;</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">include</span>(<span class="string">&quot;flag.php&quot;</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$flag</span>;    </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;wrong password&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params"><span class="variable">$string</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> str_replace(<span class="string">&#x27;ctfshowup&#x27;</span>,<span class="string">&#x27;ctfshow&#x27;</span>,<span class="variable">$string</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$str</span> = file_get_contents(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">&#x27;/\_|\.|\]|\[/is&#x27;</span>,<span class="variable">$str</span>))&#123;            </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;I am sorry but you have to leave.&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    extract(<span class="variable">$_POST</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$ser</span> = filter(serialize(<span class="keyword">new</span> spaceman(<span class="variable">$user_name</span>,<span class="variable">$pass_word</span>)));</span><br><span class="line"><span class="variable">$test</span> = unserialize(<span class="variable">$ser</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="php-input-与-POST"><a href="#php-input-与-POST" class="headerlink" title="php://input 与 $_POST"></a>php://input 与 $_POST</h3><p>先说说php://input传参的问题，当直接post<code>str=xxxx</code>的时候可以直接传入变量str，但是当post<code>str=xxx&amp;pass_word=xxx</code>的时候，php://input会将这一整串赋值给str，因为其中有下划线，所以无法绕过，测试如下：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210124173439968.png" alt="image-20210124173439968"></p>
+<p>上网查找相关资料，发现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.Coentent-Type仅在取值为application&#x2F;x-www-data-urlencoded和multipart&#x2F;form-data两种情况下，PHP才会将http请求数据包中相应的数据填入全局变量$_POST</span><br><span class="line"></span><br><span class="line">2.只有Coentent-Type为multipart&#x2F;form-data的时候，PHP不会将http请求数据包中的相应数据填入php:&#x2F;&#x2F;input，否则其它情况都会。</span><br></pre></td></tr></table></figure>
+<p>也就是说，Coentent-Type为multipart/form-data时，php://input为空而$_POST不为空，从而绕过该正则。至于如何传呢，我是使用插件<code>Tabbed Postman - REST Client</code>，其他的方法我也不会（菜）</p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p>刚开始觉得filter函数吞掉了俩字符，会导致反序列无法正常进行，后面发现，这个filter函数过滤了个寂寞。。。</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210124175714492.png" alt="image-20210124175714492"></p>
+<p>正常情况下压根儿就没有<code>ctfshowup</code>给他进行替换。。。所以直接以form-data，post一个pass_word=ctfshowvip即可，user_name随便填</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210124175902807.png"></p>
+<p>可能这就是自己给自己加戏吧。。。</p>
+<h2 id="veryphp"><a href="#veryphp" class="headerlink" title="veryphp"></a>veryphp</h2><p>也是一道php代码审计，源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;config.php&quot;</span>);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">qwq</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;Access Denied!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">oao</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        show_source(<span class="string">&quot;config.php&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$str</span> = file_get_contents(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">&#x27;/\`|\_|\.|%|\*|\~|\^|\&#x27;|\&quot;|\;|\(|\)|\]|g|e|l|i|\//is&#x27;</span>,<span class="variable">$str</span>))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;I am sorry but you have to leave.&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    extract(<span class="variable">$_POST</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$shaw_root</span>))&#123;</span><br><span class="line">    <span class="keyword">if</span>(preg_match(<span class="string">&#x27;/^\-[a-e][^a-zA-Z0-8]&lt;b&gt;(.*)&gt;&#123;4&#125;\D*?(abc.*?)p(hp)*\@R(s|r).$/&#x27;</span>, <span class="variable">$shaw_root</span>)&amp;&amp; strlen(<span class="variable">$shaw_root</span>)===<span class="number">29</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$hint</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Almost there.&quot;</span>.<span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>.<span class="string">&quot;Input correct parameters&quot;</span>.<span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$ans</span>===<span class="variable">$SecretNumber</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>.<span class="string">&quot;Congratulations!&quot;</span>.<span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">    call_user_func(<span class="variable">$my_ans</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="php-input-与-POST-1"><a href="#php-input-与-POST-1" class="headerlink" title="php://input 与 $_POST"></a>php://input 与 $_POST</h3><p>传参问题与上一题一样，这里就不再赘述了。</p>
+<h3 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h3><p>绕了半天不知道这个正则想匹配些啥（可能是我太菜了），不过最后总算是绕过去了，学习正则的话可以参考这篇文章：<a target="_blank" rel="noopener" href="https://deerchao.cn/tutorials/regex/regex.htm">正则表达式30分钟入门教程</a>，最后给出$shaw_root的值：<code>-a9&lt;b&gt;&gt;&gt;&gt;&gt;abcaaaaaaaa.php@Rr.</code>。</p>
+<h3 id="SecretNumber"><a href="#SecretNumber" class="headerlink" title="$SecretNumber"></a>$SecretNumber</h3><p>绕过正则之后得到一个hint：<code>Here is a hint : md5(&quot;shaw&quot;.($SecretNumber).&quot;root&quot;)==166b47a5cb1ca2431a0edfcef200684f &amp;&amp; strlen($SecretNumber)===5</code>，感觉出题人是想让我们根据这个hint把SecretNumber爆出来，但是这里两个变量都可控，应该是被非预期了。。。</p>
+<h3 id="call-user-func"><a href="#call-user-func" class="headerlink" title="call_user_func"></a>call_user_func</h3><p>又是一个变量的call_user_func。。。上回我盯着phpinfo看了大半天。。。这次也是先传入一个phpinfo找找，但是并没发现什么可疑的东西，然后又搜了下flag，也没找到。然后这时候想起最前面的qwq类以及其静态方法，刚开始直接传入my_ans=oao，但是发现行不通。。。于是去Google了一下call_user_func如何调用类的静态方法：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125094308165.png" alt="image-20210125094308165"></p>
+<p>因为oao函数没有参数，所以可以传入my_ans数组从而调用该静态方法，最后payload：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125094459116.png" alt="image-20210125094459116"></p>
+<h2 id="虎山行-amp-revenge"><a href="#虎山行-amp-revenge" class="headerlink" title="虎山行&amp;revenge"></a>虎山行&amp;revenge</h2><p>这题真的不会，之前也没有做过phar的反序列化，基本上都是靠着各种wp和资料复现的。</p>
+<p>打开之后有个hint：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124151116.png" alt="image-20210125124151116"></p>
+<p>访问之后：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124217163.png" alt="image-20210125124217163"></p>
+<p>安装看看：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125124326307.png" alt="image-20210125124326307"></p>
+<p>假装自己扫了一下目录：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125125220618.png" alt="image-20210125125220618"></p>
+<p>拿到源码之后先拿d盾扫一下：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210125184218268.png" alt="image-20210125184218268"></p>
+<p>好像没啥用，后面同学和我说可以传file直接目录穿越（审计源码能力太差了）：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210126093915671.png" alt="image-20210126093915671"></p>
+<p>然后打开：/ctfshowsecretfilehh：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210126094004259.png" alt="image-20210126094004259"></p>
+<p>利用<code>/mc-admin/page-edit.php?file=../../../../../../../var/www/html/ctfshowsecretfilehh/waf.php</code>读取waf.php源码:</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210126114719848.png" alt="image-20210126114719848"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf</span>(<span class="params"><span class="variable">$file</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (preg_match(<span class="string">&quot;/^phar|smtp|dict|zip|compress|file|etc|root|filter|php|flag|ctf|hint|\.\.\//i&quot;</span>,<span class="variable">$file</span>))&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;姿势太简单啦，来一点骚的？！&quot;</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$file</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再用<code>/mc-admin/page-edit.php?file=../../../upload.php</code>读取upload.php的源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 允许上传的图片后缀</span></span><br><span class="line"><span class="variable">$allowedExts</span> = <span class="keyword">array</span>(<span class="string">&quot;gif&quot;</span>, <span class="string">&quot;jpg&quot;</span>, <span class="string">&quot;png&quot;</span>);</span><br><span class="line"><span class="variable">$temp</span> = explode(<span class="string">&quot;.&quot;</span>, <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;name&quot;</span>]);</span><br><span class="line"><span class="comment">// echo $_FILES[&quot;file&quot;][&quot;size&quot;];</span></span><br><span class="line"><span class="variable">$extension</span> = end(<span class="variable">$temp</span>);     <span class="comment">// 获取文件后缀名</span></span><br><span class="line"><span class="keyword">if</span> (((<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;image/gif&quot;</span>)</span><br><span class="line">|| (<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;image/jpeg&quot;</span>)</span><br><span class="line">|| (<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;type&quot;</span>] == <span class="string">&quot;image/png&quot;</span>))</span><br><span class="line">&amp;&amp; (<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;size&quot;</span>] &lt; <span class="number">2048000</span>)   <span class="comment">// 小于 2000kb</span></span><br><span class="line">&amp;&amp; in_array(<span class="variable">$extension</span>, <span class="variable">$allowedExts</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;error&quot;</span>] &gt; <span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">&quot;文件出错: &quot;</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;error&quot;</span>] . <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (file_exists(<span class="string">&quot;upload/&quot;</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;name&quot;</span>]))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">echo</span> <span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;name&quot;</span>] . <span class="string">&quot; 文件已经存在。 &quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="variable">$md5_unix_random</span> =substr(md5(time()),<span class="number">0</span>,<span class="number">8</span>);</span><br><span class="line">			<span class="variable">$filename</span> = <span class="variable">$md5_unix_random</span>.<span class="string">&#x27;.&#x27;</span>.<span class="variable">$extension</span>;</span><br><span class="line">            move_uploaded_file(<span class="variable">$_FILES</span>[<span class="string">&quot;file&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], <span class="string">&quot;upload/&quot;</span> . <span class="variable">$filename</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;上传成功,文件存在upload/&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&quot;文件类型仅支持jpg、png、gif等图片格式&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里直接参考yu22x师傅博客里的脚本找上传的文件名</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">geturl</span>(<span class="params">s</span>):</span></span><br><span class="line">    a=hashlib.md5(<span class="built_in">str</span>(<span class="built_in">int</span>(s)).encode()).hexdigest()</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;http://b8876a9e-71b3-4a02-b8c4-80f02ec058a5.chall.ctf.show/upload/&quot;</span>+a[:<span class="number">8</span>]+<span class="string">&#x27;.gif&#x27;</span></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    url=<span class="string">&quot;http://b8876a9e-71b3-4a02-b8c4-80f02ec058a5.chall.ctf.show/upload.php&quot;</span></span><br><span class="line">    files=&#123;<span class="string">&#x27;file&#x27;</span>:(<span class="string">&#x27;exp.gif&#x27;</span>,</span><br><span class="line">        <span class="built_in">open</span>(<span class="string">&#x27;exp.gif&#x27;</span>,<span class="string">&#x27;rb&#x27;</span>),</span><br><span class="line">        <span class="string">&#x27;image/gif&#x27;</span></span><br><span class="line">        )&#125;</span><br><span class="line">    r=requests.post(url,files=files)</span><br><span class="line">    print(r.text)</span><br><span class="line">    a=time.time()</span><br><span class="line">    r2=requests.get(geturl(a))</span><br><span class="line">    r3=requests.get(geturl(a-<span class="number">1</span>))<span class="comment">#存在延时多试几个时间</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="string">&quot;我的网站&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span>  r2.text <span class="keyword">or</span> <span class="string">&quot;我的网站&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span>  r3.text):</span><br><span class="line">        print(geturl(a))</span><br><span class="line">        print(geturl(a-<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        time.sleep(<span class="number">0.3</span>)</span><br></pre></td></tr></table></figure>
+<p>先在/uplaod上传一个phar文件（后缀名已改为gif），然后再用该脚本找文件名：</p>
+<p>然后访问hint.txt:</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210127123518266.png" alt="image-20210127123518266"></p>
+<p>访问/ctfshowgetflaghhhh：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$unser</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;unser&#x27;</span>];</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Unser</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$username</span>=<span class="string">&#x27;Firebasky&#x27;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$password</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;username==<span class="string">&#x27;ctfshow&#x27;</span>&amp;&amp;<span class="keyword">$this</span>-&gt;password==(<span class="keyword">int</span>)md5(time()))&#123;</span><br><span class="line">            system(<span class="string">&#x27;cp /ctfshow* /var/www/html/flag.txt&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$ctf</span>=@unserialize(<span class="variable">$unser</span>);</span><br><span class="line">system(<span class="string">&#x27;rm -rf /var/www/html/flag.txt&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>因为md5之后有一个强制类型转换，所以当md值是字母开头的时候会变成0，所以我们可以令password为0，然后多试几次既可：</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210127124645962.png" alt="image-20210127124645962"></p>
+<p>后面有个<code>system(&#39;rm -rf /var/www/html/flag.txt&#39;);</code>删掉flag，理论上需要条件竞争，但是不知道为啥狂点了几次hackbar的EXECUTE之后就可以直接url访问。。。。迷</p>
+<p><img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210127124946215.png" alt="image-20210127124946215"></p>
+<p>revenge只有路由的名字不一样，不知道有啥意义。。。迷</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wp/" rel="tag"># wp</a>
+              <a href="/tags/web/" rel="tag"># web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/28/BJDCTF2020/" rel="prev" title="BJDCTF2020">
+      <i class="fa fa-chevron-left"></i> BJDCTF2020
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AFweb%E9%83%A8%E5%88%86wp"><span class="nav-number">1.</span> <span class="nav-text">大吉大利杯web部分wp</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#spaceman"><span class="nav-number">1.1.</span> <span class="nav-text">spaceman</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#php-input-%E4%B8%8E-POST"><span class="nav-number">1.1.1.</span> <span class="nav-text">php:&#x2F;&#x2F;input 与 $_POST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">1.1.2.</span> <span class="nav-text">反序列化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#veryphp"><span class="nav-number">1.2.</span> <span class="nav-text">veryphp</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#php-input-%E4%B8%8E-POST-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">php:&#x2F;&#x2F;input 与 $_POST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%88%99"><span class="nav-number">1.2.2.</span> <span class="nav-text">正则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SecretNumber"><span class="nav-number">1.2.3.</span> <span class="nav-text">$SecretNumber</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#call-user-func"><span class="nav-number">1.2.4.</span> <span class="nav-text">call_user_func</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%8E%E5%B1%B1%E8%A1%8C-amp-revenge"><span class="nav-number">1.3.</span> <span class="nav-text">虎山行&amp;revenge</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">K1te</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">K1te</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
