@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519215245491.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519215259111.png">
 <meta property="article:published_time" content="2021-05-19T14:10:17.000Z">
-<meta property="article:modified_time" content="2021-05-19T14:12:43.799Z">
+<meta property="article:modified_time" content="2021-07-18T07:49:52.704Z">
 <meta property="article:author" content="K1te">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="ctf">
@@ -215,10 +215,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-05-19 22:10:17 / 修改时间：22:12:43" itemprop="dateCreated datePublished" datetime="2021-05-19T22:10:17+08:00">2021-05-19</time>
+              <time title="创建时间：2021-05-19 22:10:17" itemprop="dateCreated datePublished" datetime="2021-05-19T22:10:17+08:00">2021-05-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-07-18 15:49:52" itemprop="dateModified" datetime="2021-07-18T15:49:52+08:00">2021-07-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -243,7 +249,7 @@
         <p>其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。</p>
 <a id="more"></a>
 
-<p>无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用<code>sys.schema_auto_increment_columns</code>、<code>sys.schema_table_statistics_with_buffer</code>、<code>mysql.innodb_table_stats</code>等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入</p>
+<p>无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用<code>sys.schema_auto_increment_columns</code>、<code>sys.schema_table_statistics_with_buffer</code>、<code>mysql.innodb_table_stats</code>等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表名之后，还需要进一步地使用无列名注入</p>
 <h2 id="一、列名重复（join……using）"><a href="#一、列名重复（join……using）" class="headerlink" title="一、列名重复（join……using）"></a>一、列名重复（join……using）</h2><p>条件：需要开启报错</p>
 <p>直接拿sqli-labs的email表来做演示（后面也会使用这个表）：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518205433174.png"></p>
