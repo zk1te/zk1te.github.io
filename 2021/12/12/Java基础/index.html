@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/author.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/author.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java反序列化基础">
+<meta property="og:url" content="http://example.com/2021/12/12/Java%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="k1te&#39;s blog">
+<meta property="og:description" content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211202160433241.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203095022058.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203104850877.png">
+<meta property="article:published_time" content="2021-12-12T07:53:17.000Z">
+<meta property="article:modified_time" content="2022-01-07T03:31:58.816Z">
+<meta property="article:author" content="K1te">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211202160433241.png">
+
+<link rel="canonical" href="http://example.com/2021/12/12/Java%E5%9F%BA%E7%A1%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java反序列化基础 | k1te's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">k1te's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/12/Java%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="K1te">
+      <meta itemprop="description" content="看到我请叫我滚去学web">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="k1te's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java反序列化基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-12 15:53:17" itemprop="dateCreated datePublished" datetime="2021-12-12T15:53:17+08:00">2021-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-07 11:31:58" itemprop="dateModified" datetime="2022-01-07T11:31:58+08:00">2022-01-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。</p>
+<a id="more"></a>
+
+
+
+<h3 id="序列化和反序列化"><a href="#序列化和反序列化" class="headerlink" title="序列化和反序列化"></a>序列化和反序列化</h3><p><strong>Java序列化</strong>是指把Java对象转换为字节序列的过程；而<strong>Java反序列化</strong>是指把字节序列恢复为Java对象的过程。</p>
+<h4 id="用处"><a href="#用处" class="headerlink" title="用处"></a>用处</h4><ul>
+<li> 想把内存中的对象保存到一个文件中或者数据库中时候；</li>
+<li> 想用套接字在网络上传送对象的时候；</li>
+<li> 想通过RMI传输对象的时候</li>
+</ul>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><blockquote>
+<p> 只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）</p>
+</blockquote>
+<p>通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream </p>
+<p><img src="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211202160433241.png" alt="image-20211202160433241"></p>
+<p>同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象</p>
+<p>ObjectOutputStream代表对象输出流：</p>
+<ul>
+<li>它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。</li>
+</ul>
+<p>ObjectInputStream代表对象输入流：</p>
+<ul>
+<li>它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。</li>
+</ul>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><p>Person.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Person&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SerializeTest.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SerializeTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">serialize</span><span class="params">(Object obj)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">        ObjectOutputStream objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">&quot;person.ser&quot;</span>));</span><br><span class="line">        objectOutputStream.writeObject(obj);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Person person = <span class="keyword">new</span> Person(<span class="string">&quot;a&quot;</span>,<span class="number">22</span>);</span><br><span class="line"><span class="comment">//        System.out.println(person);</span></span><br><span class="line">        serialize(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Unserialize.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnserializeTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">unserialize</span><span class="params">(String filename)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(filename));</span><br><span class="line">        Object obj = objectInputStream.readObject();</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        Person person = (Person) unserialize(<span class="string">&quot;person.ser&quot;</span>);</span><br><span class="line">        System.out.println(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="其他需要注意的点"><a href="#其他需要注意的点" class="headerlink" title="其他需要注意的点"></a>其他需要注意的点</h4><ol>
+<li>静态成员变量是不能被序列化</li>
+<li>transient 标识的对象成员变量不参与序列化</li>
+</ol>
+<h4 id="重写writeObject和readObject方法"><a href="#重写writeObject和readObject方法" class="headerlink" title="重写writeObject和readObject方法"></a>重写writeObject和readObject方法</h4><blockquote>
+<p>使用transient关键字阻止序列化虽然简单方便，但被它修饰的属性被完全隔离在序列化机制之外，导致了在反序列化时无法获取该属性的值，而通过在需要序列化的对象的Java类里加入writeObject()方法与readObject()方法可以控制如何序列化各属性，甚至完全不序列化某些属性或者加密序列化某些属性。</p>
+</blockquote>
+<p>example:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyList</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    transient 表示该成员 arr 不需要被序列化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Object[] arr;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyList</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.arr = <span class="keyword">new</span> Object[<span class="number">100</span>];</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        给前面30个元素进行初始化</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">this</span>.arr[i] = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;MyList&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, arr=&quot;</span> + Arrays.toString(arr) +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//-------------------------- 自定义序列化反序列化 arr 元素 ------------------</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Save the state of the &lt;tt&gt;ArrayList&lt;/tt&gt; instance to a stream (that</span></span><br><span class="line"><span class="comment">     * is, serialize it).</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@serialData</span> The length of the array backing the &lt;tt&gt;ArrayList&lt;/tt&gt;</span></span><br><span class="line"><span class="comment">     * instance is emitted (int), followed by all of its elements</span></span><br><span class="line"><span class="comment">     * (each an &lt;tt&gt;Object&lt;/tt&gt;) in the proper order.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject</span><span class="params">(java.io.ObjectOutputStream s)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> java.io.IOException </span>&#123;</span><br><span class="line">        <span class="comment">//执行 JVM 默认的序列化操作</span></span><br><span class="line">        s.defaultWriteObject();</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">        <span class="comment">//手动序列化 arr  前面30个元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) &#123;</span><br><span class="line">            s.writeObject(arr[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Reconstitute the &lt;tt&gt;ArrayList&lt;/tt&gt; instance from a stream (that is,</span></span><br><span class="line"><span class="comment">     * deserialize it).</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readObject</span><span class="params">(java.io.ObjectInputStream s)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> java.io.IOException, ClassNotFoundException </span>&#123;</span><br><span class="line"> </span><br><span class="line">        s.defaultReadObject();</span><br><span class="line">        arr = <span class="keyword">new</span> Object[<span class="number">30</span>];</span><br><span class="line"> </span><br><span class="line">        <span class="comment">// Read in all elements in the proper order.</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">30</span>; i++) &#123;</span><br><span class="line">            arr[i] = s.readObject();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="安全问题的产生"><a href="#安全问题的产生" class="headerlink" title="安全问题的产生"></a>安全问题的产生</h4><p>只要服务端反序列化数据，客户端传递的类的readObject中的代码就会自动执行，给予攻击者在服务器上运行代码的能力。</p>
+<h4 id="可能的形式"><a href="#可能的形式" class="headerlink" title="可能的形式"></a>可能的形式</h4><ol>
+<li>入口类的readObject直接调用危险方法。</li>
+<li>入口类参数中包含可控类，该类有危险方法，readObject时调用。</li>
+<li>入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject时调用。</li>
+<li>构造函数/静态代码块等在<strong>类加载</strong>时隐式执行</li>
+</ol>
+<h4 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h4><ol>
+<li>入口类<ul>
+<li>重写readObject</li>
+<li>readObject调用常见函数</li>
+<li>参数类型宽泛</li>
+<li>最好jdk自带</li>
+</ul>
+</li>
+<li>调用链 gadget chain<ul>
+<li>相同名称，相同类型</li>
+</ul>
+</li>
+<li>执行类</li>
+</ol>
+<h4 id="URLDNS"><a href="#URLDNS" class="headerlink" title="URLDNS"></a>URLDNS</h4><p>最简单的链，检测反序列化位点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">*   Gadget Chain:</span><br><span class="line">*     HashMap.readObject()</span><br><span class="line">*       HashMap.putVal()</span><br><span class="line">*         HashMap.hash()</span><br><span class="line">*           URL.hashCode()</span><br></pre></td></tr></table></figure>
+<p>然而put的时候直接调用了hashCode，需要通过<strong>反射</strong>改变已有对象的属性。</p>
+<blockquote>
+<p>注意，java有dns缓存，所以同一个url，只会dns解析一次，后面都会直接在缓存里面找</p>
+</blockquote>
+<h4 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h4><p><strong>Serializable 接口</strong></p>
+<p>一个对象想要被序列化，那么它的类就要实现此接口或者它的子接口。</p>
+<p>这个对象的所有属性（包括private属性、包括其引用的对象）都可以被序列化和反序列化来保存、传递。不想序列化的字段可以使用transient修饰。</p>
+<p>由于Serializable对象完全以它存储的二进制位为基础来构造，因此并不会调用任何构造函数，因此Serializable类无需默认构造函数，但是当Serializable类的父类没有实现Serializable接口时，反序列化过程会调用父类的默认构造函数，因此该父类必需有默认构造函数，否则会抛异常。</p>
+<p>使用transient关键字阻止序列化虽然简单方便，但被它修饰的属性被完全隔离在序列化机制之外，导致了在反序列化时无法获取该属性的值，而通过在需要序列化的对象的Java类里加入writeObject()方法与readObject()方法可以控制如何序列化各属性，甚至完全不序列化某些属性或者加密序列化某些属性。</p>
+<p><strong>Externalizable 接口</strong></p>
+<p>它是Serializable接口的子类，用户要实现的writeExternal()和readExternal() 方法，用来决定如何序列化和反序列化。</p>
+<p>因为序列化和反序列化方法需要自己实现，因此可以指定序列化哪些属性，而transient在这里无效。</p>
+<p>对Externalizable对象反序列化时，会先调用类的无参构造方法，这是有别于默认反序列方式的。如果把类的不带参数的构造方法删除，或者把该构造方法的访问权限设置为private、默认或protected级别，会抛出java.io.InvalidException: no valid constructor异常，因此Externalizable对象必须有默认构造函数，而且必需是public的。</p>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>Java 的<strong>反射机制</strong>是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法； 并且对于任意一个对象，都能够调用它的任意一个方法；这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。</p>
+<p>总的来时，反射赋予Java<strong>动态特性</strong></p>
+<h4 id="反射的基本使用"><a href="#反射的基本使用" class="headerlink" title="反射的基本使用"></a>反射的基本使用</h4><h5 id="获取Class对象"><a href="#获取Class对象" class="headerlink" title="获取Class对象"></a>获取Class对象</h5><ol>
+<li><p>使用<code>Class.forName </code>静态方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class class1 = Class.forName(<span class="string">&quot;Person&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li><p>使用类的<code>.class</code>静态属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class class2 = Person.class;</span><br></pre></td></tr></table></figure></li>
+<li><p>使用实例对象的<code>getClass()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person person = <span class="keyword">new</span> Person();</span><br><span class="line">Class class3 = person.getClass();</span><br></pre></td></tr></table></figure></li>
+<li><p>通过<code>ClassLoader</code>获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();</span><br><span class="line">        Class&lt;?&gt; c = systemClassLoader.loadClass(<span class="string">&quot;Person&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="创造实例对象"><a href="#创造实例对象" class="headerlink" title="创造实例对象"></a>创造实例对象</h5></li>
+<li><p>通过Class的newInstance()方法</p>
+</li>
+<li><p>通过Constructor的newInstance()方法</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;方式一</span><br><span class="line">Class class1 &#x3D; Class.forName(&quot;reflection.Student&quot;);</span><br><span class="line">Student student &#x3D; (Student) class1.newInstance();</span><br><span class="line">System.out.println(student);</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;方式二</span><br><span class="line">Constructor constructor &#x3D; class1.getConstructor();</span><br><span class="line">Student student1 &#x3D; (Student) constructor.newInstance();</span><br><span class="line">System.out.println(student1);</span><br></pre></td></tr></table></figure>
+<p>方法一只能调用无参构造函数，一般不用</p>
+<h5 id="获取类的成员变量"><a href="#获取类的成员变量" class="headerlink" title="获取类的成员变量"></a>获取类的成员变量</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">getField()</span><br><span class="line">getDeclaredField()</span><br><span class="line">getFields()</span><br><span class="line">getDeclaredFields()</span><br></pre></td></tr></table></figure>
+<h5 id="修改成员变量"><a href="#修改成员变量" class="headerlink" title="修改成员变量"></a>修改成员变量</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Field.set(Object obj,Object value)</span><br></pre></td></tr></table></figure>
+<p>如何修改私有变量？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Field.setAccessible(true);</span><br></pre></td></tr></table></figure>
+<h5 id="获取类的方法"><a href="#获取类的方法" class="headerlink" title="获取类的方法"></a>获取类的方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">getMethod(String name, Class&lt;?&gt;... parameterTypes)</span><br><span class="line">getMethods()</span><br><span class="line">getDeclaredMethod()</span><br><span class="line">getDeclaredMethods()</span><br></pre></td></tr></table></figure>
+<h5 id="调用类的方法"><a href="#调用类的方法" class="headerlink" title="调用类的方法"></a>调用类的方法</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invoke(Object obj, Object... args)</span><br></pre></td></tr></table></figure>
+<p>setAccessible同理</p>
+<h4 id="回到URLDNS"><a href="#回到URLDNS" class="headerlink" title="回到URLDNS"></a>回到URLDNS</h4><p>put之前修改hashCode属性不为-1；put之后，反序列化之前修改hashCode属性为-1</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;URL,Integer&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        URL url = <span class="keyword">new</span> URL(<span class="string">&quot;http://y21jgo6y2e6rmwv062dgrkf2ctik69.burpcollaborator.net&quot;</span>);</span><br><span class="line">        Class c = url.getClass();</span><br><span class="line">        Field hashCodeField = c.getDeclaredField(<span class="string">&quot;hashCode&quot;</span>);</span><br><span class="line">        hashCodeField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        hashCodeField.set(url,<span class="number">123</span>);</span><br><span class="line">        hashMap.put(url,<span class="number">1</span>);</span><br><span class="line">        hashCodeField.set(url,-<span class="number">1</span>);</span><br><span class="line">        serialize(hashMap);</span><br></pre></td></tr></table></figure>
+<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><ul>
+<li>定制需要的对象</li>
+<li>通过invoke调用除了同名函数之外的函数</li>
+<li>通过Class类创建对象，引入不能序列化的类</li>
+</ul>
+<h3 id="类的动态加载"><a href="#类的动态加载" class="headerlink" title="类的动态加载"></a>类的动态加载</h3><h4 id="类的加载机制"><a href="#类的加载机制" class="headerlink" title="类的加载机制"></a>类的加载机制</h4><p>Java虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这个过程被称作虚拟机的类加载机制。</p>
+<h4 id="类的生命周期"><a href="#类的生命周期" class="headerlink" title="类的生命周期"></a>类的生命周期</h4><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，<strong>它的整个生命周期包括：加载，验证，准备，解析，初始化,使用,卸载</strong>这7个阶段.其中其中验证、准备、解析3个部分统称为连接</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203095022058.png" alt="image-20211203095022058"></p>
+<ol>
+<li>加载：查找并加载类的二进制数据</li>
+<li>验证：确保被加载的类的正确性</li>
+<li>准备：为类的静态变量分配内存，并将其初始化为默认值</li>
+<li>解析：把类中的符号引用转换为直接引用</li>
+<li>初始化：对类的静态变量，静态代码块执行初始化操作</li>
+<li>使用：类访问方法区内的数据结构的接口， 对象是Heap区的数据。</li>
+<li>卸载</li>
+</ol>
+<h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><p>虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类。 实现这个动作的代码模块称为“类加载器”。</p>
+<h4 id="类加载的三种方式"><a href="#类加载的三种方式" class="headerlink" title="类加载的三种方式"></a>类加载的三种方式</h4><ol>
+<li>命令行启动应用时候由JVM初始化加载</li>
+<li>通过Class.forName()方法动态加载</li>
+<li>通过ClassLoader.loadClass()方法动态加载</li>
+</ol>
+<blockquote>
+<p><code>.class</code>和<code>getClass()</code>使用之前类均已加载完毕</p>
+</blockquote>
+<h4 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h4><p>类的双亲委派机制</p>
+<p>双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去完成加载。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203104850877.png" alt="image-20211203104850877"></p>
+<h5 id="启动类加载器-Bootstrap-ClassLoader"><a href="#启动类加载器-Bootstrap-ClassLoader" class="headerlink" title="启动类加载器(Bootstrap ClassLoader)"></a>启动类加载器(Bootstrap ClassLoader)</h5><p>这个类将器负责将存放在＜JAVA_HOME＞\lib目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机识别的（按照文件名识别，如rt.jar、tools.jar，名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。</p>
+<h5 id="扩展类加载器-Extension-ClassLoader"><a href="#扩展类加载器-Extension-ClassLoader" class="headerlink" title="扩展类加载器(Extension ClassLoader)"></a>扩展类加载器(Extension ClassLoader)</h5><p>这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载＜JAVA_HOME＞\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</p>
+<h5 id="应用程序类加载器-Application-ClassLoader"><a href="#应用程序类加载器-Application-ClassLoader" class="headerlink" title="应用程序类加载器(Application ClassLoader)"></a>应用程序类加载器(Application ClassLoader)</h5><p>这个类加载器由sun.misc.Launcher$AppClassLoader来实现。由于应用程序类加载器是ClassLoader类中的getSystem-ClassLoader()方法的返回值，所以有些场合中也称它为“系统类加载器”。</p>
+<p>它负责加载用户类路径（ClassPath）上所有的类库，开发者同样可以直接在代码中使用这个类加载器。如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
+<p>我们的应用程序都是由这3种类加载器互相配合进行加载的，如果有必要，还可以加入自己定义的类加载器。</p>
+<h5 id="举例如下："><a href="#举例如下：" class="headerlink" title="举例如下："></a>举例如下：</h5><ol>
+<li>当AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
+<li>当ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader去完成。</li>
+<li>如果BootStrapClassLoader加载失败(例如在$JAVA_HOME/jre/lib里未查找到该class)，会使用ExtClassLoader来尝试加载；</li>
+<li>若ExtClassLoader也加载失败，则会使用AppClassLoader来加载，如果AppClassLoader也加载失败，则会报出异常ClassNotFoundException。</li>
+</ol>
+<h4 id="类加载与代码执行"><a href="#类加载与代码执行" class="headerlink" title="类加载与代码执行"></a>类加载与代码执行</h4><h6 id="JVM初始化加载"><a href="#JVM初始化加载" class="headerlink" title="JVM初始化加载"></a>JVM初始化加载</h6><p>初始化：静态代码块</p>
+<p>实例化：构造代码块、无参构造函数</p>
+<h5 id="动态加载"><a href="#动态加载" class="headerlink" title="动态加载"></a>动态加载</h5><p>Class.forname：初始化/不初始化皆可</p>
+<p>ClassLoader.loadClass：不进行初始化</p>
+<h4 id="加载任意类"><a href="#加载任意类" class="headerlink" title="加载任意类"></a>加载任意类</h4><p>加载自己的恶意类，拓展攻击面</p>
+<h5 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">继承关系：</span><br><span class="line">ClassLoader-&gt;SecureClassLoader-&gt;URLClassLoader-&gt;AppClassLoader</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">调用链：</span><br><span class="line">loadClass-&gt;findClass-&gt;defineClass</span><br></pre></td></tr></table></figure>
+<h5 id="利用-1"><a href="#利用-1" class="headerlink" title="利用"></a>利用</h5><ol>
+<li><p>URLClassLoader任意类加载:file/http/jar</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]&#123;new URL(&quot;file:///C:\\tmp\\&quot;)&#125;);</span></span><br><span class="line"><span class="comment">//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]&#123;new URL(&quot;http://localhost:8888/&quot;)&#125;);</span></span><br><span class="line">        URLClassLoader urlClassLoader = <span class="keyword">new</span> URLClassLoader(<span class="keyword">new</span> URL[]&#123;<span class="keyword">new</span> URL(<span class="string">&quot;jar:file:///C:\\tmp\\Hello.jar!/&quot;</span>)&#125;);</span><br><span class="line">        Class&lt;?&gt; c1 = urlClassLoader.loadClass(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">        c1.newInstance();</span><br></pre></td></tr></table></figure></li>
+<li><p>ClassLoader.defineClass 字节码加载任意类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Method defineClassMethod = ClassLoader.class.getDeclaredMethod(<span class="string">&quot;defineClass&quot;</span>, String.class, <span class="keyword">byte</span>[].class, <span class="keyword">int</span>.class, <span class="keyword">int</span>.class);</span><br><span class="line">        defineClassMethod.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">byte</span>[] code = Files.readAllBytes(Paths.get(<span class="string">&quot;C:\\tmp\\Hello.class&quot;</span>));</span><br><span class="line">        defineClassMethod.invoke(systemClassLoader,<span class="string">&quot;Hello&quot;</span>,code,<span class="number">0</span>,code.length);</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="maven踩坑"><a href="#maven踩坑" class="headerlink" title="maven踩坑"></a>maven踩坑</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.oracle.com/cn/java/technologies/javase/javase8-archive-downloads.html">中文官网</a>下载jdk的链接有问题，需要去<a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html">英文官网</a>才正常</li>
+<li>只有使用idea自带的maven才可以download source，否则会报错：<code>Sources not found for: commons-collections:commons-collections:3.2.1</code></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://space.bilibili.com/2142877265">白日梦组长的个人空间_哔哩哔哩_bilibili</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mocas_wang/article/details/107621010">(2条消息) java序列化与反序列化全讲解_mocas_wang的博客-CSDN博客_java序列化讲解</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904025607897096">谈谈Java反射：从入门到实践，再到原理 - 掘金 (juejin.cn)</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6865572557329072141">关于JVM类加载机制，看这一篇就够了 - 掘金 (juejin.cn)</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+              <a href="/tags/java/" rel="tag"># java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/16/5space2021/" rel="prev" title="2021第五空间线上web">
+      <i class="fa fa-chevron-left"></i> 2021第五空间线上web
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/13/2021MTCTF/" rel="next" title="2021美团网络安全高校挑战赛web部分wp">
+      2021美团网络安全高校挑战赛web部分wp <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">序列化和反序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E5%A4%84"><span class="nav-number">1.1.</span> <span class="nav-text">用处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">1.3.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">其他需要注意的点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E5%86%99writeObject%E5%92%8CreadObject%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">重写writeObject和readObject方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E7%9A%84%E4%BA%A7%E7%94%9F"><span class="nav-number">1.6.</span> <span class="nav-text">安全问题的产生</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E7%9A%84%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.7.</span> <span class="nav-text">可能的形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8"><span class="nav-number">1.8.</span> <span class="nav-text">利用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URLDNS"><span class="nav-number">1.9.</span> <span class="nav-text">URLDNS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%93%E5%B1%95"><span class="nav-number">1.10.</span> <span class="nav-text">拓展</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84"><span class="nav-number">2.</span> <span class="nav-text">反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">反射的基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96Class%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.1.1.</span> <span class="nav-text">获取Class对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E9%80%A0%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.1.2.</span> <span class="nav-text">创造实例对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="nav-number">2.1.3.</span> <span class="nav-text">获取类的成员变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="nav-number">2.1.4.</span> <span class="nav-text">修改成员变量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.5.</span> <span class="nav-text">获取类的方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E7%B1%BB%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.1.6.</span> <span class="nav-text">调用类的方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E5%88%B0URLDNS"><span class="nav-number">2.2.</span> <span class="nav-text">回到URLDNS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">类的动态加载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">类的加载机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">3.2.</span> <span class="nav-text">类的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">3.4.</span> <span class="nav-text">类加载的三种方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">3.5.</span> <span class="nav-text">类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8-Bootstrap-ClassLoader"><span class="nav-number">3.5.1.</span> <span class="nav-text">启动类加载器(Bootstrap ClassLoader)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8-Extension-ClassLoader"><span class="nav-number">3.5.2.</span> <span class="nav-text">扩展类加载器(Extension ClassLoader)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8-Application-ClassLoader"><span class="nav-number">3.5.3.</span> <span class="nav-text">应用程序类加载器(Application ClassLoader)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BE%E4%BE%8B%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="nav-number">3.5.4.</span> <span class="nav-text">举例如下：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E4%B8%8E%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="nav-number">3.6.</span> <span class="nav-text">类加载与代码执行</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#JVM%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8A%A0%E8%BD%BD"><span class="nav-number">3.6.0.1.</span> <span class="nav-text">JVM初始化加载</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD"><span class="nav-number">3.6.1.</span> <span class="nav-text">动态加载</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E4%BB%BB%E6%84%8F%E7%B1%BB"><span class="nav-number">3.7.</span> <span class="nav-text">加载任意类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.7.1.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%A9%E7%94%A8-1"><span class="nav-number">3.7.2.</span> <span class="nav-text">利用</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number"></span> <span class="nav-text">环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#maven%E8%B8%A9%E5%9D%91"><span class="nav-number">1.</span> <span class="nav-text">maven踩坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number"></span> <span class="nav-text">参考</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="K1te"
+      src="/images/author.jpg">
+  <p class="site-author-name" itemprop="name">K1te</p>
+  <div class="site-description" itemprop="description">看到我请叫我滚去学web</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://chikorita.fun/" title="https:&#x2F;&#x2F;chikorita.fun&#x2F;" rel="noopener" target="_blank">茗哥</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://oatmeal.vip/" title="https:&#x2F;&#x2F;oatmeal.vip&#x2F;" rel="noopener" target="_blank">Oatmeal</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://examine2.top/" title="https:&#x2F;&#x2F;examine2.top&#x2F;" rel="noopener" target="_blank">examine</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://jan.show/" title="https:&#x2F;&#x2F;jan.show&#x2F;" rel="noopener" target="_blank">Jan</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://eastjun.top/" title="https:&#x2F;&#x2F;eastjun.top&#x2F;" rel="noopener" target="_blank">EastJun</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">K1te</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
