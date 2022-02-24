@@ -1,0 +1,867 @@
+<!doctype html><html lang=en-us>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。
+序列化和反序列化 Java序列化是指把Java对象转换为字节序列的过程；而Java反序列化是指把字节序列恢复为Java对象的过程。
+用处  想把内存中的对象保存到一个文件中或者数据库中时候； 想用套接字在网络上传送对象的时候； 想通过RMI传输对象的时候  实现  只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）
+ 通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream
+同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象
+ObjectOutputStream代表对象输出流：
+ 它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。  ObjectInputStream代表对象输入流：
+ 它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。  例子 Person.java
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19  public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this."><title>Java反序列化基础</title>
+<link rel=canonical href=https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/>
+<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="Java反序列化基础">
+<meta property="og:description" content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。
+序列化和反序列化 Java序列化是指把Java对象转换为字节序列的过程；而Java反序列化是指把字节序列恢复为Java对象的过程。
+用处  想把内存中的对象保存到一个文件中或者数据库中时候； 想用套接字在网络上传送对象的时候； 想通过RMI传输对象的时候  实现  只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）
+ 通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream
+同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象
+ObjectOutputStream代表对象输出流：
+ 它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。  ObjectInputStream代表对象输入流：
+ 它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。  例子 Person.java
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19  public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this.">
+<meta property="og:url" content="https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/">
+<meta property="og:site_name" content="k1te's blog">
+<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="java"><meta property="article:tag" content="web"><meta property="article:published_time" content="2021-12-12T15:53:17+08:00"><meta property="article:modified_time" content="2021-12-12T15:53:17+08:00">
+<meta name=twitter:title content="Java反序列化基础">
+<meta name=twitter:description content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。
+序列化和反序列化 Java序列化是指把Java对象转换为字节序列的过程；而Java反序列化是指把字节序列恢复为Java对象的过程。
+用处  想把内存中的对象保存到一个文件中或者数据库中时候； 想用套接字在网络上传送对象的时候； 想通过RMI传输对象的时候  实现  只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）
+ 通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream
+同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象
+ObjectOutputStream代表对象输出流：
+ 它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。  ObjectInputStream代表对象输入流：
+ 它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。  例子 Person.java
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19  public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SK3CMJQD3N"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-SK3CMJQD3N')</script>
+</head>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
+</a>
+</div>
+<main class="main full-width">
+<article class=main-article>
+<header class=article-header>
+<div class=article-details>
+<header class=article-category>
+<a href=/categories/%E7%AC%94%E8%AE%B0/>
+笔记
+</a>
+</header>
+<h2 class=article-title>
+<a href=/2021/12/12/java%E5%9F%BA%E7%A1%80/>Java反序列化基础</a>
+</h2>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Dec 12, 2021</time>
+</div>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>
+4 minute read
+</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<p>Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。</p>
+<h3 id=序列化和反序列化>序列化和反序列化</h3>
+<p><strong>Java序列化</strong>是指把Java对象转换为字节序列的过程；而<strong>Java反序列化</strong>是指把字节序列恢复为Java对象的过程。</p>
+<h4 id=用处>用处</h4>
+<ul>
+<li>想把内存中的对象保存到一个文件中或者数据库中时候；</li>
+<li>想用套接字在网络上传送对象的时候；</li>
+<li>想通过RMI传输对象的时候</li>
+</ul>
+<h4 id=实现>实现</h4>
+<blockquote>
+<p>只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）</p>
+</blockquote>
+<p>通过 ObjectOutStream 包装 FileOutStream或者ByteArrayInputStream</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20211202160433241.png loading=lazy alt=image-20211202160433241></p>
+<p>同理，可以通过 ObjectInputStream 将数据从磁盘 FileInputStream 或者内存 ByteArrayInputStream 读取出来然后转化为指定的对象</p>
+<p>ObjectOutputStream代表对象输出流：</p>
+<ul>
+<li>它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。</li>
+</ul>
+<p>ObjectInputStream代表对象输入流：</p>
+<ul>
+<li>它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。</li>
+</ul>
+<h4 id=例子>例子</h4>
+<p>Person.java</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>Person</span> <span class=kd>implements</span> <span class=n>Serializable</span> <span class=o>{</span>
+    <span class=kd>private</span> <span class=n>String</span> <span class=n>name</span><span class=o>;</span>
+    <span class=kd>private</span> <span class=kt>int</span> <span class=n>age</span><span class=o>;</span>
+
+    <span class=kd>public</span> <span class=nf>Person</span><span class=o>(){}</span>
+
+    <span class=kd>public</span> <span class=nf>Person</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>,</span> <span class=kt>int</span> <span class=n>age</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>name</span> <span class=o>=</span> <span class=n>name</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>age</span> <span class=o>=</span> <span class=n>age</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>toString</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;Person{&#34;</span> <span class=o>+</span>
+                <span class=s>&#34;name=&#39;&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=sc>&#39;\&#39;&#39;</span> <span class=o>+</span>
+                <span class=s>&#34;, age=&#34;</span> <span class=o>+</span> <span class=n>age</span> <span class=o>+</span>
+                <span class=sc>&#39;}&#39;</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>SerializeTest.java</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>SerializeTest</span> <span class=o>{</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>serialize</span><span class=o>(</span><span class=n>Object</span> <span class=n>obj</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span><span class=o>{</span>
+        <span class=n>ObjectOutputStream</span> <span class=n>objectOutputStream</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ObjectOutputStream</span><span class=o>(</span><span class=k>new</span> <span class=n>FileOutputStream</span><span class=o>(</span><span class=s>&#34;person.ser&#34;</span><span class=o>));</span>
+        <span class=n>objectOutputStream</span><span class=o>.</span><span class=na>writeObject</span><span class=o>(</span><span class=n>obj</span><span class=o>);</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span> <span class=o>{</span>
+        <span class=n>Person</span> <span class=n>person</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Person</span><span class=o>(</span><span class=s>&#34;a&#34;</span><span class=o>,</span><span class=n>22</span><span class=o>);</span>
+<span class=c1>//        System.out.println(person);
+</span><span class=c1></span>        <span class=n>serialize</span><span class=o>(</span><span class=n>person</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Unserialize.java</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>class</span> <span class=nc>UnserializeTest</span> <span class=o>{</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=n>Object</span> <span class=nf>unserialize</span><span class=o>(</span><span class=n>String</span> <span class=n>filename</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span><span class=o>,</span> <span class=n>ClassNotFoundException</span> <span class=o>{</span>
+        <span class=n>ObjectInputStream</span> <span class=n>objectInputStream</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ObjectInputStream</span><span class=o>(</span><span class=k>new</span> <span class=n>FileInputStream</span><span class=o>(</span><span class=n>filename</span><span class=o>));</span>
+        <span class=n>Object</span> <span class=n>obj</span> <span class=o>=</span> <span class=n>objectInputStream</span><span class=o>.</span><span class=na>readObject</span><span class=o>();</span>
+        <span class=k>return</span> <span class=n>obj</span><span class=o>;</span>
+    <span class=o>}</span>
+
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>IOException</span><span class=o>,</span> <span class=n>ClassNotFoundException</span> <span class=o>{</span>
+        <span class=n>Person</span> <span class=n>person</span> <span class=o>=</span> <span class=o>(</span><span class=n>Person</span><span class=o>)</span> <span class=n>unserialize</span><span class=o>(</span><span class=s>&#34;person.ser&#34;</span><span class=o>);</span>
+        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>person</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id=其他需要注意的点>其他需要注意的点</h4>
+<ol>
+<li>静态成员变量是不能被序列化</li>
+<li>transient 标识的对象成员变量不参与序列化</li>
+</ol>
+<h4 id=重写writeobject和readobject方法>重写writeObject和readObject方法</h4>
+<blockquote>
+<p>使用transient关键字阻止序列化虽然简单方便，但被它修饰的属性被完全隔离在序列化机制之外，导致了在反序列化时无法获取该属性的值，而通过在需要序列化的对象的Java类里加入writeObject()方法与readObject()方法可以控制如何序列化各属性，甚至完全不序列化某些属性或者加密序列化某些属性。</p>
+</blockquote>
+<p>example:</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java>
+<span class=kd>public</span> <span class=kd>class</span> <span class=nc>MyList</span> <span class=kd>implements</span> <span class=n>Serializable</span> <span class=o>{</span>
+ 
+    <span class=kd>private</span> <span class=n>String</span> <span class=n>name</span><span class=o>;</span>
+ 
+ 
+    <span class=cm>/*
+</span><span class=cm>    transient 表示该成员 arr 不需要被序列化
+</span><span class=cm>     */</span>
+    <span class=kd>private</span> <span class=kd>transient</span> <span class=n>Object</span><span class=o>[]</span> <span class=n>arr</span><span class=o>;</span>
+ 
+    <span class=kd>public</span> <span class=nf>MyList</span><span class=o>()</span> <span class=o>{</span>
+    <span class=o>}</span>
+ 
+    <span class=kd>public</span> <span class=nf>MyList</span><span class=o>(</span><span class=n>String</span> <span class=n>name</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>name</span> <span class=o>=</span> <span class=n>name</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>arr</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Object</span><span class=o>[</span><span class=n>100</span><span class=o>];</span>
+        <span class=cm>/*
+</span><span class=cm>        给前面30个元素进行初始化
+</span><span class=cm>         */</span>
+        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>30</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>arr</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>i</span><span class=o>;</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+ 
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>String</span> <span class=nf>toString</span><span class=o>()</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=s>&#34;MyList{&#34;</span> <span class=o>+</span>
+                <span class=s>&#34;name=&#39;&#34;</span> <span class=o>+</span> <span class=n>name</span> <span class=o>+</span> <span class=sc>&#39;\&#39;&#39;</span> <span class=o>+</span>
+                <span class=s>&#34;, arr=&#34;</span> <span class=o>+</span> <span class=n>Arrays</span><span class=o>.</span><span class=na>toString</span><span class=o>(</span><span class=n>arr</span><span class=o>)</span> <span class=o>+</span>
+                <span class=sc>&#39;}&#39;</span><span class=o>;</span>
+    <span class=o>}</span>
+ 
+ 
+    <span class=c1>//-------------------------- 自定义序列化反序列化 arr 元素 ------------------
+</span><span class=c1></span> 
+    <span class=cm>/**
+</span><span class=cm>     * Save the state of the &lt;tt&gt;ArrayList&lt;/tt&gt; instance to a stream (that
+</span><span class=cm>     * is, serialize it).
+</span><span class=cm>     *
+</span><span class=cm>     * @serialData The length of the array backing the &lt;tt&gt;ArrayList&lt;/tt&gt;
+</span><span class=cm>     * instance is emitted (int), followed by all of its elements
+</span><span class=cm>     * (each an &lt;tt&gt;Object&lt;/tt&gt;) in the proper order.
+</span><span class=cm>     */</span>
+    <span class=kd>private</span> <span class=kt>void</span> <span class=nf>writeObject</span><span class=o>(</span><span class=n>java</span><span class=o>.</span><span class=na>io</span><span class=o>.</span><span class=na>ObjectOutputStream</span> <span class=n>s</span><span class=o>)</span>
+            <span class=kd>throws</span> <span class=n>java</span><span class=o>.</span><span class=na>io</span><span class=o>.</span><span class=na>IOException</span> <span class=o>{</span>
+        <span class=c1>//执行 JVM 默认的序列化操作
+</span><span class=c1></span>        <span class=n>s</span><span class=o>.</span><span class=na>defaultWriteObject</span><span class=o>();</span>
+ 
+ 
+        <span class=c1>//手动序列化 arr  前面30个元素
+</span><span class=c1></span>        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>30</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=n>s</span><span class=o>.</span><span class=na>writeObject</span><span class=o>(</span><span class=n>arr</span><span class=o>[</span><span class=n>i</span><span class=o>]);</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+ 
+    <span class=cm>/**
+</span><span class=cm>     * Reconstitute the &lt;tt&gt;ArrayList&lt;/tt&gt; instance from a stream (that is,
+</span><span class=cm>     * deserialize it).
+</span><span class=cm>     */</span>
+    <span class=kd>private</span> <span class=kt>void</span> <span class=nf>readObject</span><span class=o>(</span><span class=n>java</span><span class=o>.</span><span class=na>io</span><span class=o>.</span><span class=na>ObjectInputStream</span> <span class=n>s</span><span class=o>)</span>
+            <span class=kd>throws</span> <span class=n>java</span><span class=o>.</span><span class=na>io</span><span class=o>.</span><span class=na>IOException</span><span class=o>,</span> <span class=n>ClassNotFoundException</span> <span class=o>{</span>
+ 
+        <span class=n>s</span><span class=o>.</span><span class=na>defaultReadObject</span><span class=o>();</span>
+        <span class=n>arr</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Object</span><span class=o>[</span><span class=n>30</span><span class=o>];</span>
+ 
+        <span class=c1>// Read in all elements in the proper order.
+</span><span class=c1></span>        <span class=k>for</span> <span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>0</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>30</span><span class=o>;</span> <span class=n>i</span><span class=o>++)</span> <span class=o>{</span>
+            <span class=n>arr</span><span class=o>[</span><span class=n>i</span><span class=o>]</span> <span class=o>=</span> <span class=n>s</span><span class=o>.</span><span class=na>readObject</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id=安全问题的产生>安全问题的产生</h4>
+<p>只要服务端反序列化数据，客户端传递的类的readObject中的代码就会自动执行，给予攻击者在服务器上运行代码的能力。</p>
+<h4 id=可能的形式>可能的形式</h4>
+<ol>
+<li>入口类的readObject直接调用危险方法。</li>
+<li>入口类参数中包含可控类，该类有危险方法，readObject时调用。</li>
+<li>入口类参数中包含可控类，该类又调用其他有危险方法的类，readObject时调用。</li>
+<li>构造函数/静态代码块等在<strong>类加载</strong>时隐式执行</li>
+</ol>
+<h4 id=利用>利用</h4>
+<ol>
+<li>入口类
+<ul>
+<li>重写readObject</li>
+<li>readObject调用常见函数</li>
+<li>参数类型宽泛</li>
+<li>最好jdk自带</li>
+</ul>
+</li>
+<li>调用链 gadget chain
+<ul>
+<li>相同名称，相同类型</li>
+</ul>
+</li>
+<li>执行类</li>
+</ol>
+<h4 id=urldns>URLDNS</h4>
+<p>最简单的链，检测反序列化位点</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback> *   Gadget Chain:
+ *     HashMap.readObject()
+ *       HashMap.putVal()
+ *         HashMap.hash()
+ *           URL.hashCode()
+</code></pre></td></tr></table>
+</div>
+</div><p>然而put的时候直接调用了hashCode，需要通过<strong>反射</strong>改变已有对象的属性。</p>
+<blockquote>
+<p>注意，java有dns缓存，所以同一个url，只会dns解析一次，后面都会直接在缓存里面找</p>
+</blockquote>
+<h4 id=拓展>拓展</h4>
+<p><strong>Serializable 接口</strong></p>
+<p>一个对象想要被序列化，那么它的类就要实现此接口或者它的子接口。</p>
+<p>这个对象的所有属性（包括private属性、包括其引用的对象）都可以被序列化和反序列化来保存、传递。不想序列化的字段可以使用transient修饰。</p>
+<p>由于Serializable对象完全以它存储的二进制位为基础来构造，因此并不会调用任何构造函数，因此Serializable类无需默认构造函数，但是当Serializable类的父类没有实现Serializable接口时，反序列化过程会调用父类的默认构造函数，因此该父类必需有默认构造函数，否则会抛异常。</p>
+<p>使用transient关键字阻止序列化虽然简单方便，但被它修饰的属性被完全隔离在序列化机制之外，导致了在反序列化时无法获取该属性的值，而通过在需要序列化的对象的Java类里加入writeObject()方法与readObject()方法可以控制如何序列化各属性，甚至完全不序列化某些属性或者加密序列化某些属性。</p>
+<p><strong>Externalizable 接口</strong></p>
+<p>它是Serializable接口的子类，用户要实现的writeExternal()和readExternal() 方法，用来决定如何序列化和反序列化。</p>
+<p>因为序列化和反序列化方法需要自己实现，因此可以指定序列化哪些属性，而transient在这里无效。</p>
+<p>对Externalizable对象反序列化时，会先调用类的无参构造方法，这是有别于默认反序列方式的。如果把类的不带参数的构造方法删除，或者把该构造方法的访问权限设置为private、默认或protected级别，会抛出java.io.InvalidException: no valid constructor异常，因此Externalizable对象必须有默认构造函数，而且必需是public的。</p>
+<h3 id=反射>反射</h3>
+<p>Java 的<strong>反射机制</strong>是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法； 并且对于任意一个对象，都能够调用它的任意一个方法；这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。</p>
+<p>总的来时，反射赋予Java<strong>动态特性</strong></p>
+<h4 id=反射的基本使用>反射的基本使用</h4>
+<h5 id=获取class对象>获取Class对象</h5>
+<ol>
+<li>
+<p>使用<code>Class.forName </code>静态方法</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>Class</span> <span class=n>class1</span> <span class=o>=</span> <span class=n>Class</span><span class=o>.</span><span class=na>forName</span><span class=o>(</span><span class=s>&#34;Person&#34;</span><span class=o>);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>使用类的<code>.class</code>静态属性</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>Class</span> <span class=n>class2</span> <span class=o>=</span> <span class=n>Person</span><span class=o>.</span><span class=na>class</span><span class=o>;</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>使用实例对象的<code>getClass()</code>方法</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>Person</span> <span class=n>person</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Person</span><span class=o>();</span>
+<span class=n>Class</span> <span class=n>class3</span> <span class=o>=</span> <span class=n>person</span><span class=o>.</span><span class=na>getClass</span><span class=o>();</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>通过<code>ClassLoader</code>获取</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>ClassLoader</span> <span class=n>systemClassLoader</span> <span class=o>=</span> <span class=n>ClassLoader</span><span class=o>.</span><span class=na>getSystemClassLoader</span><span class=o>();</span>
+        <span class=n>Class</span><span class=o>&lt;?&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>systemClassLoader</span><span class=o>.</span><span class=na>loadClass</span><span class=o>(</span><span class=s>&#34;Person&#34;</span><span class=o>);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h5 id=创造实例对象>创造实例对象</h5>
+<ol>
+<li>通过Class的newInstance()方法</li>
+<li>通过Constructor的newInstance()方法</li>
+</ol>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>//方式一
+Class class1 = Class.forName(&#34;reflection.Student&#34;);
+Student student = (Student) class1.newInstance();
+System.out.println(student);
+
+//方式二
+Constructor constructor = class1.getConstructor();
+Student student1 = (Student) constructor.newInstance();
+System.out.println(student1);
+</code></pre></td></tr></table>
+</div>
+</div><p>方法一只能调用无参构造函数，一般不用</p>
+<h5 id=获取类的成员变量>获取类的成员变量</h5>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>getField()
+getDeclaredField()
+getFields()
+getDeclaredFields()
+</code></pre></td></tr></table>
+</div>
+</div><h5 id=修改成员变量>修改成员变量</h5>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>Field.set(Object obj,Object value)
+</code></pre></td></tr></table>
+</div>
+</div><p>如何修改私有变量？</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>Field.setAccessible(true);
+</code></pre></td></tr></table>
+</div>
+</div><h5 id=获取类的方法>获取类的方法</h5>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>getMethod(String name, Class&lt;?&gt;... parameterTypes)
+getMethods()
+getDeclaredMethod()
+getDeclaredMethods()
+</code></pre></td></tr></table>
+</div>
+</div><h5 id=调用类的方法>调用类的方法</h5>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>invoke(Object obj, Object... args)
+</code></pre></td></tr></table>
+</div>
+</div><p>setAccessible同理</p>
+<h4 id=回到urldns>回到URLDNS</h4>
+<p>put之前修改hashCode属性不为-1；put之后，反序列化之前修改hashCode属性为-1</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>HashMap</span><span class=o>&lt;</span><span class=n>URL</span><span class=o>,</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>hashMap</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+        <span class=n>URL</span> <span class=n>url</span> <span class=o>=</span> <span class=k>new</span> <span class=n>URL</span><span class=o>(</span><span class=s>&#34;http://y21jgo6y2e6rmwv062dgrkf2ctik69.burpcollaborator.net&#34;</span><span class=o>);</span>
+        <span class=n>Class</span> <span class=n>c</span> <span class=o>=</span> <span class=n>url</span><span class=o>.</span><span class=na>getClass</span><span class=o>();</span>
+        <span class=n>Field</span> <span class=n>hashCodeField</span> <span class=o>=</span> <span class=n>c</span><span class=o>.</span><span class=na>getDeclaredField</span><span class=o>(</span><span class=s>&#34;hashCode&#34;</span><span class=o>);</span>
+        <span class=n>hashCodeField</span><span class=o>.</span><span class=na>setAccessible</span><span class=o>(</span><span class=kc>true</span><span class=o>);</span>
+        <span class=n>hashCodeField</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>url</span><span class=o>,</span><span class=n>123</span><span class=o>);</span>
+        <span class=n>hashMap</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=n>url</span><span class=o>,</span><span class=n>1</span><span class=o>);</span>
+        <span class=n>hashCodeField</span><span class=o>.</span><span class=na>set</span><span class=o>(</span><span class=n>url</span><span class=o>,-</span><span class=n>1</span><span class=o>);</span>
+        <span class=n>serialize</span><span class=o>(</span><span class=n>hashMap</span><span class=o>);</span>
+</code></pre></td></tr></table>
+</div>
+</div><h4 id=应用>应用</h4>
+<ul>
+<li>定制需要的对象</li>
+<li>通过invoke调用除了同名函数之外的函数</li>
+<li>通过Class类创建对象，引入不能序列化的类</li>
+</ul>
+<h3 id=类的动态加载>类的动态加载</h3>
+<h4 id=类的加载机制>类的加载机制</h4>
+<p>Java虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这个过程被称作虚拟机的类加载机制。</p>
+<h4 id=类的生命周期>类的生命周期</h4>
+<p>类从被加载到虚拟机内存中开始，到卸载出内存为止，<strong>它的整个生命周期包括：加载，验证，准备，解析，初始化,使用,卸载</strong>这7个阶段.其中其中验证、准备、解析3个部分统称为连接</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203095022058.png loading=lazy alt=image-20211203095022058></p>
+<ol>
+<li>加载：查找并加载类的二进制数据</li>
+<li>验证：确保被加载的类的正确性</li>
+<li>准备：为类的静态变量分配内存，并将其初始化为默认值</li>
+<li>解析：把类中的符号引用转换为直接引用</li>
+<li>初始化：对类的静态变量，静态代码块执行初始化操作</li>
+<li>使用：类访问方法区内的数据结构的接口， 对象是Heap区的数据。</li>
+<li>卸载</li>
+</ol>
+<h4 id=类加载器>类加载器</h4>
+<p>虚拟机设计团队把类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何去获取所需要的类。 实现这个动作的代码模块称为“类加载器”。</p>
+<h4 id=类加载的三种方式>类加载的三种方式</h4>
+<ol>
+<li>命令行启动应用时候由JVM初始化加载</li>
+<li>通过Class.forName()方法动态加载</li>
+<li>通过ClassLoader.loadClass()方法动态加载</li>
+</ol>
+<blockquote>
+<p><code>.class</code>和<code>getClass()</code>使用之前类均已加载完毕</p>
+</blockquote>
+<h4 id=类加载机制>类加载机制</h4>
+<p>类的双亲委派机制</p>
+<p>双亲委派模型的工作过程是：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去完成加载。</p>
+<p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20211203104850877.png loading=lazy alt=image-20211203104850877></p>
+<h5 id=启动类加载器bootstrap-classloader>启动类加载器(Bootstrap ClassLoader)</h5>
+<p>这个类将器负责将存放在＜JAVA_HOME＞\lib目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机识别的（按照文件名识别，如rt.jar、tools.jar，名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。</p>
+<h5 id=扩展类加载器extension-classloader>扩展类加载器(Extension ClassLoader)</h5>
+<p>这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载＜JAVA_HOME＞\lib\ext目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</p>
+<h5 id=应用程序类加载器application-classloader>应用程序类加载器(Application ClassLoader)</h5>
+<p>这个类加载器由sun.misc.Launcher$AppClassLoader来实现。由于应用程序类加载器是ClassLoader类中的getSystem-ClassLoader()方法的返回值，所以有些场合中也称它为“系统类加载器”。</p>
+<p>它负责加载用户类路径（ClassPath）上所有的类库，开发者同样可以直接在代码中使用这个类加载器。如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
+<p>我们的应用程序都是由这3种类加载器互相配合进行加载的，如果有必要，还可以加入自己定义的类加载器。</p>
+<h5 id=举例如下>举例如下：</h5>
+<ol>
+<li>当AppClassLoader加载一个class时，它首先不会自己去尝试加载这个类，而是把类加载请求委派给父类加载器ExtClassLoader去完成。</li>
+<li>当ExtClassLoader加载一个class时，它首先也不会自己去尝试加载这个类，而是把类加载请求委派给BootStrapClassLoader去完成。</li>
+<li>如果BootStrapClassLoader加载失败(例如在$JAVA_HOME/jre/lib里未查找到该class)，会使用ExtClassLoader来尝试加载；</li>
+<li>若ExtClassLoader也加载失败，则会使用AppClassLoader来加载，如果AppClassLoader也加载失败，则会报出异常ClassNotFoundException。</li>
+</ol>
+<h4 id=类加载与代码执行>类加载与代码执行</h4>
+<h6 id=jvm初始化加载>JVM初始化加载</h6>
+<p>初始化：静态代码块</p>
+<p>实例化：构造代码块、无参构造函数</p>
+<h5 id=动态加载>动态加载</h5>
+<p>Class.forname：初始化/不初始化皆可</p>
+<p>ClassLoader.loadClass：不进行初始化</p>
+<h4 id=加载任意类>加载任意类</h4>
+<p>加载自己的恶意类，拓展攻击面</p>
+<h5 id=分析>分析</h5>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>继承关系：
+ClassLoader-&gt;SecureClassLoader-&gt;URLClassLoader-&gt;AppClassLoader
+</code></pre></td></tr></table>
+</div>
+</div><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>调用链：
+loadClass-&gt;findClass-&gt;defineClass
+</code></pre></td></tr></table>
+</div>
+</div><h5 id=利用-1>利用</h5>
+<ol>
+<li>
+<p>URLClassLoader任意类加载:file/http/jar</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=c1>//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL(&#34;file:///C:\\tmp\\&#34;)});
+</span><span class=c1>//        URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{new URL(&#34;http://localhost:8888/&#34;)});
+</span><span class=c1></span>        <span class=n>URLClassLoader</span> <span class=n>urlClassLoader</span> <span class=o>=</span> <span class=k>new</span> <span class=n>URLClassLoader</span><span class=o>(</span><span class=k>new</span> <span class=n>URL</span><span class=o>[]{</span><span class=k>new</span> <span class=n>URL</span><span class=o>(</span><span class=s>&#34;jar:file:///C:\\tmp\\Hello.jar!/&#34;</span><span class=o>)});</span>
+        <span class=n>Class</span><span class=o>&lt;?&gt;</span> <span class=n>c1</span> <span class=o>=</span> <span class=n>urlClassLoader</span><span class=o>.</span><span class=na>loadClass</span><span class=o>(</span><span class=s>&#34;Hello&#34;</span><span class=o>);</span>
+        <span class=n>c1</span><span class=o>.</span><span class=na>newInstance</span><span class=o>();</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>ClassLoader.defineClass 字节码加载任意类</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=n>Method</span> <span class=n>defineClassMethod</span> <span class=o>=</span> <span class=n>ClassLoader</span><span class=o>.</span><span class=na>class</span><span class=o>.</span><span class=na>getDeclaredMethod</span><span class=o>(</span><span class=s>&#34;defineClass&#34;</span><span class=o>,</span> <span class=n>String</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=kt>byte</span><span class=o>[].</span><span class=na>class</span><span class=o>,</span> <span class=kt>int</span><span class=o>.</span><span class=na>class</span><span class=o>,</span> <span class=kt>int</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+        <span class=n>defineClassMethod</span><span class=o>.</span><span class=na>setAccessible</span><span class=o>(</span><span class=kc>true</span><span class=o>);</span>
+        <span class=kt>byte</span><span class=o>[]</span> <span class=n>code</span> <span class=o>=</span> <span class=n>Files</span><span class=o>.</span><span class=na>readAllBytes</span><span class=o>(</span><span class=n>Paths</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=s>&#34;C:\\tmp\\Hello.class&#34;</span><span class=o>));</span>
+        <span class=n>defineClassMethod</span><span class=o>.</span><span class=na>invoke</span><span class=o>(</span><span class=n>systemClassLoader</span><span class=o>,</span><span class=s>&#34;Hello&#34;</span><span class=o>,</span><span class=n>code</span><span class=o>,</span><span class=n>0</span><span class=o>,</span><span class=n>code</span><span class=o>.</span><span class=na>length</span><span class=o>);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h3 id=maven踩坑>maven踩坑</h3>
+<ul>
+<li><a class=link href=https://www.oracle.com/cn/java/technologies/javase/javase8-archive-downloads.html target=_blank rel=noopener>中文官网</a>下载jdk的链接有问题，需要去<a class=link href=https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html target=_blank rel=noopener>英文官网</a>才正常</li>
+<li>只有使用idea自带的maven才可以download source，否则会报错：<code>Sources not found for: commons-collections:commons-collections:3.2.1</code></li>
+</ul>
+<h3 id=参考>参考</h3>
+<p><a class=link href=https://space.bilibili.com/2142877265 target=_blank rel=noopener>白日梦组长的个人空间_哔哩哔哩_bilibili</a></p>
+<p><a class=link href=https://blog.csdn.net/mocas_wang/article/details/107621010 target=_blank rel=noopener>(2条消息) java序列化与反序列化全讲解_mocas_wang的博客-CSDN博客_java序列化讲解</a></p>
+<p><a class=link href=https://juejin.cn/post/6844904025607897096 target=_blank rel=noopener>谈谈Java反射：从入门到实践，再到原理 - 掘金 (juejin.cn)</a></p>
+<p><a class=link href=https://juejin.cn/post/6865572557329072141 target=_blank rel=noopener>关于JVM类加载机制，看这一篇就够了 - 掘金 (juejin.cn)</a></p>
+</section>
+<footer class=article-footer>
+<section class=article-tags>
+<a href=/tags/java/>java</a>
+<a href=/tags/web/>web</a>
+</section>
+<section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span>
+</section>
+</footer>
+</article>
+<aside class=related-contents--wrapper>
+<h2 class=section-title>Related contents</h2>
+<div class=related-contents>
+<div class="flex article-list--tile">
+<article>
+<a href=/2022/01/10/lfi%E5%AD%A6%E4%B9%A0/>
+<div class=article-details>
+<h2 class=article-title>LFI 新姿势学习</h2>
+</div>
+</a>
+</article>
+<article>
+<a href=/2021/05/19/no-column-sql-injection/>
+<div class=article-details>
+<h2 class=article-title>ctf无列名注入小结</h2>
+</div>
+</a>
+</article>
+</div>
+</div>
+</aside>
+<div class=disqus-container>
+<div id=disqus_thread></div>
+<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
+<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
+<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
+</div>
+<style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style>
+<script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2020 -
+2022 k1te's blog
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.8.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
+<nav id=TableOfContents>
+<ol>
+<li>
+<ol>
+<li><a href=#序列化和反序列化>序列化和反序列化</a>
+<ol>
+<li><a href=#用处>用处</a></li>
+<li><a href=#实现>实现</a></li>
+<li><a href=#例子>例子</a></li>
+<li><a href=#其他需要注意的点>其他需要注意的点</a></li>
+<li><a href=#重写writeobject和readobject方法>重写writeObject和readObject方法</a></li>
+<li><a href=#安全问题的产生>安全问题的产生</a></li>
+<li><a href=#可能的形式>可能的形式</a></li>
+<li><a href=#利用>利用</a></li>
+<li><a href=#urldns>URLDNS</a></li>
+<li><a href=#拓展>拓展</a></li>
+</ol>
+</li>
+<li><a href=#反射>反射</a>
+<ol>
+<li><a href=#反射的基本使用>反射的基本使用</a></li>
+<li><a href=#回到urldns>回到URLDNS</a></li>
+<li><a href=#应用>应用</a></li>
+</ol>
+</li>
+<li><a href=#类的动态加载>类的动态加载</a>
+<ol>
+<li><a href=#类的加载机制>类的加载机制</a></li>
+<li><a href=#类的生命周期>类的生命周期</a></li>
+<li><a href=#类加载器>类加载器</a></li>
+<li><a href=#类加载的三种方式>类加载的三种方式</a></li>
+<li><a href=#类加载机制>类加载机制</a></li>
+<li><a href=#类加载与代码执行>类加载与代码执行</a></li>
+<li><a href=#加载任意类>加载任意类</a></li>
+</ol>
+</li>
+<li><a href=#maven踩坑>maven踩坑</a></li>
+<li><a href=#参考>参考</a></li>
+</ol>
+</li>
+</ol>
+</nav>
+</div>
+</section>
+</aside>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
+</body>
+</html>
