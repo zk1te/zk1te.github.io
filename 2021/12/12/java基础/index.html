@@ -10,7 +10,7 @@ ObjectOutputStream代表对象输出流：
  它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。  例子 Person.java
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19  public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this."><title>Java反序列化基础</title>
 <link rel=canonical href=https://k1te.cn/2021/12/12/java%E5%9F%BA%E7%A1%80/>
-<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="Java反序列化基础">
+<link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="Java反序列化基础">
 <meta property="og:description" content="Java入门的简单基础，包括序列化反序列化、反射、类的动态加载，动态代理暂时还没用到，后面用到再加上。
 序列化和反序列化 Java序列化是指把Java对象转换为字节序列的过程；而Java反序列化是指把字节序列恢复为Java对象的过程。
 用处  想把内存中的对象保存到一个文件中或者数据库中时候； 想用套接字在网络上传送对象的时候； 想通过RMI传输对象的时候  实现  只有实现了Serializable或者Externalizable接口的类的对象才能被序列化为字节序列。（不是则会抛出异常）

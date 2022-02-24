@@ -5,7 +5,7 @@ HackMe 随便上传一个东西显示“HACK! I filtered all the characters.”�
 然后上传成功之后会显示一个地址upload/1b5337d0c8ad813197b506146d8d503d/yyyyMMddhhmmssSSS.jsp，后面hint出来才知道这个yyyyMMddhhmmssSSS是上传时的时间戳，最后的SSS是毫秒，我们可以简单写个脚本来爆：
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35  from os import name import requests import time import sys import threading def func(fname): res = requests.get(fname) if &amp;#34;Something went wrong&amp;#34; not in res.text: print(fname) sys."><title>2021美团网络安全高校挑战赛web部分wp</title>
 <link rel=canonical href=https://k1te.cn/2021/12/13/2021mtctf/>
-<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="2021美团网络安全高校挑战赛web部分wp">
+<link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="2021美团网络安全高校挑战赛web部分wp">
 <meta property="og:description" content="跟着队友学到了不少东西
 HackMe 随便上传一个东西显示“HACK! I filtered all the characters.”，尝试上传一个a，发现可以，上传aa不行，上传a a可以，猜测是字符不能连在一起，可以用utf-16绕过，随便拿个jsp马转成utf-16即可：
 然后上传成功之后会显示一个地址upload/1b5337d0c8ad813197b506146d8d503d/yyyyMMddhhmmssSSS.jsp，后面hint出来才知道这个yyyyMMddhhmmssSSS是上传时的时间戳，最后的SSS是毫秒，我们可以简单写个脚本来爆：

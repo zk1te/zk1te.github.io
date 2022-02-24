@@ -15,7 +15,7 @@ join有不同的类型：
  INNER JOIN：如果表中有至少一个匹配，则返回行 LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行 RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行 FULL JOIN：只要其中一个表中存在匹配，则返回行  其中inner join 和 join是相同的
 security中还有一个users表如下："><title>ctf无列名注入小结</title>
 <link rel=canonical href=https://k1te.cn/2021/05/19/no-column-sql-injection/>
-<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="ctf无列名注入小结">
+<link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="ctf无列名注入小结">
 <meta property="og:description" content="ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
 无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
 一、列名重复（join……using） 条件：需要开启报错

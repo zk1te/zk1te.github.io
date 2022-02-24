@@ -8,7 +8,7 @@ Easy MD5 打开网址之后，在响应标头中找到了hint：
 1 2 3 4 5  md5(&amp;#34;ffifdyop&amp;#34;,true); &amp;gt;&amp;gt;&amp;#39;or&amp;#39;6�]��!r,��b md5(&amp;#34;129581926211651571912466741651878684928&amp;#34;,true); &amp;gt;&amp;gt;�T0D��o#��&amp;#39;or&amp;#39;8 //第二个在该题中无效   第二层是MD5碰撞：
 1 2 3 4 5 6 7  &amp;lt;!-- $a = $GET[&amp;#39;a&amp;#39;]; $b = $_GET[&amp;#39;b&amp;#39;]; if($a != $b &amp;amp;&amp;amp; md5($a) == md5($b)){ // wow, glzjin wants a girl friend. --&amp;gt;   因为使用的是!"><title>BJDCTF2020</title>
 <link rel=canonical href=https://k1te.cn/2020/09/28/bjdctf2020/>
-<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="BJDCTF2020">
+<link rel=stylesheet href=/scss/style.min.445f140069a334e0a849a507486c823ccc053246a20296cb62e77ff22191eb8b.css><meta property="og:title" content="BJDCTF2020">
 <meta property="og:description" content="BJDCTF2020 wp 在buuoj上面复现的wp，有一些是自己做出来的，有一些是看了wp才做出来了，依然很菜。
 Easy MD5 打开网址之后，在响应标头中找到了hint：
 1  select*from&amp;#39;admin&amp;#39;wherepassword=md5($pass,true)  理论上md5的密码验证是很难破解的，但是这里MD5函数的第二个参数设为true就有漏洞。
