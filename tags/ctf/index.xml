@@ -40,7 +40,7 @@ jspxcms 参考：复现jspxcms解压getshell漏洞 | lockcy&amp;rsquo;s cave
 Web Ad Network 左上角有一张图片，点击之后会不停地重定向，我们只需要修改浏览器的重定向次数，然后让浏览器一直跳就可以了：
 Announcement 注入点在email处，insert注入，左边的digest是email的md5：
 简单的报错注入，因为不想频繁算md5，于是写了个脚本:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 import requests import hashlib import re session = requests.Session() def genearteMD5(str): # 创建md5对象 hl = hashlib.md5() # Tips # 此处必须声明encode # 否则报错为：hl.update(str) Unicode-objects must be encoded before hashing hl.</description></item><item><title>ctf无列名注入小结</title><link>https://k1te.cn/2021/05/19/no-column-sql-injection/</link><pubDate>Wed, 19 May 2021 22:10:17 +0800</pubDate><guid>https://k1te.cn/2021/05/19/no-column-sql-injection/</guid><description>ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 import requests import hashlib import re session = requests.Session() def genearteMD5(str): # 创建md5对象 hl = hashlib.md5() # Tips # 此处必须声明encode # 否则报错为：hl.update(str) Unicode-objects must be encoded before hashing hl.</description></item><item><title>ctf无列名注入小结</title><link>https://k1te.cn/2021/05/19/no-column-sql-injection/</link><pubDate>Wed, 19 May 2021 22:10:17 +0800</pubDate><guid>https://k1te.cn/2021/05/19/no-column-sql-injection/</guid><description>ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
 无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
 一、列名重复（join……using） 条件：需要开启报错
 直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
