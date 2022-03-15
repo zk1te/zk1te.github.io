@@ -26,7 +26,24 @@ HackMe 随便上传一个东西显示“HACK! I filtered all the characters.”�
 ObjectOutputStream代表对象输出流：
 它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。 ObjectInputStream代表对象输入流：
 它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。 例子 Person.java
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this.</description></item><item><title>ctf无列名注入小结</title><link>https://k1te.cn/2021/05/19/no-column-sql-injection/</link><pubDate>Wed, 19 May 2021 22:10:17 +0800</pubDate><guid>https://k1te.cn/2021/05/19/no-column-sql-injection/</guid><description>ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 public class Person implements Serializable { private String name; private int age; public Person(){} public Person(String name, int age) { this.</description></item><item><title>TP3.2.xRCE</title><link>https://k1te.cn/2021/08/14/TP_RCE/</link><pubDate>Sat, 14 Aug 2021 16:19:19 +0800</pubDate><guid>https://k1te.cn/2021/08/14/TP_RCE/</guid><description>前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：【漏洞通报】ThinkPHP3.2.x RCE漏洞通报。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。
+利用 这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接
+利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：
+1 2 3 4 public function index($value=&amp;#39;&amp;#39;){ $this-&amp;gt;assign($value); $this-&amp;gt;display(); } payload：?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log
+本质上是一个文件包含，再结合报错写log最终达到rce的目的
+分析 这里我们先不包含log，而是包含config.ini来分析文件包含，payload：
+1 ?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini 首先我们的可控参数通过Controller.class.php中的assign函数最终跳到了View.class.php中的assign函数： 在该函数中将其赋值给$this-&amp;gt;tVar变量：
+赋值结束后回到IndexController再进入到display函数，和上面的assign函数一样最终跳到View.class.php的display函数中，该函数中的fetch函数解析并获取模板文件内容，此时模板文件路径和内容为空：
+继续跟进fetch函数，该函数中将空的templateFile传入parseTemplate函数:
+当参数为空时，parseTemplate函数返回默认的模板文件位置./Application/Home/View/Index/index.html
+接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支
+将this-&amp;gt;tVar放入params变量中跳入Hook::listen，tag变量是写死的view_parse，因此name变量为Behavior\ParseTemplateBehavior，接着进入self::exec
+在exec函数中调用Behavior\ParseTemplateBehavior的run方法处理带有我们可控参数的$params变量：
+在run方法中经过一些判断，最终调用fetch函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);
+继续跟进fetch，获取缓存文件路径后，进入Storage的load方法中：
+在load方法中，$_filename为之前获取的缓存文件路径，$var则为之前带有_filename=C://config.ini的数组，利用extract方法进行变量覆盖，实现任意文件包含：
+众所周知，include函数不在意包含的什么文件：
+因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。</description></item><item><title>ctf无列名注入小结</title><link>https://k1te.cn/2021/05/19/no-column-sql-injection/</link><pubDate>Wed, 19 May 2021 22:10:17 +0800</pubDate><guid>https://k1te.cn/2021/05/19/no-column-sql-injection/</guid><description>ctf无列名注入小结 其实之前也遇到过类似的题目，但是拖延症太严重了，一直没有仔细研究，正好这次国赛初赛也有一道无列名注入的题目，好好学习一下。
 无列名注入一般伴随着bypass information_schema，当这个表被过滤的时候，我们只能使用sys.schema_auto_increment_columns、sys.schema_table_statistics_with_buffer、mysql.innodb_table_stats等等进行绕过，但是这些表中一般都没有字段名，只能获得表名，所以当我们知道表明之后，还需要进一步地使用无列名注入
 一、列名重复（join……using） 条件：需要开启报错
 直接拿sqli-labs的email表来做演示（后面也会使用这个表）：
