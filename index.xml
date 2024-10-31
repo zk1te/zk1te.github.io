@@ -1,4 +1,121 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>k1te's blog</title><link>https://k1te.cn/</link><description>Recent content on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 11 Oct 2024 17:28:36 +0800</lastBuildDate><atom:link href="https://k1te.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>论文阅读：Progressive Backdoor Erasing via connecting Backdoor and Adversarial Attacks</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</link><pubDate>Fri, 11 Oct 2024 17:28:36 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</guid><description>&lt;h3 id="info">Info
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>k1te's blog</title><link>https://k1te.cn/</link><description>Recent content on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 23 Oct 2024 13:34:53 +0800</lastBuildDate><atom:link href="https://k1te.cn/index.xml" rel="self" type="application/rss+xml"/><item><title>【论文阅读】IBA: Towards Irreversible Backdoor Attacks in Federated Learning</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</link><pubDate>Wed, 23 Oct 2024 13:34:53 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</guid><description>&lt;h3 id="info">Info
+&lt;/h3>&lt;p>NeurIPS 2023&lt;/p>
+&lt;p>Vanderbilt University等&lt;/p>
+&lt;p>代码地址：&lt;a class="link" href="https://github.com/sail-research/iba" target="_blank" rel="noopener"
+>sail-research/iba: IBA: Towards Irreversible Backdoor Attacks in Federated Learning (Poster at NeurIPS 2023)&lt;/a>&lt;/p>
+&lt;h3 id="abstract">Abstract
+&lt;/h3>&lt;p>联合学习（FL）是一种分布式学习方法，它能在不损害终端设备的个人潜在敏感数据的情况下，在分散数据上训练机器学习模型。然而，分布式性质和未经调查的数据直观地引入了新的安全漏洞，包括后门攻击。在这种情况下，敌方会在训练过程中将后门功能植入全局模型中，从而激活该功能，在输入任何特定敌方模式时引发所需的不当行为。尽管在触发和扭曲模型行为方面取得了显著的成功，但 FL 中先前的后门攻击往往持有不切实际的假设、有限的不可察觉性和持久性。具体来说，对手需要控制足够多的客户端，或者知道其他诚实客户端的数据分布。在许多情况下，插入的触发器往往是直观可见的，而且如果将对手从训练过程中移除，后门效应很快就会被削弱。为了解决这些局限性，我们在 FL 中提出了一种新颖的后门攻击框架&amp;ndash;不可逆后门攻击（Irreversible Backdoor Attacks, IBA），它可以共同学习最佳的、视觉上隐蔽的触发器，然后逐步将后门植入全局模型。这种方法可以让敌方在躲避人类和机器检查的同时实施后门攻击。此外，我们还通过选择性地毒化最不可能由主任务学习过程更新的模型参数，并将毒化模型更新限制在全局模型附近，从而提高了所提攻击的效率和持久性。最后，我们在几个基准数据集（包括 MNIST、CIFAR-10 和 Tiny ImageNet）上对所提出的攻击框架进行了评估，评估结果表明，与其他后门攻击相比，IBA 在绕过现有后门防御措施并实现更持久后门效果的同时，还取得了很高的成功率。总体而言，IBA为 FL 中的后门攻击提供了一种更有效、隐蔽和持久的方法。&lt;/p>
+&lt;h3 id="contributions">Contributions
+&lt;/h3>&lt;ol>
+&lt;li>提出了一种两阶段联邦学习后门攻击方法IBA，动态生成触发器，并且是不可见后门攻击，保证了推理阶段不被发现。IBA将污染模型的更新限制在全球模型附近，降低恶意更新被检测出来的风险。&lt;/li>
+&lt;li>在学习过程中选择不太可能更新的模型参数进行投毒，增加持久性。&lt;/li>
+&lt;li>最先进的攻击性能、隐蔽性、持久性。&lt;/li>
+&lt;/ol>
+&lt;h3 id="thread-model">Thread Model
+&lt;/h3>&lt;p>攻击者A仅控制一个客户端k，并且它将在每k轮中参与训练，即固定频率攻击；&lt;/p>
+&lt;p>攻击者A能够完全控制客户端A，但是无法访问其他的良性客户端；&lt;/p>
+&lt;p>假设A完全了解中央服务器和任何可能的防御措施，但是不能改变服务器的参数和算法。&lt;/p>
+&lt;h3 id="method">Method
+&lt;/h3>&lt;p>首先讲解一下大致的流程，如下图所示，其实非常简单，主要分为两个阶段，第一个阶段是触发器的生成，第二个阶段是后门的注入。看起来好像平平无奇，下面讲一下各个步骤的具体的点。&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031204850784.png"
+loading="lazy"
+alt="图1：IBA后门攻击方案"
+>&lt;/p>
+&lt;h4 id="trigger-generating">Trigger Generating
+&lt;/h4>&lt;p>噪声的生成函数如下，函数G是触发生成函数，函数T是后门图像生成函数：
+$$
+T_\xi(x) = x + G_\xi(x), \parallel G_\xi(x) \parallel_\infty\le\epsilon,\forall x
+$$
+函数G的迭代过程如下：
+$$
+\xi \larr \xi - \eta_\xi \sum_{x\in \mathcal{D} } \mathcal{L}&lt;em>\xi(f&lt;/em>{w_k}(T_\xi(x)),y_T)
+$$
+其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p>
+&lt;p>作者说这一想法来自于对抗攻击，但其实与传统的无目标对抗完全相反，无目标对抗的目标函数将样本的预测结果与本身的标签最大化，而生成函数G的目标则是最大化样本的预测结果与后门的目标标签，这样做的结果就是将生成的噪声与目标类对齐，或者说，将其指向目标类内部，没错，这就是之前Narcissus的做法，你可以将生成的噪声看作肉眼不可见的目标类图像，附加在输入上，模型一看到便将其识别为目标类，效果十分好。&lt;/p>
+&lt;h4 id="backdoor-injecting">Backdoor Injecting
+&lt;/h4>&lt;p>作者的目标是生成一个本地的后门模型$f_w$，其目标函数如下：
+$$
+\min_{w} \sum_{x \in \mathcal{D}} \alpha \mathcal{L}&lt;em>{\text{clean}}(f&lt;/em>{w_k}(x), y_x) + \beta \mathcal{L}&lt;em>{\text{poison}}(f&lt;/em>{w_k}(T_{\xi}(x)), y_T)
+$$
+普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p>
+&lt;h5 id="attack-model-retraining">Attack Model Retraining
+&lt;/h5>&lt;p>由于我们将本地模型$f_w$作为替代模型得到触发生成模型$G$，而本地模型是一直变化的，因此作者提出我们的生成模型G需要频繁地进行更新，使其与全局模型保持同步。&lt;/p>
+&lt;h5 id="partial-model-poisoning">Partial Model Poisoning
+&lt;/h5>&lt;p>部分模型污染旨在通过选择特定的污染空间和维度来增强攻击的持久性和有效性。这种方法的关键在于：&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>基于空间的污染&lt;/strong>：通过限制模型的参数，使其保持在良性模型的附近，从而帮助攻击绕过基于后门的防御。&lt;/li>
+&lt;li>&lt;strong>基于维度的污染&lt;/strong>：通过缩小被污染的神经元，减小来自良性客户端的稀释效应。&lt;/li>
+&lt;/ol>
+&lt;h6 id="poisoned-space-based">Poisoned-Space Based
+&lt;/h6>&lt;p>数学不是特别好，下面的解释来自于ChatGPT：&lt;/p>
+&lt;p>在这种攻击下，提交的本地模型通过其参数的大小限制而部分被污染。具体来说，攻击者对良性数据集 D和被污染数据集 D‘ 的损失应用投影梯度下降。这里的关键步骤是：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>投影过程&lt;/strong>：定期将模型参数投影到以全局模型为中心的球体上。这样可以确保产生的被污染模型与原始模型的偏差不会太大。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>数学表达&lt;/strong>：这可以通过公式表示为：
+$$
+\parallel w_k - w \parallel \le \delta
+$$
+其中 $w_k$是本地模型，$w$是全局模型，$\delta$是允许的最大偏差。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>此外，这种攻击策略可以与模型替换结合使用，通过在发送模型到服务器之前对模型参数进行缩放，来抵消其他诚实客户端的贡献。具体的缩放模型计算公式为：
+$$
+\hat{w_k} \simeq w_k + \sum_{i\in C \setminus k}\frac{n_i}{n_{\mathcal{C} \setminus k}} (w_k - w^&lt;em>).
+$$
+这里，$n_i$是客户端$i$的样本数量，$n_{\mathcal{C} \setminus k}$是所有其他客户端的样本总数，$ w^&lt;/em>$是理想的全局模型。&lt;/p>
+&lt;h6 id="poisoning-dimension-based">Poisoning-dimension based
+&lt;/h6>&lt;p>由于攻击者无法参与每一轮训练，直接提交被污染的模型到服务器是无效的。为了解决这个问题，提出了利用历史梯度变化选择不常更新的神经元作为污染维度的方法。具体步骤如下：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>选择维度&lt;/strong>：计算梯度向量g的底部k%坐标，这些坐标是基于在干净数据 D上学习主要任务得到的梯度。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>数学表达&lt;/strong>：
+$$
+\beta_t \larr \frac{p-1}{p}*\beta + \frac{1}{p} * \beta \text \quad{使得} \quad \beta_t=bottom_k(g_t)
+$$&lt;/p>
+&lt;p>其中 p是到第 t轮为止，攻击者被选中参与 FL 训练的轮数。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>投影梯度&lt;/strong>：当完成本地模型 $f_w$的梯度计算 $\hat{g}$后，攻击者将梯度投影到 $\hat{g}$的坐标约束上，只针对底部k%的坐标进行污染。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>这样，只有底部k%的坐标被污染，这可以延长后门效果，因为其他良性客户端很少更新这些坐标。利用历史信息帮助确定每一轮的底部k%坐标，随着轮次的推进和本地客户端模型向全局模型的收敛，这一信息变得更加重要。&lt;/p>
+&lt;h3 id="experiments">Experiments
+&lt;/h3>&lt;p>数据集：CIFAR、MNIST、Tiny ImageNet&lt;/p>
+&lt;p>1.不同攻击场景：不同联邦聚合方法：&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220203153.png"
+loading="lazy"
+alt="image-20241031220203153"
+>&lt;/p>
+&lt;p>2.不同防御方法：&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220217471.png"
+loading="lazy"
+alt="image-20241031220217471"
+>&lt;/p>
+&lt;p>3.不可感知性：&lt;/p>
+&lt;p>前两行是良性图像，后两行是后门图像&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220336600.png"
+loading="lazy"
+alt="image-20241031220336600"
+>&lt;/p>
+&lt;p>4.持久性：&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220509388.png"
+loading="lazy"
+alt="image-20241031220509388"
+>&lt;/p>
+&lt;h3 id="future-directions">Future Directions
+&lt;/h3>&lt;p>生成自ChatGPT：&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>开发对抗联邦学习后门攻击的防御机制&lt;/strong>：由于联邦学习是分布式和去中心化的，这一特点带来了独特的挑战。因此，需要开发针对这种特殊环境的鲁棒防御机制，以有效应对后门攻击。&lt;/li>
+&lt;li>&lt;strong>将方法推广至多样化的联邦学习场景&lt;/strong>：将本文提出的方法推广至具有异构数据（如非独立同分布数据）的联邦学习设置中，以更全面地理解攻击的有效性。&lt;/li>
+&lt;li>&lt;strong>探索替代的触发器及其在隐蔽性和成功率上的影响&lt;/strong>：研究不同类型的触发器，分析它们在提高攻击隐蔽性和成功率方面的作用，从而获取更多有价值的见解。&lt;/li>
+&lt;li>&lt;strong>在更大规模和实际场景中评估框架&lt;/strong>：在更大规模的联邦学习系统和现实场景中评估该框架，以检验其可扩展性和实用性。&lt;/li>
+&lt;li>&lt;strong>推进对抗防御策略&lt;/strong>：研究包括主动检测和缓解技术在内的对抗防御策略，为更安全、值得信赖的联邦学习系统做出贡献。&lt;/li>
+&lt;/ol></description></item><item><title>论文阅读：Progressive Backdoor Erasing via connecting Backdoor and Adversarial Attacks</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</link><pubDate>Fri, 11 Oct 2024 17:28:36 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</guid><description>&lt;h3 id="info">Info
 &lt;/h3>&lt;p>CVPR 2023&lt;/p>
 &lt;p>Xi’an Jiaotong University、Xidian University&lt;/p>
 &lt;p>代码地址：https://github.com/John-niu-07/BPE&lt;/p>
