@@ -26,15 +26,15 @@ alt="图1：IBA后门攻击方案"
 $$
 T_\xi(x) = x + G_\xi(x), \parallel G_\xi(x) \parallel_\infty\le\epsilon,\forall x
 $$&lt;/p>
-&lt;p>函数G的迭代过程如下：
-$$
+&lt;p>函数G的迭代过程如下：&lt;/p>
+&lt;p>$$
 \xi \larr \xi - \eta_\xi \sum_{x\in \mathcal{D} } \mathcal{L}&lt;em>\xi (f&lt;/em>{w_k}(T_\xi(x)),y_T)
 $$&lt;/p>
 &lt;p>其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p>
 &lt;p>作者说这一想法来自于对抗攻击，但其实与传统的无目标对抗完全相反，无目标对抗的目标函数将样本的预测结果与本身的标签最大化，而生成函数G的目标则是最大化样本的预测结果与后门的目标标签，这样做的结果就是将生成的噪声与目标类对齐，或者说，将其指向目标类内部，没错，这就是之前Narcissus的做法，你可以将生成的噪声看作肉眼不可见的目标类图像，附加在输入上，模型一看到便将其识别为目标类，效果十分好。&lt;/p>
 &lt;h4 id="backdoor-injecting">Backdoor Injecting
-&lt;/h4>&lt;p>作者的目标是生成一个本地的后门模型$f_w$，其目标函数如下：
-$$
+&lt;/h4>&lt;p>作者的目标是生成一个本地的后门模型$f_w$​，其目标函数如下：&lt;/p>
+&lt;p>$$
 \min_{w} \sum_{x \in \mathcal{D}} \alpha \mathcal{L}&lt;em>{\text{clean}}(f&lt;/em>{w_k}(x), y_x) + \beta \mathcal{L}&lt;em>{\text{poison}}(f&lt;/em>{w_k}(T_{\xi}(x)), y_T)
 $$&lt;/p>
 &lt;p>普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p>
