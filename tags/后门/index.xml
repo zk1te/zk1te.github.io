@@ -29,15 +29,15 @@ $$&lt;/p>
 &lt;p>函数G的迭代过程如下：
 $$
 \xi \larr \xi - \eta_\xi \sum_{x\in \mathcal{D} } \mathcal{L}&lt;em>\xi (f&lt;/em>{w_k}(T_\xi(x)),y_T)
-$$
-其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p>
+$$&lt;/p>
+&lt;p>其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p>
 &lt;p>作者说这一想法来自于对抗攻击，但其实与传统的无目标对抗完全相反，无目标对抗的目标函数将样本的预测结果与本身的标签最大化，而生成函数G的目标则是最大化样本的预测结果与后门的目标标签，这样做的结果就是将生成的噪声与目标类对齐，或者说，将其指向目标类内部，没错，这就是之前Narcissus的做法，你可以将生成的噪声看作肉眼不可见的目标类图像，附加在输入上，模型一看到便将其识别为目标类，效果十分好。&lt;/p>
 &lt;h4 id="backdoor-injecting">Backdoor Injecting
 &lt;/h4>&lt;p>作者的目标是生成一个本地的后门模型$f_w$，其目标函数如下：
 $$
 \min_{w} \sum_{x \in \mathcal{D}} \alpha \mathcal{L}&lt;em>{\text{clean}}(f&lt;/em>{w_k}(x), y_x) + \beta \mathcal{L}&lt;em>{\text{poison}}(f&lt;/em>{w_k}(T_{\xi}(x)), y_T)
-$$
-普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p>
+$$&lt;/p>
+&lt;p>普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p>
 &lt;h5 id="attack-model-retraining">Attack Model Retraining
 &lt;/h5>&lt;p>由于我们将本地模型$f_w$作为替代模型得到触发生成模型$G$，而本地模型是一直变化的，因此作者提出我们的生成模型G需要频繁地进行更新，使其与全局模型保持同步。&lt;/p>
 &lt;h5 id="partial-model-poisoning">Partial Model Poisoning
@@ -63,9 +63,9 @@ $$
 &lt;/ul>
 &lt;p>此外，这种攻击策略可以与模型替换结合使用，通过在发送模型到服务器之前对模型参数进行缩放，来抵消其他诚实客户端的贡献。具体的缩放模型计算公式为：
 $$
-\hat{w_k} \simeq w_k + \sum_{i\in C \setminus k}\frac{n_i}{n_{\mathcal{C} \setminus k}} (w_k - w^&lt;em>).
-$$
-这里，$n_i$是客户端$i$的样本数量，$n_{\mathcal{C} \setminus k}$是所有其他客户端的样本总数，$ w^&lt;/em>$是理想的全局模型。&lt;/p>
+\hat{w_k} \simeq w_k + \sum_{i\in C \setminus k}\frac{n_i}{n_{\mathcal{C} \setminus k}} (w_k - w^*).
+$$&lt;/p>
+&lt;p>这里，$n_i$是客户端$i$的样本数量，$n_{\mathcal{C} \setminus k}$是所有其他客户端的样本总数，$ w^*$是理想的全局模型。&lt;/p>
 &lt;h6 id="poisoning-dimension-based">Poisoning-dimension based
 &lt;/h6>&lt;p>由于攻击者无法参与每一轮训练，直接提交被污染的模型到服务器是无效的。为了解决这个问题，提出了利用历史梯度变化选择不常更新的神经元作为污染维度的方法。具体步骤如下：&lt;/p>
 &lt;ul>
