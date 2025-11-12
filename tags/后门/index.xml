@@ -1,41 +1,41 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>后门 on k1te's blog</title><link>https://k1te.cn/tags/%E5%90%8E%E9%97%A8/</link><description>Recent content in 后门 on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 22 Nov 2024 14:37:13 +0800</lastBuildDate><atom:link href="https://k1te.cn/tags/%E5%90%8E%E9%97%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>【论文阅读】MM-BD: Post-Training Detection of Backdoor Attacks with Arbitrary Backdoor Pattern Types Using a Maximum Margin Statistic</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBmm-bd-post-training-detection-of-backdoor-attacks-with-arbitrary-backdoor-pattern-types-using-a-maximum-margin-statistic/</link><pubDate>Fri, 22 Nov 2024 14:37:13 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBmm-bd-post-training-detection-of-backdoor-attacks-with-arbitrary-backdoor-pattern-types-using-a-maximum-margin-statistic/</guid><description>&lt;h3 id="info">Info
-&lt;/h3>&lt;p>S&amp;amp;P 2024&lt;/p>
-&lt;p>Pennsylvania State University&lt;/p>
-&lt;p>代码地址：&lt;a class="link" href="https://github.com/wanghangpsu/MM-BD" target="_blank" rel="noopener"
->https://github.com/wanghangpsu/MM-BD&lt;/a>&lt;/p>
-&lt;h3 id="abstract">Abstract
-&lt;/h3>&lt;p>后门攻击是针对深度神经网络分类器的一种重要对抗性威胁。当测试样本中嵌入后门pattern时，来自一个或多个源类别的样本会被（错误地）分类为攻击者指定的目标类别。本文关注文献中常见的&lt;strong>训练后&lt;/strong>后门防御场景，即防御者在无法访问训练集的情况下，检测一个已训练分类器是否遭受后门攻击。许多训练后检测方法设计用于检测使用一种或几种特定后门嵌入函数（如补丁替换或加性攻击）的攻击。然而，当攻击者使用的后门嵌入函数（防御者未知）与防御者假定的后门嵌入函数不同时，这些检测方法可能失效。&lt;/p>
-&lt;p>相比之下，我们提出了一种训练后防御方法，可以检测具有任意类型后门嵌入的后门攻击，而无需对后门嵌入类型作任何假设。我们的检测器利用后门攻击对分类器在 softmax 层之前输出分布的影响，该影响独立于后门嵌入机制。对于每个类别，我们估计一个最大间隔统计量，并通过将无监督异常检测器应用于这些统计量来进行检测推断。因此，我们的检测器不需要任何合法的干净样本，并且能够高效检测具有任意源类别数量的后门攻击。&lt;/p>
-&lt;p>在四个数据集上，我们的检测器针对三种不同类型的后门模式以及多种攻击配置展示了优于多种最新方法的优势。此外，我们提出了一种新颖且通用的后门缓解方法，用于在检测后实施缓解。该缓解方法在首届 IEEE Trojan Removal Competition 中获得亚军。代码已在线公开。&lt;/p>
-&lt;h3 id="key-insight">Key Insight
-&lt;/h3>&lt;p>本文的检测器基于后门攻击对分类器logits的影响，而这一影响独立于后门pattern类型。&lt;/p>
-&lt;p>Logits: logits 就是一个向量，下一步通常被投给 softmax/sigmoid 的向量。logits层通常产生$-\infin$到$+\infin$的值，而softmax层将其转换为0到1的值。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241127213207657.png"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>后门 on</title><link>https://k1te.cn/tags/%E5%90%8E%E9%97%A8/</link><description>Recent content in 后门 on</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 22 Nov 2024 14:37:13 +0800</lastBuildDate><atom:link href="https://k1te.cn/tags/%E5%90%8E%E9%97%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>【论文阅读】MM-BD: Post-Training Detection of Backdoor Attacks with Arbitrary Backdoor Pattern Types Using a Maximum Margin Statistic</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBmm-bd-post-training-detection-of-backdoor-attacks-with-arbitrary-backdoor-pattern-types-using-a-maximum-margin-statistic/</link><pubDate>Fri, 22 Nov 2024 14:37:13 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBmm-bd-post-training-detection-of-backdoor-attacks-with-arbitrary-backdoor-pattern-types-using-a-maximum-margin-statistic/</guid><description>&lt;h3 id="info"&gt;Info
+&lt;/h3&gt;&lt;p&gt;S&amp;amp;P 2024&lt;/p&gt;
+&lt;p&gt;Pennsylvania State University&lt;/p&gt;
+&lt;p&gt;代码地址：&lt;a class="link" href="https://github.com/wanghangpsu/MM-BD" target="_blank" rel="noopener"
+&gt;https://github.com/wanghangpsu/MM-BD&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="abstract"&gt;Abstract
+&lt;/h3&gt;&lt;p&gt;后门攻击是针对深度神经网络分类器的一种重要对抗性威胁。当测试样本中嵌入后门pattern时，来自一个或多个源类别的样本会被（错误地）分类为攻击者指定的目标类别。本文关注文献中常见的&lt;strong&gt;训练后&lt;/strong&gt;后门防御场景，即防御者在无法访问训练集的情况下，检测一个已训练分类器是否遭受后门攻击。许多训练后检测方法设计用于检测使用一种或几种特定后门嵌入函数（如补丁替换或加性攻击）的攻击。然而，当攻击者使用的后门嵌入函数（防御者未知）与防御者假定的后门嵌入函数不同时，这些检测方法可能失效。&lt;/p&gt;
+&lt;p&gt;相比之下，我们提出了一种训练后防御方法，可以检测具有任意类型后门嵌入的后门攻击，而无需对后门嵌入类型作任何假设。我们的检测器利用后门攻击对分类器在 softmax 层之前输出分布的影响，该影响独立于后门嵌入机制。对于每个类别，我们估计一个最大间隔统计量，并通过将无监督异常检测器应用于这些统计量来进行检测推断。因此，我们的检测器不需要任何合法的干净样本，并且能够高效检测具有任意源类别数量的后门攻击。&lt;/p&gt;
+&lt;p&gt;在四个数据集上，我们的检测器针对三种不同类型的后门模式以及多种攻击配置展示了优于多种最新方法的优势。此外，我们提出了一种新颖且通用的后门缓解方法，用于在检测后实施缓解。该缓解方法在首届 IEEE Trojan Removal Competition 中获得亚军。代码已在线公开。&lt;/p&gt;
+&lt;h3 id="key-insight"&gt;Key Insight
+&lt;/h3&gt;&lt;p&gt;本文的检测器基于后门攻击对分类器logits的影响，而这一影响独立于后门pattern类型。&lt;/p&gt;
+&lt;p&gt;Logits: logits 就是一个向量，下一步通常被投给 softmax/sigmoid 的向量。logits层通常产生$-\infin$到$+\infin$的值，而softmax层将其转换为0到1的值。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241127213207657.png"
 loading="lazy"
 alt="image-20241127213207657"
->&lt;/p>
-&lt;p>假设存在一个以目标类别 $t \in Y$为目标的后门攻击，并将与任何类别 $c \in Y$相关联的分类器的 logit 函数记为 $g_c : X → R$（在不失一般性的情况下假设 $X$是紧凑的）。对于所有 $c \in Y\setminus t$​，无论后门模式的类型如何，我们可能会观察到：
+&gt;&lt;/p&gt;
+&lt;p&gt;假设存在一个以目标类别 $t \in Y$为目标的后门攻击，并将与任何类别 $c \in Y$相关联的分类器的 logit 函数记为 $g_c : X → R$（在不失一般性的情况下假设 $X$是紧凑的）。对于所有 $c \in Y\setminus t$​，无论后门模式的类型如何，我们可能会观察到：
 $$
 \max_{x\in \mathcal{X}}[g_t(x)-\max_{k\in \mathcal{Y}\setminus t}g_k(x)] \gg \max_{x\in \mathcal{X}}[g_c(x)-\max_{k\prime\in \mathcal{Y}\setminus c}g_k\prime(x)] \tag 1
 $$
-即，对于真正的后门攻击目标类别（定义为上式左侧）的最大间隔统计量通常会远大于其他所有类别的最大间隔统计量（上式右侧）。&lt;/p>
-&lt;p>对于这一现象，作者给出的解释是：后门分类器中后门样本的内部特征由后门pattern（trigger）主导而不是源类的判别特征，trigger具有高度的重复性，而其他非目标类的区分特征通常表现出较高的变异性，例如，“鸟”类别中可能包含多种鸟类，甚至同一物体在不同视角、距离或光照条件下的不同表现形式。&lt;/p>
-&lt;p>为了实现较低的中毒率，trigger的高重复性不可避免，但是这也会引发过拟合，最终导致：&lt;/p>
-&lt;ol>
-&lt;li>提升目标类别logit&lt;/li>
-&lt;li>抑制所有其他类别logit&lt;/li>
-&lt;/ol>
-&lt;p>由于上述“提高”和“抑制”效应，目标类别的logit与所有其他类别的logit之间会形成巨大的间隔。&lt;/p>
-&lt;p>为了验证上面的推理，如下图所示，作者实现了一个toy可视化例子：首先根据高斯混合模型生成三个类别的二维输入，每个类别500个样本，然后以class3作为target label，分别插入了 10（BA-10）和 100（BA-100）个“后门样本”进行中毒。作者使用了具有三层隐藏层的多层感知机作为分类器模型，该模型在干净测试样本上的准确率几乎达到 91%，而在测试“后门样本”上的攻击成功率分别为 92% 和 99%。&lt;/p>
-&lt;p>对于每次后门攻击和每个类别，作者将一个类别的 logit 与其他两类中最大 logit 之间的差距作为输入空间的函数进行绘图。可以观察到，后门目标类别（图中f 和 g）的最大间隔在两种后门攻击下均异常大。此外，与 BA-10 相比，BA-100 的目标类别最大间隔异常现象更为明显。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241127221716046.png"
+即，对于真正的后门攻击目标类别（定义为上式左侧）的最大间隔统计量通常会远大于其他所有类别的最大间隔统计量（上式右侧）。&lt;/p&gt;
+&lt;p&gt;对于这一现象，作者给出的解释是：后门分类器中后门样本的内部特征由后门pattern（trigger）主导而不是源类的判别特征，trigger具有高度的重复性，而其他非目标类的区分特征通常表现出较高的变异性，例如，“鸟”类别中可能包含多种鸟类，甚至同一物体在不同视角、距离或光照条件下的不同表现形式。&lt;/p&gt;
+&lt;p&gt;为了实现较低的中毒率，trigger的高重复性不可避免，但是这也会引发过拟合，最终导致：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;提升目标类别logit&lt;/li&gt;
+&lt;li&gt;抑制所有其他类别logit&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;由于上述“提高”和“抑制”效应，目标类别的logit与所有其他类别的logit之间会形成巨大的间隔。&lt;/p&gt;
+&lt;p&gt;为了验证上面的推理，如下图所示，作者实现了一个toy可视化例子：首先根据高斯混合模型生成三个类别的二维输入，每个类别500个样本，然后以class3作为target label，分别插入了 10（BA-10）和 100（BA-100）个“后门样本”进行中毒。作者使用了具有三层隐藏层的多层感知机作为分类器模型，该模型在干净测试样本上的准确率几乎达到 91%，而在测试“后门样本”上的攻击成功率分别为 92% 和 99%。&lt;/p&gt;
+&lt;p&gt;对于每次后门攻击和每个类别，作者将一个类别的 logit 与其他两类中最大 logit 之间的差距作为输入空间的函数进行绘图。可以观察到，后门目标类别（图中f 和 g）的最大间隔在两种后门攻击下均异常大。此外，与 BA-10 相比，BA-100 的目标类别最大间隔异常现象更为明显。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241127221716046.png"
 loading="lazy"
 alt="图1"
->&lt;/p>
-&lt;h3 id="theoretical-analysis">Theoretical Analysis
-&lt;/h3>&lt;p>与PEB类似，这里作者也进行了一番理论分析。&lt;/p>
-&lt;p>现在假设有一个简单的线性模型$g(·) : X → R^{|Y|}$，其中与类别$c \in Y$相关的输出由 logit $g_c$表示，其通过列向量点积计算得到：$g_c(x)=w_{c}^{\prime} x$​&lt;/p>
-&lt;p>其中：$w_c$ 代表与类别 $c$ 相关的权重向量，具有与输入 $x$ 相同的维度；模型对输入 $x$ 的类别决策 $c$ 对应于具有最大 logit $g_c(x)$的类别。假设在训练后，模型可以以超过 $\tau$ 的置信度正确分类所有训练样本，该置信度通过正确类别的间隔（即该类别的 logit 减去其他所有类别的最大 logit）评估：
+&gt;&lt;/p&gt;
+&lt;h3 id="theoretical-analysis"&gt;Theoretical Analysis
+&lt;/h3&gt;&lt;p&gt;与PEB类似，这里作者也进行了一番理论分析。&lt;/p&gt;
+&lt;p&gt;现在假设有一个简单的线性模型$g(·) : X → R^{|Y|}$，其中与类别$c \in Y$相关的输出由 logit $g_c$表示，其通过列向量点积计算得到：$g_c(x)=w_{c}^{\prime} x$​&lt;/p&gt;
+&lt;p&gt;其中：$w_c$ 代表与类别 $c$ 相关的权重向量，具有与输入 $x$ 相同的维度；模型对输入 $x$ 的类别决策 $c$ 对应于具有最大 logit $g_c(x)$的类别。假设在训练后，模型可以以超过 $\tau$ 的置信度正确分类所有训练样本，该置信度通过正确类别的间隔（即该类别的 logit 减去其他所有类别的最大 logit）评估：
 $$
 g_y(x)-\max_{c\neq y}g_c(x)=w_{y}^{\prime}x-\max_{c\neq y}w_{c}^{\prime}x \ge \tau, \forall(x,y)\in X \times Y. \tag 2
 $$
@@ -51,276 +51,276 @@ $$
 $$
 g_t(v)-g_s(v)=w_{t}^{\prime}v-w_{s}^{\prime}v\ge2\tau\tag5
 $$
-即，后门目标类别的最大间隔下限至少为 $2\tau$，大于所有类别的合法样本的下限。&lt;/p>
-&lt;h3 id="treat-model">Treat Model
-&lt;/h3>&lt;p>有些后门防御方法会在分类器的训练阶段部署，但这通常也是不可行的。在这里，我们考虑一个实际的&lt;strong>训练后场景&lt;/strong>：在Model Zoo或者hugging face下载预训练模型的下游用户，只能检测分类器是否已受到攻击，而无法访问分类器的训练集，用户也无法访问任何未受攻击的分类器以供参考。&lt;/p>
-&lt;h3 id="dection">Dection
-&lt;/h3>&lt;p>本文提出的后门检测方法大致分类两步，首先估计出每个类的最大间隔统计量，然后根据得到的最大间隔统计量，利用统计学的方法，判断最大间隔统计量是否存在异常，如有异常说明存在后门攻击。&lt;/p>
-&lt;h4 id="estimation-step">Estimation Step
-&lt;/h4>&lt;blockquote>
-&lt;p>下面的内容修改自ChatGPT&lt;/p>
-&lt;/blockquote>
-&lt;p>对每个类别 $c \in Y$​，通过最大化“最大间隔统计量”来估计每个类别的异常行为。这个统计量反映了一个类别的 logit 与其他类别中最大 logit 之间的差距。公式如下：
+即，后门目标类别的最大间隔下限至少为 $2\tau$，大于所有类别的合法样本的下限。&lt;/p&gt;
+&lt;h3 id="treat-model"&gt;Treat Model
+&lt;/h3&gt;&lt;p&gt;有些后门防御方法会在分类器的训练阶段部署，但这通常也是不可行的。在这里，我们考虑一个实际的&lt;strong&gt;训练后场景&lt;/strong&gt;：在Model Zoo或者hugging face下载预训练模型的下游用户，只能检测分类器是否已受到攻击，而无法访问分类器的训练集，用户也无法访问任何未受攻击的分类器以供参考。&lt;/p&gt;
+&lt;h3 id="dection"&gt;Dection
+&lt;/h3&gt;&lt;p&gt;本文提出的后门检测方法大致分类两步，首先估计出每个类的最大间隔统计量，然后根据得到的最大间隔统计量，利用统计学的方法，判断最大间隔统计量是否存在异常，如有异常说明存在后门攻击。&lt;/p&gt;
+&lt;h4 id="estimation-step"&gt;Estimation Step
+&lt;/h4&gt;&lt;blockquote&gt;
+&lt;p&gt;下面的内容修改自ChatGPT&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;对每个类别 $c \in Y$​，通过最大化“最大间隔统计量”来估计每个类别的异常行为。这个统计量反映了一个类别的 logit 与其他类别中最大 logit 之间的差距。公式如下：
 $$
 \max_{x\in X}[g_c(x)-\max_{k\in Y\setminus c}g_k(x)]
 $$
-其中：&lt;/p>
-&lt;ul>
-&lt;li>$g_c(x)$：输入 $x$ 在类别 $c$ 下的 logit。&lt;/li>
-&lt;li>$Y \setminus c$：所有类别中排除当前类别 $c$​ 的集合。&lt;/li>
-&lt;li>$X$：输入空间（例如，对于彩色图像，$X = [0, 1]^{H \times W \times C}$，其中 $H$、$W$ 和 $C$​ 分别表示图像的高度、宽度和通道数）。&lt;/li>
-&lt;/ul>
-&lt;p>方法：&lt;/p>
-&lt;p>用**梯度上升法（Gradient Ascent）**来解决该优化问题：&lt;/p>
-&lt;ul>
-&lt;li>梯度上升法通过&lt;strong>调整输入 $x$&lt;/strong> 来逐步逼近目标值，使得当前类别的最大边界统计量最大化。&lt;/li>
-&lt;li>为了保证优化过程在定义域内有效，我们对 $x$ 进行投影（Projection），确保其始终位于 $X$​ 内。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>为什么梯度上升法可行？&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>$X$是一个闭合凸集，logit 函数在 $X$上是连续的，因此是有界且满足 Lipschitz 条件（即函数在某些局部区域内的梯度是有限的）。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>根据 &lt;em>Convex Optimization: Algorithms and Complexity&lt;/em> 的定理 3.2，即使从随机初始化的点出发，通过梯度上升并投影回 $X$​ ，也可以保证收敛到局部最优解。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>多次随机初始化&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>为了避免局部最优解偏离全局最优，我们通常从 $X$​ 中进行多次随机初始化（例如，对图像来说，将像素值在 [0,1] 区间内随机初始化），然后选择最优解中最大的局部解。&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>与基于逆向工程的防御方法对比&lt;/strong>：&lt;/p>
-&lt;ul>
-&lt;li>基于逆向工程的方法通常需要假设后门触发器的类型，并依赖干净样本来估计后门模式。这种方法在样本大多数来自非源类时效果会较差。&lt;/li>
-&lt;li>而本方法无需假设任何后门触发器的嵌入类型，也不需要领域中的干净样本，从而更具鲁棒性。&lt;/li>
-&lt;/ul>
-&lt;h4 id="inference-step">Inference Step
-&lt;/h4>&lt;p>作者使用无监督的异常检测方法，判断最大间隔统计量是否存在异常值，从而检测后门攻击，具体步骤如下：&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>定义最大间隔统计量&lt;/p>
-&lt;p>对每个类别$c\in Y$，估计的最大间隔统计量用$r_c$表示。找到所有类别中最大的统计量：
+其中：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$g_c(x)$：输入 $x$ 在类别 $c$ 下的 logit。&lt;/li&gt;
+&lt;li&gt;$Y \setminus c$：所有类别中排除当前类别 $c$​ 的集合。&lt;/li&gt;
+&lt;li&gt;$X$：输入空间（例如，对于彩色图像，$X = [0, 1]^{H \times W \times C}$，其中 $H$、$W$ 和 $C$​ 分别表示图像的高度、宽度和通道数）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;方法：&lt;/p&gt;
+&lt;p&gt;用**梯度上升法（Gradient Ascent）**来解决该优化问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;梯度上升法通过&lt;strong&gt;调整输入 $x$&lt;/strong&gt; 来逐步逼近目标值，使得当前类别的最大边界统计量最大化。&lt;/li&gt;
+&lt;li&gt;为了保证优化过程在定义域内有效，我们对 $x$ 进行投影（Projection），确保其始终位于 $X$​ 内。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;为什么梯度上升法可行？&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;$X$是一个闭合凸集，logit 函数在 $X$上是连续的，因此是有界且满足 Lipschitz 条件（即函数在某些局部区域内的梯度是有限的）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;根据 &lt;em&gt;Convex Optimization: Algorithms and Complexity&lt;/em&gt; 的定理 3.2，即使从随机初始化的点出发，通过梯度上升并投影回 $X$​ ，也可以保证收敛到局部最优解。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;多次随机初始化&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为了避免局部最优解偏离全局最优，我们通常从 $X$​ 中进行多次随机初始化（例如，对图像来说，将像素值在 [0,1] 区间内随机初始化），然后选择最优解中最大的局部解。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;与基于逆向工程的防御方法对比&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;基于逆向工程的方法通常需要假设后门触发器的类型，并依赖干净样本来估计后门模式。这种方法在样本大多数来自非源类时效果会较差。&lt;/li&gt;
+&lt;li&gt;而本方法无需假设任何后门触发器的嵌入类型，也不需要领域中的干净样本，从而更具鲁棒性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="inference-step"&gt;Inference Step
+&lt;/h4&gt;&lt;p&gt;作者使用无监督的异常检测方法，判断最大间隔统计量是否存在异常值，从而检测后门攻击，具体步骤如下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;定义最大间隔统计量&lt;/p&gt;
+&lt;p&gt;对每个类别$c\in Y$，估计的最大间隔统计量用$r_c$表示。找到所有类别中最大的统计量：
 $$
 r_{\text{max}}=\max_{c\in Y}r_c
 $$
-通常情况下，$r_{\text{max}}$对应于潜在的后门target类。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>假设检验&lt;/p>
-&lt;p>假设无攻击的情况下，这些统计量（除了 $r_{\text{max}}$）服从某种&lt;strong>原假设分布&lt;/strong> $H_0$。我们在实验中选择单尾密度分布（例如，Gamma 分布）来建模$H_0$，因为理论上和经验上最大边界是严格为正的。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>计算p值&lt;/p>
-&lt;p>为评估$r_{\text{max}}$在$H_0$下的异常程度，使用次序统计量计算p值：
+通常情况下，$r_{\text{max}}$对应于潜在的后门target类。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;假设检验&lt;/p&gt;
+&lt;p&gt;假设无攻击的情况下，这些统计量（除了 $r_{\text{max}}$）服从某种&lt;strong&gt;原假设分布&lt;/strong&gt; $H_0$。我们在实验中选择单尾密度分布（例如，Gamma 分布）来建模$H_0$，因为理论上和经验上最大边界是严格为正的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;计算p值&lt;/p&gt;
+&lt;p&gt;为评估$r_{\text{max}}$在$H_0$下的异常程度，使用次序统计量计算p值：
 $$
 pv = 1 - H_0(r_\text{max})^{K-1}
 $$
-其中： $K=|Y|$表示类别的总数，$H_0(r_\text{max})$表示最大间隔统计量$r_{\text{max}}$在$H_0$下的累积分布函数（CDF）。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>检测决策&lt;/p>
-&lt;p>设定显著性水平$\theta$（例如经典值$\theta=0.05$）。如果$pv&amp;lt;\theta$，则以置信度$1-\theta$检测出后门攻击。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>推断目标类别&lt;/p>
-&lt;p>一旦检测到后门攻击，将$r_{\text{max}}$所对应的类别推断为后门目标类别。&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;h3 id="mitigation">Mitigation
-&lt;/h3>&lt;p>后门攻击利用了某些“异常激活”的神经元，使得模型对携带特定触发器的样本给出错误预测。我们需要找到一种方法来：&lt;strong>抑制这些异常激活&lt;/strong>，从而降低后门攻击的成功率；但同时&lt;strong>保持模型在正常样本上的性能&lt;/strong>。&lt;/p>
-&lt;p>文中提出的方法的核心思想是：对模型中每一层的每个神经元设置一个&lt;strong>上限值&lt;/strong>，即限制它们的激活值不能超过这个上限。这可以防止后门攻击利用某些神经元过度激活，但同时我们也希望这个限制不会影响模型在正常样本上的性能。&lt;/p>
-&lt;h4 id="upper-bound">Upper Bound
-&lt;/h4>&lt;p>如何为每一个神经元都设置一个上限呢？我们知道，神经网络的输出是通过逐层计算得到的。假设模型有 LLL 层神经网络，输入数据为 xxx，我们可以表示每一层的激活输出：$\sigma_l(x)$为第$l$层的神经元激活值。&lt;/p>
-&lt;p>模型的预测结果(logit值)可以写成：
+其中： $K=|Y|$表示类别的总数，$H_0(r_\text{max})$表示最大间隔统计量$r_{\text{max}}$在$H_0$下的累积分布函数（CDF）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;检测决策&lt;/p&gt;
+&lt;p&gt;设定显著性水平$\theta$（例如经典值$\theta=0.05$）。如果$pv&amp;lt;\theta$，则以置信度$1-\theta$检测出后门攻击。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;推断目标类别&lt;/p&gt;
+&lt;p&gt;一旦检测到后门攻击，将$r_{\text{max}}$所对应的类别推断为后门目标类别。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="mitigation"&gt;Mitigation
+&lt;/h3&gt;&lt;p&gt;后门攻击利用了某些“异常激活”的神经元，使得模型对携带特定触发器的样本给出错误预测。我们需要找到一种方法来：&lt;strong&gt;抑制这些异常激活&lt;/strong&gt;，从而降低后门攻击的成功率；但同时&lt;strong&gt;保持模型在正常样本上的性能&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;文中提出的方法的核心思想是：对模型中每一层的每个神经元设置一个&lt;strong&gt;上限值&lt;/strong&gt;，即限制它们的激活值不能超过这个上限。这可以防止后门攻击利用某些神经元过度激活，但同时我们也希望这个限制不会影响模型在正常样本上的性能。&lt;/p&gt;
+&lt;h4 id="upper-bound"&gt;Upper Bound
+&lt;/h4&gt;&lt;p&gt;如何为每一个神经元都设置一个上限呢？我们知道，神经网络的输出是通过逐层计算得到的。假设模型有 LLL 层神经网络，输入数据为 xxx，我们可以表示每一层的激活输出：$\sigma_l(x)$为第$l$层的神经元激活值。&lt;/p&gt;
+&lt;p&gt;模型的预测结果(logit值)可以写成：
 $$
 g_c(x)=w_c^T(\sigma_L\circ \sigma_{L-1}\circ\cdots\circ\sigma_1(x))+b_c
 $$
-这里$w_c$ 和 $b_c$ 是与类别 $c$​ 相关的权重和偏置。&lt;/p>
-&lt;p>于是，对每一层的神经元激活值，我们引入一个上限 $z_l$​，并定义一个新的激活函数：
+这里$w_c$ 和 $b_c$ 是与类别 $c$​ 相关的权重和偏置。&lt;/p&gt;
+&lt;p&gt;于是，对每一层的神经元激活值，我们引入一个上限 $z_l$​，并定义一个新的激活函数：
 $$
 \overline\sigma_l(x;z_l)=min{\sigma_l(x),z_l}
 $$
-这表示每个神经元的激活值不能超过$z_l$。&lt;/p>
-&lt;p>于是新的模型logit变成：
+这表示每个神经元的激活值不能超过$z_l$。&lt;/p&gt;
+&lt;p&gt;于是新的模型logit变成：
 $$
-{g}&lt;em>{c}(x ; Z)=w&lt;/em>{c}^{T}\left(\bar{\sigma}&lt;em>{L} \circ \bar{\sigma}&lt;/em>{L-1} \circ \cdots \circ \bar{\sigma}&lt;em>{2}\left(\sigma&lt;/em>{1}(x) ; z_{2}\right) \cdots ; z_{L}\right)+b_{c}
+{g}&lt;em&gt;{c}(x ; Z)=w&lt;/em&gt;{c}^{T}\left(\bar{\sigma}&lt;em&gt;{L} \circ \bar{\sigma}&lt;/em&gt;{L-1} \circ \cdots \circ \bar{\sigma}&lt;em&gt;{2}\left(\sigma&lt;/em&gt;{1}(x) ; z_{2}\right) \cdots ; z_{L}\right)+b_{c}
 $$
-这里$Z={z_2,z_3,\dots,z_L}$是所有层的上限值集合。&lt;/p>
-&lt;h4 id="optimization">Optimization
-&lt;/h4>&lt;p>为了保证缓解后的模型仍然可以在干净样本上正常工作，我们需要优化这些上限值$Z$。&lt;/p>
-&lt;p>数学上，这可以写成一个优化问题：：
+这里$Z={z_2,z_3,\dots,z_L}$是所有层的上限值集合。&lt;/p&gt;
+&lt;h4 id="optimization"&gt;Optimization
+&lt;/h4&gt;&lt;p&gt;为了保证缓解后的模型仍然可以在干净样本上正常工作，我们需要优化这些上限值$Z$。&lt;/p&gt;
+&lt;p&gt;数学上，这可以写成一个优化问题：：
 $$
-\min_{Z = {z_2, \dots, z_L}} \sum_{l=2}^L ||z_l||&lt;em>2
+\min_{Z = {z_2, \dots, z_L}} \sum_{l=2}^L ||z_l||&lt;em&gt;2
 $$
 即最小化所有上限值的二范数（尽可能小的上限值），同时满足以下约束：
 $$
-\frac{1}{|D|} \sum&lt;/em>{(x, y) \in D} 1[y = \arg \max_{c \in Y} \bar{g}_c(x; Z)] \geq \pi
+\frac{1}{|D|} \sum&lt;/em&gt;{(x, y) \in D} 1[y = \arg \max_{c \in Y} \bar{g}_c(x; Z)] \geq \pi
 $$
-意思是：模型在干净样本 $D$ 上的分类准确率必须高于某个阈值 $\pi$。&lt;/p>
-&lt;p>由于直接优化上述约束问题可能比较困难，作者提出通过&lt;strong>拉格朗日乘子法&lt;/strong>来解决问题：
+意思是：模型在干净样本 $D$ 上的分类准确率必须高于某个阈值 $\pi$。&lt;/p&gt;
+&lt;p&gt;由于直接优化上述约束问题可能比较困难，作者提出通过&lt;strong&gt;拉格朗日乘子法&lt;/strong&gt;来解决问题：
 $$
-L(Z, \lambda; D) = \frac{1}{|D| \times |Y|} \sum_{(x, y) \in D} \sum_{c \in Y} [\bar{g}&lt;em>c(x; Z) - g_c(x)]^2 + \lambda \sum&lt;/em>{l=2}^L ||z_l||_2
+L(Z, \lambda; D) = \frac{1}{|D| \times |Y|} \sum_{(x, y) \in D} \sum_{c \in Y} [\bar{g}&lt;em&gt;c(x; Z) - g_c(x)]^2 + \lambda \sum&lt;/em&gt;{l=2}^L ||z_l||_2
 $$
-&lt;strong>&amp;ndash;TBD&amp;ndash;&lt;/strong>&lt;/p></description></item><item><title>【论文阅读】IBA: Towards Irreversible Backdoor Attacks in Federated Learning</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</link><pubDate>Wed, 23 Oct 2024 13:34:53 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</guid><description>&lt;h3 id="info">Info
-&lt;/h3>&lt;p>NeurIPS 2023&lt;/p>
-&lt;p>Vanderbilt University等&lt;/p>
-&lt;p>代码地址：&lt;a class="link" href="https://github.com/sail-research/iba" target="_blank" rel="noopener"
->sail-research/iba: IBA: Towards Irreversible Backdoor Attacks in Federated Learning (Poster at NeurIPS 2023)&lt;/a>&lt;/p>
-&lt;h3 id="abstract">Abstract
-&lt;/h3>&lt;p>联合学习（FL）是一种分布式学习方法，它能在不损害终端设备的个人潜在敏感数据的情况下，在分散数据上训练机器学习模型。然而，分布式性质和未经调查的数据直观地引入了新的安全漏洞，包括后门攻击。在这种情况下，敌方会在训练过程中将后门功能植入全局模型中，从而激活该功能，在输入任何特定敌方模式时引发所需的不当行为。尽管在触发和扭曲模型行为方面取得了显著的成功，但 FL 中先前的后门攻击往往持有不切实际的假设、有限的不可察觉性和持久性。具体来说，对手需要控制足够多的客户端，或者知道其他诚实客户端的数据分布。在许多情况下，插入的触发器往往是直观可见的，而且如果将对手从训练过程中移除，后门效应很快就会被削弱。为了解决这些局限性，我们在 FL 中提出了一种新颖的后门攻击框架&amp;ndash;不可逆后门攻击（Irreversible Backdoor Attacks, IBA），它可以共同学习最佳的、视觉上隐蔽的触发器，然后逐步将后门植入全局模型。这种方法可以让敌方在躲避人类和机器检查的同时实施后门攻击。此外，我们还通过选择性地毒化最不可能由主任务学习过程更新的模型参数，并将毒化模型更新限制在全局模型附近，从而提高了所提攻击的效率和持久性。最后，我们在几个基准数据集（包括 MNIST、CIFAR-10 和 Tiny ImageNet）上对所提出的攻击框架进行了评估，评估结果表明，与其他后门攻击相比，IBA 在绕过现有后门防御措施并实现更持久后门效果的同时，还取得了很高的成功率。总体而言，IBA为 FL 中的后门攻击提供了一种更有效、隐蔽和持久的方法。&lt;/p>
-&lt;h3 id="contributions">Contributions
-&lt;/h3>&lt;ol>
-&lt;li>提出了一种两阶段联邦学习后门攻击方法IBA，动态生成触发器，并且是不可见后门攻击，保证了推理阶段不被发现。IBA将污染模型的更新限制在全球模型附近，降低恶意更新被检测出来的风险。&lt;/li>
-&lt;li>在学习过程中选择不太可能更新的模型参数进行投毒，增加持久性。&lt;/li>
-&lt;li>最先进的攻击性能、隐蔽性、持久性。&lt;/li>
-&lt;/ol>
-&lt;h3 id="thread-model">Thread Model
-&lt;/h3>&lt;p>攻击者A仅控制一个客户端k，并且它将在每k轮中参与训练，即固定频率攻击；&lt;/p>
-&lt;p>攻击者A能够完全控制客户端A，但是无法访问其他的良性客户端；&lt;/p>
-&lt;p>假设A完全了解中央服务器和任何可能的防御措施，但是不能改变服务器的参数和算法。&lt;/p>
-&lt;h3 id="method">Method
-&lt;/h3>&lt;p>首先讲解一下大致的流程，如下图所示，其实非常简单，主要分为两个阶段，第一个阶段是触发器的生成，第二个阶段是后门的注入。看起来好像平平无奇，下面讲一下各个步骤的具体的点。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031204850784.png"
+&lt;strong&gt;&amp;ndash;TBD&amp;ndash;&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>【论文阅读】IBA: Towards Irreversible Backdoor Attacks in Federated Learning</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</link><pubDate>Wed, 23 Oct 2024 13:34:53 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBiba-towards-irreversible-backdoor-attacks-in-federated-learning/</guid><description>&lt;h3 id="info"&gt;Info
+&lt;/h3&gt;&lt;p&gt;NeurIPS 2023&lt;/p&gt;
+&lt;p&gt;Vanderbilt University等&lt;/p&gt;
+&lt;p&gt;代码地址：&lt;a class="link" href="https://github.com/sail-research/iba" target="_blank" rel="noopener"
+&gt;sail-research/iba: IBA: Towards Irreversible Backdoor Attacks in Federated Learning (Poster at NeurIPS 2023)&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="abstract"&gt;Abstract
+&lt;/h3&gt;&lt;p&gt;联合学习（FL）是一种分布式学习方法，它能在不损害终端设备的个人潜在敏感数据的情况下，在分散数据上训练机器学习模型。然而，分布式性质和未经调查的数据直观地引入了新的安全漏洞，包括后门攻击。在这种情况下，敌方会在训练过程中将后门功能植入全局模型中，从而激活该功能，在输入任何特定敌方模式时引发所需的不当行为。尽管在触发和扭曲模型行为方面取得了显著的成功，但 FL 中先前的后门攻击往往持有不切实际的假设、有限的不可察觉性和持久性。具体来说，对手需要控制足够多的客户端，或者知道其他诚实客户端的数据分布。在许多情况下，插入的触发器往往是直观可见的，而且如果将对手从训练过程中移除，后门效应很快就会被削弱。为了解决这些局限性，我们在 FL 中提出了一种新颖的后门攻击框架&amp;ndash;不可逆后门攻击（Irreversible Backdoor Attacks, IBA），它可以共同学习最佳的、视觉上隐蔽的触发器，然后逐步将后门植入全局模型。这种方法可以让敌方在躲避人类和机器检查的同时实施后门攻击。此外，我们还通过选择性地毒化最不可能由主任务学习过程更新的模型参数，并将毒化模型更新限制在全局模型附近，从而提高了所提攻击的效率和持久性。最后，我们在几个基准数据集（包括 MNIST、CIFAR-10 和 Tiny ImageNet）上对所提出的攻击框架进行了评估，评估结果表明，与其他后门攻击相比，IBA 在绕过现有后门防御措施并实现更持久后门效果的同时，还取得了很高的成功率。总体而言，IBA为 FL 中的后门攻击提供了一种更有效、隐蔽和持久的方法。&lt;/p&gt;
+&lt;h3 id="contributions"&gt;Contributions
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;提出了一种两阶段联邦学习后门攻击方法IBA，动态生成触发器，并且是不可见后门攻击，保证了推理阶段不被发现。IBA将污染模型的更新限制在全球模型附近，降低恶意更新被检测出来的风险。&lt;/li&gt;
+&lt;li&gt;在学习过程中选择不太可能更新的模型参数进行投毒，增加持久性。&lt;/li&gt;
+&lt;li&gt;最先进的攻击性能、隐蔽性、持久性。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="thread-model"&gt;Thread Model
+&lt;/h3&gt;&lt;p&gt;攻击者A仅控制一个客户端k，并且它将在每k轮中参与训练，即固定频率攻击；&lt;/p&gt;
+&lt;p&gt;攻击者A能够完全控制客户端A，但是无法访问其他的良性客户端；&lt;/p&gt;
+&lt;p&gt;假设A完全了解中央服务器和任何可能的防御措施，但是不能改变服务器的参数和算法。&lt;/p&gt;
+&lt;h3 id="method"&gt;Method
+&lt;/h3&gt;&lt;p&gt;首先讲解一下大致的流程，如下图所示，其实非常简单，主要分为两个阶段，第一个阶段是触发器的生成，第二个阶段是后门的注入。看起来好像平平无奇，下面讲一下各个步骤的具体的点。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031204850784.png"
 loading="lazy"
 alt="图1：IBA后门攻击方案"
->&lt;/p>
-&lt;h4 id="trigger-generating">Trigger Generating
-&lt;/h4>&lt;p>噪声的生成函数如下，函数G是触发生成函数，函数T是后门图像生成函数：
+&gt;&lt;/p&gt;
+&lt;h4 id="trigger-generating"&gt;Trigger Generating
+&lt;/h4&gt;&lt;p&gt;噪声的生成函数如下，函数G是触发生成函数，函数T是后门图像生成函数：
 $$
 T_\xi(x) = x + G_\xi(x), \parallel G_\xi(x) \parallel_\infty\le\epsilon,\forall x
-$$&lt;/p>
-&lt;p>函数G的迭代过程如下：
+$$&lt;/p&gt;
+&lt;p&gt;函数G的迭代过程如下：
 $$
-\xi \larr \xi - \eta_\xi \sum_{x\in \mathcal{D} } \mathcal{L}&lt;em>\xi (f&lt;/em>{w_k}(T_\xi(x)),y_T)
-$$&lt;/p>
-&lt;p>其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p>
-&lt;p>作者说这一想法来自于对抗攻击，但其实与传统的无目标对抗完全相反，无目标对抗的目标函数将样本的预测结果与本身的标签最大化，而生成函数G的目标则是最大化样本的预测结果与后门的目标标签，这样做的结果就是将生成的噪声与目标类对齐，或者说，将其指向目标类内部，没错，这就是之前Narcissus的做法，你可以将生成的噪声看作肉眼不可见的目标类图像，附加在输入上，模型一看到便将其识别为目标类，效果十分好。&lt;/p>
-&lt;h4 id="backdoor-injecting">Backdoor Injecting
-&lt;/h4>&lt;p>作者的目标是生成一个本地的后门模型$f_w$​​，其目标函数如下：
+\xi \larr \xi - \eta_\xi \sum_{x\in \mathcal{D} } \mathcal{L}&lt;em&gt;\xi (f&lt;/em&gt;{w_k}(T_\xi(x)),y_T)
+$$&lt;/p&gt;
+&lt;p&gt;其中，$f_w$是训练好的本地模型，将其作为替代模型，$y_T$是目标标签。&lt;/p&gt;
+&lt;p&gt;作者说这一想法来自于对抗攻击，但其实与传统的无目标对抗完全相反，无目标对抗的目标函数将样本的预测结果与本身的标签最大化，而生成函数G的目标则是最大化样本的预测结果与后门的目标标签，这样做的结果就是将生成的噪声与目标类对齐，或者说，将其指向目标类内部，没错，这就是之前Narcissus的做法，你可以将生成的噪声看作肉眼不可见的目标类图像，附加在输入上，模型一看到便将其识别为目标类，效果十分好。&lt;/p&gt;
+&lt;h4 id="backdoor-injecting"&gt;Backdoor Injecting
+&lt;/h4&gt;&lt;p&gt;作者的目标是生成一个本地的后门模型$f_w$​​，其目标函数如下：
 $$
-\min_{w} \sum_{x \in \mathcal{D}} \alpha \mathcal{L}&lt;em>{\text{clean}}(f&lt;/em>{w_k}(x), y_x) + \beta \mathcal{L}&lt;em>{\text{poison}}(f&lt;/em>{w_k}(T_{\xi}(x)), y_T)
-$$&lt;/p>
-&lt;p>普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p>
-&lt;h5 id="attack-model-retraining">Attack Model Retraining
-&lt;/h5>&lt;p>由于我们将本地模型$f_w$作为替代模型得到触发生成模型$G$，而本地模型是一直变化的，因此作者提出我们的生成模型G需要频繁地进行更新，使其与全局模型保持同步。&lt;/p>
-&lt;h5 id="partial-model-poisoning">Partial Model Poisoning
-&lt;/h5>&lt;p>部分模型污染旨在通过选择特定的污染空间和维度来增强攻击的持久性和有效性。这种方法的关键在于：&lt;/p>
-&lt;ol>
-&lt;li>&lt;strong>基于空间的污染&lt;/strong>：通过限制模型的参数，使其保持在良性模型的附近，从而帮助攻击绕过基于后门的防御。&lt;/li>
-&lt;li>&lt;strong>基于维度的污染&lt;/strong>：通过缩小被污染的神经元，减小来自良性客户端的稀释效应。&lt;/li>
-&lt;/ol>
-&lt;h6 id="poisoned-space-based">Poisoned-Space Based
-&lt;/h6>&lt;p>数学不是特别好，下面的解释来自于ChatGPT：&lt;/p>
-&lt;p>在这种攻击下，提交的本地模型通过其参数的大小限制而部分被污染。具体来说，攻击者对良性数据集 D和被污染数据集 D‘ 的损失应用投影梯度下降。这里的关键步骤是：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>投影过程&lt;/strong>：定期将模型参数投影到以全局模型为中心的球体上。这样可以确保产生的被污染模型与原始模型的偏差不会太大。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>数学表达&lt;/strong>：这可以通过公式表示为：
+\min_{w} \sum_{x \in \mathcal{D}} \alpha \mathcal{L}&lt;em&gt;{\text{clean}}(f&lt;/em&gt;{w_k}(x), y_x) + \beta \mathcal{L}&lt;em&gt;{\text{poison}}(f&lt;/em&gt;{w_k}(T_{\xi}(x)), y_T)
+$$&lt;/p&gt;
+&lt;p&gt;普通的后门攻击的损失函数只有后半段，最小化后门图像的预测结果和目标标签即可，但是本文还加上了前半段，即普通的分类优化函数，前半段提高ACC，后半段提高ASR，应该确实可以有效提高ACC，但是所付出的代价呢？能力有限，先存疑吧。&lt;/p&gt;
+&lt;h5 id="attack-model-retraining"&gt;Attack Model Retraining
+&lt;/h5&gt;&lt;p&gt;由于我们将本地模型$f_w$作为替代模型得到触发生成模型$G$，而本地模型是一直变化的，因此作者提出我们的生成模型G需要频繁地进行更新，使其与全局模型保持同步。&lt;/p&gt;
+&lt;h5 id="partial-model-poisoning"&gt;Partial Model Poisoning
+&lt;/h5&gt;&lt;p&gt;部分模型污染旨在通过选择特定的污染空间和维度来增强攻击的持久性和有效性。这种方法的关键在于：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;基于空间的污染&lt;/strong&gt;：通过限制模型的参数，使其保持在良性模型的附近，从而帮助攻击绕过基于后门的防御。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;基于维度的污染&lt;/strong&gt;：通过缩小被污染的神经元，减小来自良性客户端的稀释效应。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h6 id="poisoned-space-based"&gt;Poisoned-Space Based
+&lt;/h6&gt;&lt;p&gt;数学不是特别好，下面的解释来自于ChatGPT：&lt;/p&gt;
+&lt;p&gt;在这种攻击下，提交的本地模型通过其参数的大小限制而部分被污染。具体来说，攻击者对良性数据集 D和被污染数据集 D‘ 的损失应用投影梯度下降。这里的关键步骤是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;投影过程&lt;/strong&gt;：定期将模型参数投影到以全局模型为中心的球体上。这样可以确保产生的被污染模型与原始模型的偏差不会太大。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;数学表达&lt;/strong&gt;：这可以通过公式表示为：
 $$
 \parallel w_k - w \parallel \le \delta
 $$
-其中 $w_k$是本地模型，$w$是全局模型，$\delta$是允许的最大偏差。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>此外，这种攻击策略可以与模型替换结合使用，通过在发送模型到服务器之前对模型参数进行缩放，来抵消其他诚实客户端的贡献。具体的缩放模型计算公式为：
+其中 $w_k$是本地模型，$w$是全局模型，$\delta$是允许的最大偏差。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;此外，这种攻击策略可以与模型替换结合使用，通过在发送模型到服务器之前对模型参数进行缩放，来抵消其他诚实客户端的贡献。具体的缩放模型计算公式为：
 $$
 \hat{w_k} \simeq w_k + \sum_{i\in C \setminus k}\frac{n_i}{n_{\mathcal{C} \setminus k}} (w_k - w^*).
-$$&lt;/p>
-&lt;p>这里，$n_i$是客户端$i$的样本数量，$n_{\mathcal{C} \setminus k}$是所有其他客户端的样本总数，$ w^*$是理想的全局模型。&lt;/p>
-&lt;h6 id="poisoning-dimension-based">Poisoning-dimension based
-&lt;/h6>&lt;p>由于攻击者无法参与每一轮训练，直接提交被污染的模型到服务器是无效的。为了解决这个问题，提出了利用历史梯度变化选择不常更新的神经元作为污染维度的方法。具体步骤如下：&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>选择维度&lt;/strong>：计算梯度向量g的底部k%坐标，这些坐标是基于在干净数据 D上学习主要任务得到的梯度。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>数学表达&lt;/strong>：
+$$&lt;/p&gt;
+&lt;p&gt;这里，$n_i$是客户端$i$的样本数量，$n_{\mathcal{C} \setminus k}$是所有其他客户端的样本总数，$ w^*$是理想的全局模型。&lt;/p&gt;
+&lt;h6 id="poisoning-dimension-based"&gt;Poisoning-dimension based
+&lt;/h6&gt;&lt;p&gt;由于攻击者无法参与每一轮训练，直接提交被污染的模型到服务器是无效的。为了解决这个问题，提出了利用历史梯度变化选择不常更新的神经元作为污染维度的方法。具体步骤如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;选择维度&lt;/strong&gt;：计算梯度向量g的底部k%坐标，这些坐标是基于在干净数据 D上学习主要任务得到的梯度。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;数学表达&lt;/strong&gt;：
 $$
 \beta_t \larr \frac{p-1}{p}*\beta + \frac{1}{p} * \beta \text \quad{使得} \quad \beta_t=bottom_k(g_t)
-$$&lt;/p>
-&lt;p>其中 p是到第 t轮为止，攻击者被选中参与 FL 训练的轮数。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>投影梯度&lt;/strong>：当完成本地模型 $f_w$的梯度计算 $\hat{g}$后，攻击者将梯度投影到 $\hat{g}$的坐标约束上，只针对底部k%的坐标进行污染。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>这样，只有底部k%的坐标被污染，这可以延长后门效果，因为其他良性客户端很少更新这些坐标。利用历史信息帮助确定每一轮的底部k%坐标，随着轮次的推进和本地客户端模型向全局模型的收敛，这一信息变得更加重要。&lt;/p>
-&lt;h3 id="experiments">Experiments
-&lt;/h3>&lt;p>数据集：CIFAR、MNIST、Tiny ImageNet&lt;/p>
-&lt;p>1.不同攻击场景：不同联邦聚合方法：&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220203153.png"
+$$&lt;/p&gt;
+&lt;p&gt;其中 p是到第 t轮为止，攻击者被选中参与 FL 训练的轮数。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;投影梯度&lt;/strong&gt;：当完成本地模型 $f_w$的梯度计算 $\hat{g}$后，攻击者将梯度投影到 $\hat{g}$的坐标约束上，只针对底部k%的坐标进行污染。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样，只有底部k%的坐标被污染，这可以延长后门效果，因为其他良性客户端很少更新这些坐标。利用历史信息帮助确定每一轮的底部k%坐标，随着轮次的推进和本地客户端模型向全局模型的收敛，这一信息变得更加重要。&lt;/p&gt;
+&lt;h3 id="experiments"&gt;Experiments
+&lt;/h3&gt;&lt;p&gt;数据集：CIFAR、MNIST、Tiny ImageNet&lt;/p&gt;
+&lt;p&gt;1.不同攻击场景：不同联邦聚合方法：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220203153.png"
 loading="lazy"
 alt="image-20241031220203153"
->&lt;/p>
-&lt;p>2.不同防御方法：&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220217471.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;2.不同防御方法：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220217471.png"
 loading="lazy"
 alt="image-20241031220217471"
->&lt;/p>
-&lt;p>3.不可感知性：&lt;/p>
-&lt;p>前两行是良性图像，后两行是后门图像&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220336600.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;3.不可感知性：&lt;/p&gt;
+&lt;p&gt;前两行是良性图像，后两行是后门图像&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220336600.png"
 loading="lazy"
 alt="image-20241031220336600"
->&lt;/p>
-&lt;p>4.持久性：&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220509388.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;4.持久性：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241031220509388.png"
 loading="lazy"
 alt="image-20241031220509388"
->&lt;/p>
-&lt;h3 id="future-directions">Future Directions
-&lt;/h3>&lt;p>生成自ChatGPT：&lt;/p>
-&lt;ol>
-&lt;li>&lt;strong>开发对抗联邦学习后门攻击的防御机制&lt;/strong>：由于联邦学习是分布式和去中心化的，这一特点带来了独特的挑战。因此，需要开发针对这种特殊环境的鲁棒防御机制，以有效应对后门攻击。&lt;/li>
-&lt;li>&lt;strong>将方法推广至多样化的联邦学习场景&lt;/strong>：将本文提出的方法推广至具有异构数据（如非独立同分布数据）的联邦学习设置中，以更全面地理解攻击的有效性。&lt;/li>
-&lt;li>&lt;strong>探索替代的触发器及其在隐蔽性和成功率上的影响&lt;/strong>：研究不同类型的触发器，分析它们在提高攻击隐蔽性和成功率方面的作用，从而获取更多有价值的见解。&lt;/li>
-&lt;li>&lt;strong>在更大规模和实际场景中评估框架&lt;/strong>：在更大规模的联邦学习系统和现实场景中评估该框架，以检验其可扩展性和实用性。&lt;/li>
-&lt;li>&lt;strong>推进对抗防御策略&lt;/strong>：研究包括主动检测和缓解技术在内的对抗防御策略，为更安全、值得信赖的联邦学习系统做出贡献。&lt;/li>
-&lt;/ol></description></item><item><title>【论文阅读】Progressive Backdoor Erasing via connecting Backdoor and Adversarial Attacks</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</link><pubDate>Fri, 11 Oct 2024 17:28:36 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</guid><description>&lt;h3 id="info">Info
-&lt;/h3>&lt;p>CVPR 2023&lt;/p>
-&lt;p>Xi’an Jiaotong University、Xidian University&lt;/p>
-&lt;p>代码地址：https://github.com/John-niu-07/BPE&lt;/p>
-&lt;h3 id="abstract">Abstract
-&lt;/h3>&lt;p>众所周知，深度神经网络(DNN)既容易受到后门攻击，也容易受到对抗攻击。在文献中，这两类攻击通常被视为不同的问题并分别解决，因为它们分别属于训练时攻击和推理时攻击。然而，在本文中，我们发现了它们之间一个有趣的联系：&lt;strong>对于一个植入后门的模型，我们观察到其对抗样本与其后门图像具有相似的行为，即两者都激活了相同的DNN神经元子集&lt;/strong>。它表明，在模型中植入后门将显著影响模型的对抗样本。基于这些观察结果，我们提出了一种新的渐进式后门擦除(Progressive Backdoor Erasing, PBE)算法，通过利用非目标对抗性攻击来逐步净化受感染的模型。与以前的后门防御方法不同，我们方法的一个显著优势是，即使在干净的额外数据集不可用的情况下，它也可以擦除后门。我们的实验表明，对于5种最先进的后门攻击，我们的PBE可以有效地擦除后门，而对干净的样本没有明显的性能下降，并且性能优于现有的防御方法。&lt;/p>
-&lt;h3 id="key-insight">Key Insight
-&lt;/h3>&lt;p>现在有两个模型，一个是干净模型benign，一个是被植入了WaNet后门的infected(无论是一个All-to-All模型还是十个All-to-One模型结果都显著，见原文4.3)，然后使用10000张随机的CIFAR-10图像对这两个模型分别进行对抗攻击，结果发现得到的结果截然不同：对于benign模型，如下图的(a)所示，对抗样本被随机均匀地分类为不同的label，而对于infected模型来说，对抗样本被分类的label与后门的target label高度相关，如图(b)所示，与其他类别相比，它更有可能被分类为目标类。众所周知，后门样本也会被后门模型分类为target label（废话），因此后门模型的对抗样本可以视为其后门样本，也就是原文所说的&amp;quot;后门模型的对抗样本与其后门图像具有相似的行为&amp;quot;。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241017162244523.png"
+&gt;&lt;/p&gt;
+&lt;h3 id="future-directions"&gt;Future Directions
+&lt;/h3&gt;&lt;p&gt;生成自ChatGPT：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;开发对抗联邦学习后门攻击的防御机制&lt;/strong&gt;：由于联邦学习是分布式和去中心化的，这一特点带来了独特的挑战。因此，需要开发针对这种特殊环境的鲁棒防御机制，以有效应对后门攻击。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;将方法推广至多样化的联邦学习场景&lt;/strong&gt;：将本文提出的方法推广至具有异构数据（如非独立同分布数据）的联邦学习设置中，以更全面地理解攻击的有效性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;探索替代的触发器及其在隐蔽性和成功率上的影响&lt;/strong&gt;：研究不同类型的触发器，分析它们在提高攻击隐蔽性和成功率方面的作用，从而获取更多有价值的见解。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;在更大规模和实际场景中评估框架&lt;/strong&gt;：在更大规模的联邦学习系统和现实场景中评估该框架，以检验其可扩展性和实用性。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;推进对抗防御策略&lt;/strong&gt;：研究包括主动检测和缓解技术在内的对抗防御策略，为更安全、值得信赖的联邦学习系统做出贡献。&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>【论文阅读】Progressive Backdoor Erasing via connecting Backdoor and Adversarial Attacks</title><link>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</link><pubDate>Fri, 11 Oct 2024 17:28:36 +0800</pubDate><guid>https://k1te.cn/p/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BBprogressive-backdoor-erasing-via-connecting-backdoor-and-adversarial-attacks/</guid><description>&lt;h3 id="info"&gt;Info
+&lt;/h3&gt;&lt;p&gt;CVPR 2023&lt;/p&gt;
+&lt;p&gt;Xi’an Jiaotong University、Xidian University&lt;/p&gt;
+&lt;p&gt;代码地址：https://github.com/John-niu-07/BPE&lt;/p&gt;
+&lt;h3 id="abstract"&gt;Abstract
+&lt;/h3&gt;&lt;p&gt;众所周知，深度神经网络(DNN)既容易受到后门攻击，也容易受到对抗攻击。在文献中，这两类攻击通常被视为不同的问题并分别解决，因为它们分别属于训练时攻击和推理时攻击。然而，在本文中，我们发现了它们之间一个有趣的联系：&lt;strong&gt;对于一个植入后门的模型，我们观察到其对抗样本与其后门图像具有相似的行为，即两者都激活了相同的DNN神经元子集&lt;/strong&gt;。它表明，在模型中植入后门将显著影响模型的对抗样本。基于这些观察结果，我们提出了一种新的渐进式后门擦除(Progressive Backdoor Erasing, PBE)算法，通过利用非目标对抗性攻击来逐步净化受感染的模型。与以前的后门防御方法不同，我们方法的一个显著优势是，即使在干净的额外数据集不可用的情况下，它也可以擦除后门。我们的实验表明，对于5种最先进的后门攻击，我们的PBE可以有效地擦除后门，而对干净的样本没有明显的性能下降，并且性能优于现有的防御方法。&lt;/p&gt;
+&lt;h3 id="key-insight"&gt;Key Insight
+&lt;/h3&gt;&lt;p&gt;现在有两个模型，一个是干净模型benign，一个是被植入了WaNet后门的infected(无论是一个All-to-All模型还是十个All-to-One模型结果都显著，见原文4.3)，然后使用10000张随机的CIFAR-10图像对这两个模型分别进行对抗攻击，结果发现得到的结果截然不同：对于benign模型，如下图的(a)所示，对抗样本被随机均匀地分类为不同的label，而对于infected模型来说，对抗样本被分类的label与后门的target label高度相关，如图(b)所示，与其他类别相比，它更有可能被分类为目标类。众所周知，后门样本也会被后门模型分类为target label（废话），因此后门模型的对抗样本可以视为其后门样本，也就是原文所说的&amp;quot;后门模型的对抗样本与其后门图像具有相似的行为&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241017162244523.png"
 loading="lazy"
 alt="图一 不同模型对抗攻击结果"
->&lt;/p>
-&lt;p>为了进一步验证作者的猜想，作者测量了不同图像之间的特征相似度，如下图，我们有干净图像x，干净模型的对抗样本$\widetilde x$，后门模型的对抗样本$\widetilde x ^{\prime}$，以及后门图像$x^t$，通过比较他们特征图的$l_2$距离，显然，后门图像$x^t$和$\widetilde x ^{\prime}$的距离远小于它和对抗样本$\widetilde x ^{\prime}$之间的距离，也就是说，我们可以将后门模型的对抗样本$\widetilde x ^{\prime}$当作后门图像$x^t$来使用，这是本文的方法的核心。对于这一发现，作者给出的解释是：“当后门植入模型时，一些DNN神经元会被触发激活，称为’后门神经元‘。当对受感染的模型进行对抗攻击时，这些‘后门神经元’更有可能在生成对抗性示例时被选择/锁定和激活。”&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241017204606125.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;为了进一步验证作者的猜想，作者测量了不同图像之间的特征相似度，如下图，我们有干净图像x，干净模型的对抗样本$\widetilde x$，后门模型的对抗样本$\widetilde x ^{\prime}$，以及后门图像$x^t$，通过比较他们特征图的$l_2$距离，显然，后门图像$x^t$和$\widetilde x ^{\prime}$的距离远小于它和对抗样本$\widetilde x ^{\prime}$之间的距离，也就是说，我们可以将后门模型的对抗样本$\widetilde x ^{\prime}$当作后门图像$x^t$来使用，这是本文的方法的核心。对于这一发现，作者给出的解释是：“当后门植入模型时，一些DNN神经元会被触发激活，称为’后门神经元‘。当对受感染的模型进行对抗攻击时，这些‘后门神经元’更有可能在生成对抗性示例时被选择/锁定和激活。”&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241017204606125.png"
 loading="lazy"
 alt="图3 各种图像的特征图"
->&lt;/p>
-&lt;h3 id="theoretical-analysis">Theoretical Analysis
-&lt;/h3>&lt;p>假设有一个线性模型，权重为$W=(w_1,w_2,&amp;hellip;,w_K)$，后门模型的权重则为$\widetilde W ^\ast=(\widetilde w_1,\widetilde w_2,&amp;hellip;,\widetilde w_K)$，后门图像为$x^t = x + P$，假设在扰动$\tau &amp;gt; 0$的影响下我们的线性模型也可以正确分类，并且这个$\tau$足够大，以至于小扰动不影响分类结果。&lt;/p>
-&lt;p>在上面的假设下，我们有扰动$r$，以及其在P方向上的投影$r_ \perp$，那么它有下界：&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018165416097.png"
+&gt;&lt;/p&gt;
+&lt;h3 id="theoretical-analysis"&gt;Theoretical Analysis
+&lt;/h3&gt;&lt;p&gt;假设有一个线性模型，权重为$W=(w_1,w_2,&amp;hellip;,w_K)$，后门模型的权重则为$\widetilde W ^\ast=(\widetilde w_1,\widetilde w_2,&amp;hellip;,\widetilde w_K)$，后门图像为$x^t = x + P$，假设在扰动$\tau &amp;gt; 0$的影响下我们的线性模型也可以正确分类，并且这个$\tau$足够大，以至于小扰动不影响分类结果。&lt;/p&gt;
+&lt;p&gt;在上面的假设下，我们有扰动$r$，以及其在P方向上的投影$r_ \perp$，那么它有下界：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018165416097.png"
 loading="lazy"
 alt="公式"
->&lt;/p>
-&lt;p>上述公式可以看出，当将扰动$r$投影在触发P的方向上时，投影$r_ \perp$在完整的扰动$r$中占据了重要的部分。这意味着扰动$r$与触发P非常相似，这证明了我们的观察是合理的。&lt;/p>
-&lt;h3 id="thread-model">Thread Model
-&lt;/h3>&lt;p>假设攻击者可以控制训练数据并且已经将后门植入到模型之中。&lt;/p>
-&lt;p>在本文中，有两种防御设定。一种类似于其他”模型修复“，拥有感染模型和一个额外的干净数据集，还有一种类似于”数据过滤“，可以访问训练数据集，但是没有额外的干净数据集。&lt;/p>
-&lt;h3 id="method">Method
-&lt;/h3>&lt;p>如算法1所示，渐进式后门擦除PBE大致可以分为三步，假设现在可以访问训练数据集但是没有额外的干净数据集。&lt;/p>
-&lt;ol>
-&lt;li>首先，从训练集中随机采样一些图像(可能有后门图像也可能有干净图像)作为初始数据集$D_{ext}^0$，然后利用这些图像对后门模型$\theta^{\prime}$进行无目标对抗攻击，得到相应的对抗样本$\widetilde x ^{\prime}$，在前面的key insight中我们已经发现后门模型的对抗样本$\widetilde x ^{\prime}$可以视为后门图像$x^t$，&lt;strong>也就说我们现在得到了标签是干净的后门图像&lt;/strong>（由于目前的后门攻击中投毒率已经越来越低，因此抽取的图像全是后门图像的概率并不大），因此我们可以使用这些图像将后门模型之前学习的后门信息”纠正过来“，于是开始第一次fine-tuning，这一步目的是为了降低ASR。&lt;/li>
-&lt;li>在第t次迭代中我们有额外数据集$D_{ext}^t$，前面说过这个数据集从训练集中随机采样得到，因此有一部分图像是干净的，我们可以利用这些图像进行第二次fine-tuning，这一步的目的是提高ACC。&lt;/li>
-&lt;li>额外数据集$D_{ext}^t$中显然会有后门图像，这些图像无论是对于第一步降低ASR还是第二步提高ACC都会产生负面影响，因此这一步的目的是尽可能剔除$D_{ext}^t$中的后门图像，得到更干净的$D_{ext}^{t+1}$。这一步的原理是我们有原始的后门模型$\theta^{\prime}$，还有一个上一步得到的更加干净的模型$\theta^{t}$，显然后门图像在这两个模型中的表现不同，而干净图像则应该表现一致，由于模型$\theta^{t}$不一定足够干净，因此根据模型输出的每个类别的概率进行判断，而不是仅仅看predicted label，至此，我们得到更加干净的数据集$D_{ext}^{t+1}$，回到第一步，进行下一轮迭代，最终得到净化模型$\theta^{T}$​。&lt;/li>
-&lt;/ol>
-&lt;p>如果是第一种有额外的干净数据集的设定，那么可以直接跳过第三步，只需要运行第一步和第二步一次即可，称之为对抗微调(Adversarial Fine-Tuning, AFT)。&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018154512010.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;上述公式可以看出，当将扰动$r$投影在触发P的方向上时，投影$r_ \perp$在完整的扰动$r$中占据了重要的部分。这意味着扰动$r$与触发P非常相似，这证明了我们的观察是合理的。&lt;/p&gt;
+&lt;h3 id="thread-model"&gt;Thread Model
+&lt;/h3&gt;&lt;p&gt;假设攻击者可以控制训练数据并且已经将后门植入到模型之中。&lt;/p&gt;
+&lt;p&gt;在本文中，有两种防御设定。一种类似于其他”模型修复“，拥有感染模型和一个额外的干净数据集，还有一种类似于”数据过滤“，可以访问训练数据集，但是没有额外的干净数据集。&lt;/p&gt;
+&lt;h3 id="method"&gt;Method
+&lt;/h3&gt;&lt;p&gt;如算法1所示，渐进式后门擦除PBE大致可以分为三步，假设现在可以访问训练数据集但是没有额外的干净数据集。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;首先，从训练集中随机采样一些图像(可能有后门图像也可能有干净图像)作为初始数据集$D_{ext}^0$，然后利用这些图像对后门模型$\theta^{\prime}$进行无目标对抗攻击，得到相应的对抗样本$\widetilde x ^{\prime}$，在前面的key insight中我们已经发现后门模型的对抗样本$\widetilde x ^{\prime}$可以视为后门图像$x^t$，&lt;strong&gt;也就说我们现在得到了标签是干净的后门图像&lt;/strong&gt;（由于目前的后门攻击中投毒率已经越来越低，因此抽取的图像全是后门图像的概率并不大），因此我们可以使用这些图像将后门模型之前学习的后门信息”纠正过来“，于是开始第一次fine-tuning，这一步目的是为了降低ASR。&lt;/li&gt;
+&lt;li&gt;在第t次迭代中我们有额外数据集$D_{ext}^t$，前面说过这个数据集从训练集中随机采样得到，因此有一部分图像是干净的，我们可以利用这些图像进行第二次fine-tuning，这一步的目的是提高ACC。&lt;/li&gt;
+&lt;li&gt;额外数据集$D_{ext}^t$中显然会有后门图像，这些图像无论是对于第一步降低ASR还是第二步提高ACC都会产生负面影响，因此这一步的目的是尽可能剔除$D_{ext}^t$中的后门图像，得到更干净的$D_{ext}^{t+1}$。这一步的原理是我们有原始的后门模型$\theta^{\prime}$，还有一个上一步得到的更加干净的模型$\theta^{t}$，显然后门图像在这两个模型中的表现不同，而干净图像则应该表现一致，由于模型$\theta^{t}$不一定足够干净，因此根据模型输出的每个类别的概率进行判断，而不是仅仅看predicted label，至此，我们得到更加干净的数据集$D_{ext}^{t+1}$，回到第一步，进行下一轮迭代，最终得到净化模型$\theta^{T}$​。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果是第一种有额外的干净数据集的设定，那么可以直接跳过第三步，只需要运行第一步和第二步一次即可，称之为对抗微调(Adversarial Fine-Tuning, AFT)。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018154512010.png"
 loading="lazy"
 alt="image-20241018154512010"
->&lt;/p>
-&lt;h3 id="experiment">Experiment
-&lt;/h3>&lt;p>对比了若干防御方法在若干攻击方法上面的效果，数据集只有两个，分别是CIFAR-10和GTSRB，结果如下：&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018163549101.png"
+&gt;&lt;/p&gt;
+&lt;h3 id="experiment"&gt;Experiment
+&lt;/h3&gt;&lt;p&gt;对比了若干防御方法在若干攻击方法上面的效果，数据集只有两个，分别是CIFAR-10和GTSRB，结果如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://raw.githubusercontent.com/zk1te/img/main/image-20241018163549101.png"
 loading="lazy"
 alt="实验结果"
->&lt;/p></description></item></channel></rss>
+&gt;&lt;/p&gt;</description></item></channel></rss>

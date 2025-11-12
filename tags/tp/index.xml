@@ -1,349 +1,349 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TP on k1te's blog</title><link>https://k1te.cn/tags/tp/</link><description>Recent content in TP on k1te's blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 14 Aug 2021 16:19:19 +0800</lastBuildDate><atom:link href="https://k1te.cn/tags/tp/index.xml" rel="self" type="application/rss+xml"/><item><title>TP3.2.xRCE</title><link>https://k1te.cn/p/tp3.2.xrce/</link><pubDate>Sat, 14 Aug 2021 16:19:19 +0800</pubDate><guid>https://k1te.cn/p/tp3.2.xrce/</guid><description>&lt;p>前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
->【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p>
-&lt;h2 id="利用">利用
-&lt;/h2>&lt;p>这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p>
-&lt;p>利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="k">function&lt;/span> &lt;span class="nf">index&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">assign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">display&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>payload：&lt;code>?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code>&lt;/p>
-&lt;p>本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p>
-&lt;h2 id="分析">分析
-&lt;/h2>&lt;p>这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>首先我们的可控参数通过&lt;code>Controller.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数最终跳到了&lt;code>View.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数：
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TP on</title><link>https://k1te.cn/tags/tp/</link><description>Recent content in TP on</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 14 Aug 2021 16:19:19 +0800</lastBuildDate><atom:link href="https://k1te.cn/tags/tp/index.xml" rel="self" type="application/rss+xml"/><item><title>TP3.2.xRCE</title><link>https://k1te.cn/p/tp3.2.xrce/</link><pubDate>Sat, 14 Aug 2021 16:19:19 +0800</pubDate><guid>https://k1te.cn/p/tp3.2.xrce/</guid><description>&lt;p&gt;前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
+&gt;【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a&gt;。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p&gt;
+&lt;h2 id="利用"&gt;利用
+&lt;/h2&gt;&lt;p&gt;这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p&gt;
+&lt;p&gt;利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;assign&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;display&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;payload：&lt;code&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p&gt;
+&lt;h2 id="分析"&gt;分析
+&lt;/h2&gt;&lt;p&gt;这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;首先我们的可控参数通过&lt;code&gt;Controller.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数最终跳到了&lt;code&gt;View.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数：
 &lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727.png"
 width="449"
 height="69"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu16667192874750647793.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu8517754292988693722.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_b21f23921c29ab04.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_13bd53284eb3997d.png 1024w"
 loading="lazy"
 alt="test"
 class="gallery-image"
 data-flex-grow="650"
 data-flex-basis="1561px"
->&lt;/p>
-&lt;p>在该函数中将其赋值给&lt;code>$this-&amp;gt;tVar&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在该函数中将其赋值给&lt;code&gt;$this-&amp;gt;tVar&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
 width="887"
 height="198"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu1148837238617504674.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu16203959136362629107.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_235eb9dbc4876b6c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_edf3591b7772ff36.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="447"
 data-flex-basis="1075px"
->&lt;/p>
-&lt;p>赋值结束后回到&lt;code>IndexController&lt;/code>再进入到&lt;code>display&lt;/code>函数，和上面的&lt;code>assign&lt;/code>函数一样最终跳到&lt;code>View.class.php&lt;/code>的&lt;code>display&lt;/code>函数中，该函数中的&lt;code>fetch&lt;/code>函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;赋值结束后回到&lt;code&gt;IndexController&lt;/code&gt;再进入到&lt;code&gt;display&lt;/code&gt;函数，和上面的&lt;code&gt;assign&lt;/code&gt;函数一样最终跳到&lt;code&gt;View.class.php&lt;/code&gt;的&lt;code&gt;display&lt;/code&gt;函数中，该函数中的&lt;code&gt;fetch&lt;/code&gt;函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
 width="926"
 height="268"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu2188691107088160224.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu14304364908615236887.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_34cb82190a7f5e4b.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_279298038dcd9816.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="345"
 data-flex-basis="829px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>函数，该函数中将空的&lt;code>templateFile&lt;/code>传入&lt;code>parseTemplate&lt;/code>函数:&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;函数，该函数中将空的&lt;code&gt;templateFile&lt;/code&gt;传入&lt;code&gt;parseTemplate&lt;/code&gt;函数:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
 width="685"
 height="205"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu18396467309646162402.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu15591332239516605305.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_62c4502403db042f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_91ecba92a2f2fa7d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="334"
 data-flex-basis="801px"
->&lt;/p>
-&lt;p>当参数为空时，&lt;code>parseTemplate&lt;/code>函数返回默认的模板文件位置&lt;code>./Application/Home/View/Index/index.html&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;当参数为空时，&lt;code&gt;parseTemplate&lt;/code&gt;函数返回默认的模板文件位置&lt;code&gt;./Application/Home/View/Index/index.html&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
 width="685"
 height="226"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu10780829674757274184.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu16562431490737696462.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_be0ebb125e8892a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_aec4f6430dd5dee9.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="303"
 data-flex-basis="727px"
->&lt;/p>
-&lt;p>接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
 width="926"
 height="550"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu586646372506602813.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu9475359208743805363.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_265cd14a300c21cf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_de2999c9e4c88134.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="168"
 data-flex-basis="404px"
->&lt;/p>
-&lt;p>将&lt;code>this-&amp;gt;tVar&lt;/code>放入&lt;code>params&lt;/code>变量中跳入&lt;code>Hook::listen&lt;/code>，&lt;code>tag&lt;/code>变量是写死的&lt;code>view_parse&lt;/code>，因此&lt;code>name&lt;/code>变量为&lt;code>Behavior\ParseTemplateBehavior&lt;/code>，接着进入&lt;code>self::exec&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;this-&amp;gt;tVar&lt;/code&gt;放入&lt;code&gt;params&lt;/code&gt;变量中跳入&lt;code&gt;Hook::listen&lt;/code&gt;，&lt;code&gt;tag&lt;/code&gt;变量是写死的&lt;code&gt;view_parse&lt;/code&gt;，因此&lt;code&gt;name&lt;/code&gt;变量为&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;，接着进入&lt;code&gt;self::exec&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
 width="883"
 height="686"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu16528124452292011744.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu3278037575816808279.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_97f0a51c326a442f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_bc3e6cbb6e52125d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="128"
 data-flex-basis="308px"
->&lt;/p>
-&lt;p>在&lt;code>exec&lt;/code>函数中调用&lt;code>Behavior\ParseTemplateBehavior&lt;/code>的&lt;code>run&lt;/code>方法处理带有我们可控参数的&lt;code>$params&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;exec&lt;/code&gt;函数中调用&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;的&lt;code&gt;run&lt;/code&gt;方法处理带有我们可控参数的&lt;code&gt;$params&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
 width="486"
 height="201"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9562397795221540899.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9840742592818162137.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_e885269f9edf912a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_2f165ebc39030641.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="241"
 data-flex-basis="580px"
->&lt;/p>
-&lt;p>在run方法中经过一些判断，最终调用&lt;code>fetch&lt;/code>函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在run方法中经过一些判断，最终调用&lt;code&gt;fetch&lt;/code&gt;函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
 width="1115"
 height="404"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu10996770989912004906.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu9672187218422621868.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_b7dab9419edb4f57.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_f8ecda63457aedf0.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="275"
 data-flex-basis="662px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>，获取缓存文件路径后，进入Storage的load方法中：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;，获取缓存文件路径后，进入Storage的load方法中：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
 width="628"
 height="365"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu12439327351795598866.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu6216297510177660076.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_8a23745ad38b9d0a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_f2632b1c20d31088.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="172"
 data-flex-basis="412px"
->&lt;/p>
-&lt;p>在load方法中，&lt;code>$_filename&lt;/code>为之前获取的缓存文件路径，&lt;code>$var&lt;/code>则为之前带有&lt;code>_filename=C://config.ini&lt;/code>的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在load方法中，&lt;code&gt;$_filename&lt;/code&gt;为之前获取的缓存文件路径，&lt;code&gt;$var&lt;/code&gt;则为之前带有&lt;code&gt;_filename=C://config.ini&lt;/code&gt;的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
 width="1079"
 height="163"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu8786334477568844574.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu16216860117112078952.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_bfe99414db331bc6.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_37ba6319f2a4b46b.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="661"
 data-flex-basis="1588px"
->&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
 width="600"
 height="343"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu3788058853134331418.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu9951118566434817691.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_c5fd80d866c2f00c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_62f763d4909c0e75.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="174"
 data-flex-basis="419px"
->&lt;/p>
-&lt;p>众所周知，include函数不在意包含的什么文件：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;众所周知，include函数不在意包含的什么文件：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
 width="983"
 height="327"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu4382227923735885799.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu5994275899394673214.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_98fb2e60f24beccf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_d7db89c7caf4de14.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="300"
 data-flex-basis="721px"
->&lt;/p>
-&lt;p>因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p>
-&lt;h2 id="heading">=======
-&lt;/h2>&lt;p>title: &amp;ldquo;TP3.2.xRCE&amp;rdquo;
+&gt;&lt;/p&gt;
+&lt;p&gt;因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p&gt;
+&lt;h2 id="heading"&gt;=======
+&lt;/h2&gt;&lt;p&gt;title: &amp;ldquo;TP3.2.xRCE&amp;rdquo;
 date: 2021-08-14T16:19:19+08:00
-categories:&lt;/p>
-&lt;ul>
-&lt;li>漏洞复现
-tags:&lt;/li>
-&lt;li>TP&lt;/li>
-&lt;li>web&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;p>前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
->【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a>。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p>
-&lt;h2 id="利用-1">利用
-&lt;/h2>&lt;p>这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p>
-&lt;p>利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-php" data-lang="php">&lt;span class="line">&lt;span class="cl"> &lt;span class="k">public&lt;/span> &lt;span class="k">function&lt;/span> &lt;span class="nf">index&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">assign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$value&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">$this&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="na">display&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>payload：&lt;code>?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code>&lt;/p>
-&lt;p>本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p>
-&lt;h2 id="分析-1">分析
-&lt;/h2>&lt;p>这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>首先我们的可控参数通过&lt;code>Controller.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数最终跳到了&lt;code>View.class.php&lt;/code>中的&lt;code>assign&lt;/code>函数：
+categories:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;漏洞复现
+tags:&lt;/li&gt;
+&lt;li&gt;TP&lt;/li&gt;
+&lt;li&gt;web&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;前段时间打比赛的时候遇到了Think PHP3.2.x RCE的题目，这个洞是上个月爆出来的：&lt;a class="link" href="https://mp.weixin.qq.com/s/_4IZe-aZ_3O2PmdQrVbpdQ" target="_blank" rel="noopener"
+&gt;【漏洞通报】ThinkPHP3.2.x RCE漏洞通报&lt;/a&gt;。虽然3已经不是主流版本了，但是考虑到还是有不少老的站在用，所以还是有一定的价值的，这里分析一下。&lt;/p&gt;
+&lt;h2 id="利用-1"&gt;利用
+&lt;/h2&gt;&lt;p&gt;这里用的是Think PHP3.2.5完整版，具体每个版本之间的区别可以看看参考链接&lt;/p&gt;
+&lt;p&gt;利用的条件是assign方法的第一个变量可控。因此我们可以在indexController写入demo：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-php" data-lang="php"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="k"&gt;function&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;assign&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$value&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nv"&gt;$this&lt;/span&gt;&lt;span class="o"&gt;-&amp;gt;&lt;/span&gt;&lt;span class="na"&gt;display&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;payload：&lt;code&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=.\Application\Runtime\Logs\Home\21_06_30.log&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;本质上是一个文件包含，再结合报错写log最终达到rce的目的&lt;/p&gt;
+&lt;h2 id="分析-1"&gt;分析
+&lt;/h2&gt;&lt;p&gt;这里我们先不包含log，而是包含config.ini来分析文件包含，payload：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;?m=Home&amp;amp;c=Index&amp;amp;a=index&amp;amp;value[_filename]=C://config.ini
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;首先我们的可控参数通过&lt;code&gt;Controller.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数最终跳到了&lt;code&gt;View.class.php&lt;/code&gt;中的&lt;code&gt;assign&lt;/code&gt;函数：
 &lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727.png"
 width="449"
 height="69"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu16667192874750647793.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu8517754292988693722.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_b21f23921c29ab04.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314192829727_hu_13bd53284eb3997d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="650"
 data-flex-basis="1561px"
->&lt;/p>
-&lt;p>在该函数中将其赋值给&lt;code>$this-&amp;gt;tVar&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在该函数中将其赋值给&lt;code&gt;$this-&amp;gt;tVar&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552.png"
 width="887"
 height="198"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu1148837238617504674.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu16203959136362629107.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_235eb9dbc4876b6c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314193404552_hu_edf3591b7772ff36.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="447"
 data-flex-basis="1075px"
->&lt;/p>
-&lt;p>赋值结束后回到&lt;code>IndexController&lt;/code>再进入到&lt;code>display&lt;/code>函数，和上面的&lt;code>assign&lt;/code>函数一样最终跳到&lt;code>View.class.php&lt;/code>的&lt;code>display&lt;/code>函数中，该函数中的&lt;code>fetch&lt;/code>函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;赋值结束后回到&lt;code&gt;IndexController&lt;/code&gt;再进入到&lt;code&gt;display&lt;/code&gt;函数，和上面的&lt;code&gt;assign&lt;/code&gt;函数一样最终跳到&lt;code&gt;View.class.php&lt;/code&gt;的&lt;code&gt;display&lt;/code&gt;函数中，该函数中的&lt;code&gt;fetch&lt;/code&gt;函数解析并获取模板文件内容，此时模板文件路径和内容为空：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910.png"
 width="926"
 height="268"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu2188691107088160224.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu14304364908615236887.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_34cb82190a7f5e4b.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314194628910_hu_279298038dcd9816.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="345"
 data-flex-basis="829px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>函数，该函数中将空的&lt;code>templateFile&lt;/code>传入&lt;code>parseTemplate&lt;/code>函数:&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;函数，该函数中将空的&lt;code&gt;templateFile&lt;/code&gt;传入&lt;code&gt;parseTemplate&lt;/code&gt;函数:&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680.png"
 width="685"
 height="205"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu18396467309646162402.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu15591332239516605305.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_62c4502403db042f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202547680_hu_91ecba92a2f2fa7d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="334"
 data-flex-basis="801px"
->&lt;/p>
-&lt;p>当参数为空时，&lt;code>parseTemplate&lt;/code>函数返回默认的模板文件位置&lt;code>./Application/Home/View/Index/index.html&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;当参数为空时，&lt;code&gt;parseTemplate&lt;/code&gt;函数返回默认的模板文件位置&lt;code&gt;./Application/Home/View/Index/index.html&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873.png"
 width="685"
 height="226"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu10780829674757274184.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu16562431490737696462.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_be0ebb125e8892a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314200109873_hu_aec4f6430dd5dee9.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="303"
 data-flex-basis="727px"
->&lt;/p>
-&lt;p>接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;接着往下走，系统配置的默认模板引擎为think，所以程序进入else分支&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534.png"
 width="926"
 height="550"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu586646372506602813.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu9475359208743805363.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_265cd14a300c21cf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314202818534_hu_de2999c9e4c88134.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="168"
 data-flex-basis="404px"
->&lt;/p>
-&lt;p>将&lt;code>this-&amp;gt;tVar&lt;/code>放入&lt;code>params&lt;/code>变量中跳入&lt;code>Hook::listen&lt;/code>，&lt;code>tag&lt;/code>变量是写死的&lt;code>view_parse&lt;/code>，因此&lt;code>name&lt;/code>变量为&lt;code>Behavior\ParseTemplateBehavior&lt;/code>，接着进入&lt;code>self::exec&lt;/code>&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;将&lt;code&gt;this-&amp;gt;tVar&lt;/code&gt;放入&lt;code&gt;params&lt;/code&gt;变量中跳入&lt;code&gt;Hook::listen&lt;/code&gt;，&lt;code&gt;tag&lt;/code&gt;变量是写死的&lt;code&gt;view_parse&lt;/code&gt;，因此&lt;code&gt;name&lt;/code&gt;变量为&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;，接着进入&lt;code&gt;self::exec&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431.png"
 width="883"
 height="686"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu16528124452292011744.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu3278037575816808279.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_97f0a51c326a442f.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314204630431_hu_bc3e6cbb6e52125d.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="128"
 data-flex-basis="308px"
->&lt;/p>
-&lt;p>在&lt;code>exec&lt;/code>函数中调用&lt;code>Behavior\ParseTemplateBehavior&lt;/code>的&lt;code>run&lt;/code>方法处理带有我们可控参数的&lt;code>$params&lt;/code>变量：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;exec&lt;/code&gt;函数中调用&lt;code&gt;Behavior\ParseTemplateBehavior&lt;/code&gt;的&lt;code&gt;run&lt;/code&gt;方法处理带有我们可控参数的&lt;code&gt;$params&lt;/code&gt;变量：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410.png"
 width="486"
 height="201"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9562397795221540899.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu9840742592818162137.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_e885269f9edf912a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314205526410_hu_2f165ebc39030641.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="241"
 data-flex-basis="580px"
->&lt;/p>
-&lt;p>在run方法中经过一些判断，最终调用&lt;code>fetch&lt;/code>函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在run方法中经过一些判断，最终调用&lt;code&gt;fetch&lt;/code&gt;函数编译并加载模板文件，此时第二个参数就是我们的可控参数：array(&amp;quot;_filename&amp;quot;=&amp;gt;&amp;ldquo;C://config.ini&amp;rdquo;);&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491.png"
 width="1115"
 height="404"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu10996770989912004906.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu9672187218422621868.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_b7dab9419edb4f57.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314210913491_hu_f8ecda63457aedf0.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="275"
 data-flex-basis="662px"
->&lt;/p>
-&lt;p>继续跟进&lt;code>fetch&lt;/code>，获取缓存文件路径后，进入Storage的load方法中：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;继续跟进&lt;code&gt;fetch&lt;/code&gt;，获取缓存文件路径后，进入Storage的load方法中：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255.png"
 width="628"
 height="365"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu12439327351795598866.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu6216297510177660076.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_8a23745ad38b9d0a.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314211723255_hu_f2632b1c20d31088.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="172"
 data-flex-basis="412px"
->&lt;/p>
-&lt;p>在load方法中，&lt;code>$_filename&lt;/code>为之前获取的缓存文件路径，&lt;code>$var&lt;/code>则为之前带有&lt;code>_filename=C://config.ini&lt;/code>的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;在load方法中，&lt;code&gt;$_filename&lt;/code&gt;为之前获取的缓存文件路径，&lt;code&gt;$var&lt;/code&gt;则为之前带有&lt;code&gt;_filename=C://config.ini&lt;/code&gt;的数组，利用extract方法进行变量覆盖，实现任意文件包含：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452.png"
 width="1079"
 height="163"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu8786334477568844574.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu16216860117112078952.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_bfe99414db331bc6.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212032452_hu_37ba6319f2a4b46b.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="661"
 data-flex-basis="1588px"
->&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859.png"
 width="600"
 height="343"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu3788058853134331418.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu9951118566434817691.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_c5fd80d866c2f00c.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314212715859_hu_62f763d4909c0e75.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="174"
 data-flex-basis="419px"
->&lt;/p>
-&lt;p>众所周知，include函数不在意包含的什么文件：&lt;/p>
-&lt;p>&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
+&gt;&lt;/p&gt;
+&lt;p&gt;众所周知，include函数不在意包含的什么文件：&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026.png"
 width="983"
 height="327"
-srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu4382227923735885799.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu5994275899394673214.png 1024w"
+srcset="https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_98fb2e60f24beccf.png 480w, https://k1te.cn/p/tp3.2.xrce/image-20220314233622026_hu_d7db89c7caf4de14.png 1024w"
 loading="lazy"
 class="gallery-image"
 data-flex-grow="300"
 data-flex-basis="721px"
->&lt;/p>
-&lt;p>因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;blockquote>
-&lt;p>ef5418316bb4efc68bd96772d45afc77caf7808c&lt;/p>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote>
-&lt;/blockquote></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;p&gt;因此我们可以构造一个不存在的模块，使得tp报错，此时tp会将url写入log中，所以我们可以在url中写入恶意代码，再结合上面的LFI实现任意代码执行。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ef5418316bb4efc68bd96772d45afc77caf7808c&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>
